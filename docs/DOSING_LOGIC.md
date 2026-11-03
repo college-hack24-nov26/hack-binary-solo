@@ -9,7 +9,7 @@ Number fields are blanked unless the status is `ok` (or `needs_input` for produc
 A result is `final` only when status is ok, a number was computed and weight (and creatinine, when a renal measure was used) is doctor-entered or doctor-confirmed.
 
 ## Config
-`DOSING_ALLOW_UNVERIFIED` (default false), `DOSING_ML_STEP` (0.5), `DOSING_ABW_FACTOR` (default: formulary `factor_default`), `DOSING_FORMULARY_PATH`. Override reason minimum length: 10 characters (`Config.override_min_chars`).
+`DOSING_ALLOW_UNVERIFIED` (default false), `DOSING_ML_STEP` (0.5), `DOSING_ABW_FACTOR` (default: formulary `factor_default`), `DOSING_FORMULARY_PATH` (default: the in-repo copy `data/dosesafe_formulary_v2.json`, a verbatim copy of `Final_Drugs_data/dosesafe_formulary_v2.json`; update it by copying the original again). Override reason minimum length: 10 characters (`Config.override_min_chars`).
 
 ## Quiz to context (`dosing/mapper.py`)
 Unknown = not asked, skipped or "not sure"; it is never "no". Whether a node was asked is read from the quiz graph (`recompute_path`), not copied thresholds.
@@ -106,3 +106,6 @@ Free-text contraindications the engine cannot evaluate (dehydration, dengue, pas
 * Cetirizine at 12 y: both rules give 10 mg/day; the earlier rule is the default and the doctor may pick either.
 * Override category plus 10 or more characters is a prototype rule. A real product needs a reviewed reason list and periodic override audits.
 * Growth tables are still to be supplied (WHO CGS 0-5 y, WHO 2007 5-10 y, IAP 2015 5-18 y, a cited adult range); the draft table stays active meanwhile.
+
+### Running the demo on a new machine
+`./run_demo.sh` (or `python3 scripts/run_demo.py`) runs `scripts/startup_check.py` (Python, packages, formulary, quiz graph, a dosing self-test, logins, Ollama and the OCR model), creates a one-time `demo` doctor login and three synthetic patients if none exist, then starts Streamlit. A missing Ollama or model is only a warning: OCR scan is unavailable, everything else works. Flags: `--demo-mode`, `--port`, `--no-seed`, `--check-only`.

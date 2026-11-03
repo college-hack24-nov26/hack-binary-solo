@@ -4,7 +4,8 @@ from dataclasses import dataclass
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_FORMULARY = ROOT.parent / "Final_Drugs_data" / "dosesafe_formulary_v2.json"
+# verbatim copy of Final_Drugs_data/dosesafe_formulary_v2.json, kept inside the repo so a fresh clone works; override with DOSING_FORMULARY_PATH
+DEFAULT_FORMULARY = ROOT / "data" / "dosesafe_formulary_v2.json"
 BANNER = "Prototype data, not clinically verified"
 DEMO_BANNER = "DEMO - UNVERIFIED DATA"
 OVERRIDE_CATEGORIES = {"benefit_outweighs_risk": "Benefit outweighs risk", "patient_tolerates": "Patient already tolerates it",

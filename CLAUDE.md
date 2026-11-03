@@ -4,6 +4,7 @@ Offline clinic OPD app (Streamlit, pydantic, pytest, Python 3.14). Patient quiz 
 
 ## Commands
 Run from `hack-binary-solo/` using the local venv:
+- Demo launcher: `./run_demo.sh [--demo-mode]` (startup check, demo login and synthetic patients if none, then the app); check only: `scripts/startup_check.py`
 - App: `.venv/bin/streamlit run main_app.py` (OCR needs Ollama on localhost; dosing does not)
 - Tests: `.venv/bin/python -m pytest -q` (dosing only: `tests/test_dosing_*.py`)
 - Dosing demo as text: `.venv/bin/python scripts/dosing_demo.py`
@@ -15,7 +16,7 @@ Run from `hack-binary-solo/` using the local venv:
 - `records/` PatientRecord schema and local JSON store (`data_local/`, gitignored)
 - `ocr/` local vision-model transcription and formulary matching
 - `dosing/` the dosage engine: `mapper` (quiz to context), `rules`, `calc`, `products`, `safety`, `interactions`, `history`, `engine`, `service`, `audit`, `demo`; data in `dosing/data/`
-- Formulary lives outside the app at `../Final_Drugs_data/dosesafe_formulary_v2.json`
+- Formulary: verbatim copy at `data/dosesafe_formulary_v2.json` (original in `../Final_Drugs_data/`); `DOSING_FORMULARY_PATH` overrides. Do not edit it
 
 ## Hard rules (do not break)
 - No LLM, network or randomness in `dosing/`. Pure functions: same input, same output.
