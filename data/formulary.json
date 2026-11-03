@@ -1,0 +1,20 @@
+{
+  "_source": "Seed list from research_doc/common_drugs.txt (generic names only). Replace/extend with the cited formulary used by the dosage module.",
+  "drugs": [
+    {"generic": "paracetamol", "aliases": []},
+    {"generic": "amoxicillin", "aliases": []},
+    {"generic": "amoxicillin-clavulanate", "aliases": ["amoxicillin clavulanate", "amoxicillin and clavulanic acid", "amoxiclav"]},
+    {"generic": "azithromycin", "aliases": []},
+    {"generic": "metronidazole", "aliases": []},
+    {"generic": "pantoprazole", "aliases": []},
+    {"generic": "diclofenac", "aliases": []},
+    {"generic": "ibuprofen", "aliases": []},
+    {"generic": "cetirizine", "aliases": []},
+    {"generic": "metformin", "aliases": []},
+    {"generic": "amlodipine", "aliases": []},
+    {"generic": "telmisartan", "aliases": []},
+    {"generic": "doxycycline", "aliases": []},
+    {"generic": "ondansetron", "aliases": []},
+    {"generic": "ciprofloxacin", "aliases": []}
+  ]
+}
