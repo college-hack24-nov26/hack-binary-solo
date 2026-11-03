@@ -8,7 +8,10 @@ from intake import llm_summary
 from intake.summary import apply_doctor_edits, body_diagram_svgs, build_summary, duration_text, template_paragraph
 from intake.ui.gate import can_edit, require_login
 from intake.doctors import doctor_for_login, get_doctor, load_doctors
+import pandas as pd
+
 from records import store
+from records.vitals import abnormal, bmi
 from records.schema import TimelineEntry
 
 user = require_login()
@@ -37,6 +40,86 @@ summ = build_summary(rec, lang)
 c1, c2 = st.columns(2)
 c1.metric("Intake duration (measured)", duration_text(rec.intakeDurationSeconds))
 c2.metric("Fields captured", rec.fieldsCaptured)
+
+di = rec.dosingInputs
+st.header("Clinical overview")
+doc = get_doctor(rec.assignedDoctor, DOCTORS)
+st.caption(f"{rec.token} · {rec.status.replace('_', ' ')} · complaint: {rec.complaint.label or 'not given'}"
+           f" · assigned: {doc.name if doc else 'no doctor chosen'}")
+if rec.redFlags:
+    st.caption(f"🔴 {len(rec.redFlags)} red flag(s), details under 'Red flags' in the intake summary below (draft rules).")
+
+# -- patient basics and safety information (patient-reported at intake)
+st.subheader("Patient and safety basics (patient-reported)")
+b1, b2, b3, b4 = st.columns(4)
+b1.metric("Age", f"{di.ageYears:g} y" if di.ageYears is not None else "not captured")
+b2.metric("Sex", di.sex or "not captured")
+b3.metric("Weight (reported)", f"{di.weightKg:g} kg" if di.weightKg is not None else "not captured")
+b4.metric("Pregnancy", (di.pregnancy or "not captured").replace("_", " "))
+st.write("**Allergies:** " + (", ".join(di.allergies) if di.allergies else "none reported"))
+st.write("**Current medicines:** " + (", ".join(di.currentMeds) if di.currentMeds else "none reported"))
+conds = [n for n, v in (("kidney disease", di.renal), ("liver disease", di.hepatic), ("diabetes", di.diabetes),
+                        ("hypertension", di.hypertension), ("asthma", di.asthma)) if v == "yes"]
+unsure = [n for n, v in (("kidney", di.renal), ("liver", di.hepatic), ("diabetes", di.diabetes),
+                         ("hypertension", di.hypertension), ("asthma", di.asthma)) if v == "unsure"]
+st.write("**Conditions reported:** " + (", ".join(conds) if conds else "none reported") + (f" · not sure: {', '.join(unsure)}" if unsure else ""))
+if di.missing:
+    st.warning("Not captured at intake (skipped or not sure): " + ", ".join(di.missing))
+
+# -- vitals measured by staff
+st.subheader("Vitals (measured by staff)")
+vt = rec.vitals
+if vt is None or not vt.any_measured():
+    st.info("No vitals recorded yet. Staff enter them on the Staff alerts page.")
+else:
+    flags = abnormal(vt, di.ageYears)
+    mark = lambda k, txt: f"{'⚠ ' if k in flags else ''}{txt}"
+    cells = [("BP (mmHg)", f"{vt.bpSystolic or '-'}/{vt.bpDiastolic or '-'}", [k for k in ("bpSystolic", "bpDiastolic") if k in flags]),
+             ("Pulse (/min)", vt.pulse, ["pulse"]), ("Temp (°C)", vt.tempC, ["tempC"]), ("SpO₂ (%)", vt.spo2, ["spo2"]),
+             ("Resp rate (/min)", vt.respRate, ["respRate"]), ("Weight (kg)", vt.weightKg, []), ("Height (cm)", vt.heightCm, []),
+             ("BMI", bmi(vt), []), ("Glucose (mg/dL)", vt.bloodGlucose, ["bloodGlucose"])]
+    for row in (cells[:5], cells[5:]):
+        for col, (lab, val, keys) in zip(st.columns(5), row):
+            col.metric(lab, "-" if val in (None, "") else (("⚠ " if any(k in flags for k in keys) else "") + str(val)))
+    if flags:
+        st.warning("Outside the usual adult range (draft thresholds, doctor decides): " + ", ".join(f"{k} {w}" for k, w in flags.items()))
+    elif (di.ageYears or 99) < 12:
+        st.caption("Adult ranges are not applied to children.")
+    if di.weightKg and vt.weightKg and abs(di.weightKg - vt.weightKg) / vt.weightKg > 0.1:
+        st.warning(f"Reported weight {di.weightKg:g} kg differs from measured {vt.weightKg:g} kg. Use the measured value for dosing.")
+    st.caption(f"Recorded by {vt.recordedBy or '?'} at {(vt.recordedAt or '')[:16].replace('T', ' ')}" + (f" · {vt.notes}" if vt.notes else ""))
+
+# -- prior OPD records scanned with OCR
+st.subheader("Attached OCR records (prior OPD)")
+if not rec.timeline:
+    st.info("No scanned prescriptions or lab reports attached.")
+for e in sorted(rec.timeline, key=lambda e: e.date, reverse=True):
+    tag = "✏ edited by doctor" if e.editedByDoctor else "as read by OCR"
+    with st.expander(f"{e.date} · {e.type.replace('_', ' ')} · {len(e.items)} item(s) · {tag}", expanded=True):
+        if e.diagnoses:
+            st.write("**Diagnoses as written:** " + "; ".join(e.diagnoses))
+        if e.items:
+            cols = ["nameAsWritten", "strength", "frequencyAsWritten", "durationAsWritten", "notes"] if e.type == "prescription" \
+                else ["test", "value", "unit", "referenceRange", "flag"]
+            df = pd.DataFrame(e.items)
+            show = [c for c in cols if c in df.columns and df[c].notna().any()] or list(df.columns[:5])
+            st.dataframe(df[show], hide_index=True, width="stretch")
+        st.caption(f"Confirmed by {getattr(e, 'confirmedBy', None) or 'unknown'} · source: {e.source}"
+                   + (f" · edited fields: {', '.join(e.editedFields)}" if e.editedFields else ""))
+
+# -- doctor's own notes
+st.subheader("Doctor's notes (assessment / plan)")
+if not editable:
+    st.caption("Read-only for staff.")
+with st.form(f"notes_{token}"):
+    notes = st.text_area("Notes", value=rec.doctorNotes, height=140, disabled=not editable, key=f"notes_{token}_t",
+                         placeholder="Assessment, investigations, plan, follow-up. Written by the doctor.")
+    if st.form_submit_button("Save notes", type="primary", disabled=not editable):
+        store.save(rec.model_copy(update={"doctorNotes": notes.strip()}))
+        st.session_state[f"saved_{token}"] = "Notes saved."
+        st.rerun()
+st.divider()
+st.header("Intake summary (editable)")
 
 if msg := st.session_state.pop(f"saved_{token}", None):      # shown once, after the rerun that reloads the saved record
     st.success(msg)

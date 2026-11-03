@@ -78,6 +78,26 @@ class DoctorEdit(BaseModel):
     editedAt: str
 
 
+class Vitals(BaseModel):
+    """Measured by staff at triage (not patient-reported). None = not measured. Bounds reject typos, not diagnoses."""
+    bpSystolic: Optional[int] = Field(None, ge=40, le=300)
+    bpDiastolic: Optional[int] = Field(None, ge=20, le=200)
+    pulse: Optional[int] = Field(None, ge=20, le=250)
+    tempC: Optional[float] = Field(None, ge=30, le=45)
+    spo2: Optional[int] = Field(None, ge=50, le=100)
+    respRate: Optional[int] = Field(None, ge=4, le=80)
+    weightKg: Optional[float] = Field(None, gt=0, le=400)
+    heightCm: Optional[float] = Field(None, ge=30, le=250)
+    bloodGlucose: Optional[float] = Field(None, ge=10, le=900)   # mg/dL
+    notes: str = ""
+    recordedBy: Optional[str] = None
+    recordedAt: Optional[str] = None      # ISO-8601
+
+    def any_measured(self) -> bool:
+        return any(getattr(self, f) is not None for f in ("bpSystolic", "bpDiastolic", "pulse", "tempC", "spo2",
+                                                          "respRate", "weightKg", "heightCm", "bloodGlucose"))
+
+
 class PatientRecord(BaseModel):
     schemaVersion: str = SCHEMA_VERSION
     token: str
@@ -96,6 +116,8 @@ class PatientRecord(BaseModel):
     intakeDurationSeconds: Optional[int] = None
     fieldsCaptured: int = 0
     assignedDoctor: Optional[str] = None   # doctor id chosen by the patient (data/doctors.json); None = no preference
+    vitals: Optional[Vitals] = None        # entered by staff on the Staff page
+    doctorNotes: str = ""                  # assessment / plan, written by the doctor
     doctorEdits: dict[str, DoctorEdit] = {}
     editedByDoctor: bool = False
     editedFields: list[str] = Field(default_factory=list)

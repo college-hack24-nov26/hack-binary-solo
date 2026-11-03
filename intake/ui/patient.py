@@ -11,7 +11,9 @@ from intake.models import load_graph
 from intake.redflags import load_rules
 from intake.session import IntakeSession
 from intake.ui import common
+from intake.ui.gate import signed_in
 from intake.ui.bodymap_input import body_map_input
+from intake.ui.ocr_panel import render as render_scan
 from intake.ui.strings import t
 from records import store
 
@@ -76,6 +78,19 @@ if sess.declined:
     st.button(t("new", lang), on_click=_new)
     st.stop()
 
+if ss.stage == "scan":                             # optional: scan old records before the quiz (staff / doctor signed in)
+    if not signed_in():
+        ss.stage = "flow"
+        st.rerun()
+
+    def _to_quiz():
+        ss.stage = "flow"
+        st.rerun()
+
+    st.subheader("Scan old records")
+    render_scan(ss.auth, sess, _to_quiz)
+    st.stop()
+
 if ss.stage == "doctor":                           # patient picks the doctor after the quiz
     st.subheader(t("choose_doctor", lang))
     st.caption(t("choose_doctor_hint", lang))
@@ -115,7 +130,8 @@ if view is None:                                   # path complete -> review scr
             st.rerun()
     if st.button(t("confirm", lang), type="primary", use_container_width=True):
         rec = sess.finish()
-        rec = rec.model_copy(update={"doctorEdits": {}, "editedFields": []})
+        prior = store.load(sess.token)   # staff may have recorded vitals while the patient was answering
+        rec = rec.model_copy(update={"doctorEdits": {}, "editedFields": [], "vitals": prior.vitals if prior else None})
         store.save(rec)
         ss.stage = "doctor"
         st.rerun()

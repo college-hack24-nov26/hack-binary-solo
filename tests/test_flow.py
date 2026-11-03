@@ -49,7 +49,7 @@ def test_step1_login_moves_to_step2():
     at.text_input[0].set_value("nurse")
     at.text_input[1].set_value(PW)
     at.button[0].click().run()
-    assert not at.exception and at.title[0].value == "Step 2 · Scan old records"
+    assert not at.exception and at.subheader[0].value == "Scan old records"
 
 
 def test_step1_wrong_password_stays_on_sign_in():
@@ -120,3 +120,66 @@ def test_attached_scan_appears_in_the_saved_record_after_the_quiz_consent():
     next(b for b in at.button if "Confirm and attach" in b.label).click().run()
     s.answer("consent", "agree")
     assert s.to_record().timeline[0].type == "prescription"
+
+
+def test_patient_section_starts_with_scan_stage_then_quiz_when_signed_in():
+    at = app("intake/ui/patient.py", "doctor").run()
+    assert not at.exception and at.session_state["stage"] == "scan"
+    assert at.subheader[0].value == "Scan old records"
+    next(b for b in at.button if "Skip scanning" in b.label).click().run()
+    assert at.session_state["stage"] == "flow" and not at.exception
+
+
+def test_open_kiosk_skips_the_scan_stage():
+    at = app("intake/ui/patient.py").run()
+    assert at.session_state["stage"] == "flow"
+
+
+def _record_with_scan():
+    from records.schema import TimelineEntry
+    s = IntakeSession(load_graph(), load_rules())
+    s.timeline.append(TimelineEntry(date="12/03/2024", type="prescription", confirmedBy="dr",
+                                    items=[{"nameAsWritten": "Tab. Paracetamol", "strength": "500 mg", "frequencyAsWritten": "1-0-1"}],
+                                    diagnoses=["fever"]))
+    s.answer("consent", "agree")
+    store.save(s.to_record())
+    return s.token
+
+
+def test_staff_vitals_saved_then_visible_to_doctor_with_ocr_prior_opd():
+    token = _record_with_scan()
+    at = app("intake/ui/staff.py", "staff").run()
+    assert not at.exception
+    labels = {n.label: n for n in at.number_input}
+    labels["BP systolic (mmHg)"].set_value(150)
+    labels["BP diastolic (mmHg)"].set_value(95)
+    labels["SpO₂ (%)"].set_value(91)
+    next(b for b in at.button if b.label == "Save vitals").click().run()
+    v = store.load(token).vitals
+    assert (v.bpSystolic, v.bpDiastolic, v.spo2, v.recordedBy) == (150, 95, 91, "staff")
+
+    at = app("intake/ui/doctor.py", "doctor").run()
+    assert not at.exception
+    assert "Attached OCR records (prior OPD)" in [x.value for x in at.subheader]
+    assert any("prescription" in e.label for e in at.expander)
+    assert any("150/95" in m.value for m in at.metric)
+
+
+def test_vitals_rejected_when_systolic_not_above_diastolic():
+    token = _record_with_scan()
+    at = app("intake/ui/staff.py", "staff").run()
+    labels = {n.label: n for n in at.number_input}
+    labels["BP systolic (mmHg)"].set_value(80)
+    labels["BP diastolic (mmHg)"].set_value(90)
+    next(b for b in at.button if b.label == "Save vitals").click().run()
+    assert store.load(token).vitals is None and any("Systolic" in e.value for e in at.error)
+
+
+def test_staff_cannot_save_doctor_notes():
+    token = _record_with_scan()
+    rec = store.load(token)
+    store.save(rec.model_copy(update={"doctorNotes": "review in 3 days"}))
+    from records.schema import Vitals
+    store.save(store.load(token).model_copy(update={"vitals": Vitals(pulse=88)}))
+    at = app("intake/ui/doctor.py", "staff").run()
+    assert not at.exception and next(b for b in at.button if b.label == "Save notes").disabled
