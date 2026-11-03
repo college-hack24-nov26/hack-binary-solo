@@ -4,7 +4,6 @@ import stat
 import time
 
 import pytest
-from streamlit.testing.v1 import AppTest
 
 from ocr import auth
 
@@ -61,31 +60,3 @@ def test_idle_expiry():
     assert not auth.idle_expired(time.time() - 10, 900)
 
 
-def _app(users, monkeypatch):
-    monkeypatch.setenv("OCR_USERS_FILE", str(users))
-    return AppTest.from_file(APP, default_timeout=60)
-
-
-def test_app_blocks_until_login(users, monkeypatch):
-    at = _app(users, monkeypatch).run()
-    assert not at.exception
-    assert [b.label for b in at.button] == ["Sign in"]  # only the login form
-    assert at.text_input[1].proto.type == 1  # masked password field
-    assert not at.file_uploader and not at.checkbox  # no OCR controls before login
-
-
-def test_app_login_flow_and_role_gating(users, monkeypatch):
-    at = _app(users, monkeypatch).run()
-    at.text_input[0].input("nurse1"); at.text_input[1].input("wrong-pass"); at.button[0].click().run()
-    assert at.session_state["auth"] is None and at.error
-    at.text_input[0].input("nurse1"); at.text_input[1].input("another-pass1"); at.button[0].click().run()
-    assert at.session_state["auth"]["role"] == "staff" and at.checkbox  # consent box now visible
-
-
-def test_app_idle_timeout_drops_session(users, monkeypatch):
-    at = _app(users, monkeypatch).run()
-    at.text_input[0].input("dr.test"); at.text_input[1].input("correct-horse"); at.button[0].click().run()
-    assert at.session_state["auth"]
-    at.session_state["auth"]["last_seen"] = time.time() - 99999
-    at.run()
-    assert at.session_state["auth"] is None and not at.checkbox

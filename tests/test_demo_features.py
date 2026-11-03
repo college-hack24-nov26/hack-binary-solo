@@ -5,10 +5,9 @@ from datetime import date
 from pathlib import Path
 
 import pytest
-from streamlit.testing.v1 import AppTest
 
 from dosing import audit, audit_view, demo, service
-from intake.ui import result_card
+from api import result_card
 from records import store
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -19,12 +18,6 @@ def datadir(tmp_path, monkeypatch):
     monkeypatch.setenv("INTAKE_DATA_DIR", str(tmp_path))
     monkeypatch.delenv("DEMO_MODE", raising=False)
     return tmp_path
-
-
-def page(name, role="doctor"):
-    at = AppTest.from_file(str(ROOT / "intake" / "ui" / name), default_timeout=60)
-    at.session_state["auth"] = {"username": f"test_{role}", "role": role, "last_seen": time.time()}
-    return at
 
 
 # ------------------------------------------------------------------ fixtures through the service
@@ -88,32 +81,8 @@ def test_needs_input_fields_map_to_inputs():
     assert result_card.field_kind("age_exact") == ("num", "age_exact_days")
 
 
-# ------------------------------------------------------------------ Load demo patient + result card through the UI
-def test_load_demo_patient_is_hidden_without_demo_mode_and_for_non_doctors(monkeypatch):
-    store.save(demo.record("child_fever"))
-    assert not [b for b in page("doctor.py").run().button if b.key == "demo_load"]
-    monkeypatch.setenv("DEMO_MODE", "1")
-    assert [b for b in page("doctor.py").run().button if b.key == "demo_load"]
-    assert not [b for b in page("doctor.py", "staff").run().button if b.key == "demo_load"]
 
 
-def open_fixture(monkeypatch, key):
-    monkeypatch.setenv("DEMO_MODE", "1")
-    at = page("doctor.py").run()
-    at.selectbox(key="demo_pick").select(key).run()
-    at.button(key="demo_load").click().run()
-    assert not at.exception
-    tok = demo.DEMO_PATIENTS[key]["token"]
-    assert at.session_state["doctor_patient"] == tok and store.load(tok) is not None
-    chk = demo.DEMO_PATIENTS[key]["check"]
-    at.selectbox(key=f"dc_drug_{tok}").select(chk["drug"]).run()
-    ind = next(o for o in at.selectbox(key=f"dc_ind_{tok}_{chk['drug']}").options if o.startswith(chk["indication"].split(" (")[0]))
-    at.selectbox(key=f"dc_ind_{tok}_{chk['drug']}").select(ind).run()
-    none = [b for b in at.button if b.key and b.key.startswith("dc_hnone_")]
-    if none:
-        none[0].click().run()
-        [b for b in at.button if b.key and b.key.startswith("dc_hsave_")][0].click().run()
-    return at, tok, chk
 
 
 def dose_metrics(at):
@@ -124,49 +93,10 @@ def card_text(at):
     return " ".join(x.value for coll in (at.error, at.success, at.info, at.warning, at.markdown) for x in coll)
 
 
-def test_ui_child_fever_reaches_dose_ready_header(monkeypatch):
-    at, tok, _ = open_fixture(monkeypatch, "child_fever")
-    at.checkbox(key=f"dc_cw_{tok}").check().run()
-    at.button(key=f"dc_run_{tok}").click().run()
-    assert not at.exception and "Dose ready for doctor review" in card_text(at)
-    assert any(e["event"] == "evaluate" for e in audit.read())
 
 
-def test_ui_needs_input_checklist_recomputes_inline(monkeypatch):
-    at, tok, _ = open_fixture(monkeypatch, "diabetes_kidney")
-    at.checkbox(key=f"dc_cw_{tok}").check().run()
-    at.button(key=f"dc_run_{tok}").click().run()
-    assert "More information needed" in card_text(at) and "scr_mg_dl" in card_text(at)
-    n_before = len([e for e in audit.read() if e["event"] == "evaluate"])
-    at.selectbox(key=f"dc_need_{tok}_selected_rule_id").select("metformin#0")      # the checklist also asks for the rule
-    at.text_input(key=f"dc_need_{tok}_scr_mg_dl").input("1.0")
-    next(b for b in at.button if b.label == "Update and recompute").click().run()
-    assert not at.exception
-    t = card_text(at)
-    assert "Dose ready for doctor review" in t and "More information needed" not in t
-    assert len([e for e in audit.read() if e["event"] == "evaluate"]) == n_before + 1
-    assert audit.read()[-1]["inputs"]["doctor_inputs"]["scr_mg_dl"] == 1.0
 
 
-def test_ui_blocked_shows_no_dose_then_override_shows_it_in_red(monkeypatch):
-    at, tok, _ = open_fixture(monkeypatch, "penicillin_allergy")
-    at.button(key=f"dc_run_{tok}").click().run()
-    t = card_text(at)
-    assert "Blocked: safety rule" in t and "Source:" in t
-    assert not dose_metrics(at), "no dose figure may appear on a blocked card"
-    assert "Hidden until an override is recorded" in " ".join(m.value for m in at.markdown)
-    # too short / no category: refused by the form, still blocked
-    at.selectbox(key=f"dc_ovc_{tok}").select("benefit_outweighs_risk")
-    at.text_area(key=f"dc_ov_{tok}").input("short")
-    next(b for b in at.button if b.label == "Record override and show dose").click().run()
-    assert "Blocked: safety rule" in card_text(at) and not dose_metrics(at) and not [e for e in audit.read() if e["event"] == "override"]
-    at.text_area(key=f"dc_ov_{tok}").input("Mild reaction only; ID consult done")
-    next(b for b in at.button if b.label == "Record override and show dose").click().run()
-    assert not at.exception
-    t = card_text(at)
-    assert ":red[**Override recorded**]" in t and "Benefit outweighs risk" in t and dose_metrics(at)
-    ov = [e for e in audit.read() if e["event"] == "override"]
-    assert ov and ov[0]["override_category"] == "benefit_outweighs_risk" and ov[0]["override_reason"].startswith("Mild reaction")
 
 
 # ------------------------------------------------------------------ audit viewer
@@ -211,27 +141,6 @@ def test_deleting_a_line_is_detected():
     lines = p.read_text(encoding="utf-8").splitlines()
     p.write_text("\n".join(lines[:1] + lines[2:]) + "\n", encoding="utf-8")
     assert not audit.verify()
-
-
-def test_audit_page_is_doctor_only_and_has_no_edit_controls():
-    seeded_log()
-    for role in ("staff",):
-        at = page("audit_log.py", role).run()
-        assert any("not allowed" in e.value for e in at.error)
-        assert not at.dataframe
-    at = page("audit_log.py", "doctor").run()
-    assert not at.exception and any("Chain verified" in s.value for s in at.success)
-    assert at.dataframe and at.expander
-    assert not [b for b in at.button if any(w in (b.label or "").lower() for w in ("delete", "edit", "remove"))]
-    assert {"al_patient", "al_drug", "al_action"} <= {s.key for s in at.selectbox}
-
-
-def test_audit_page_shows_chain_broken_after_tampering():
-    seeded_log()
-    p = audit.log_path()
-    p.write_text(p.read_text(encoding="utf-8").replace('"status": "blocked"', '"status": "ok"', 1), encoding="utf-8")
-    at = page("audit_log.py").run()
-    assert any("Chain broken" in e.value for e in at.error)
 
 
 # ------------------------------------------------------------------ reset script

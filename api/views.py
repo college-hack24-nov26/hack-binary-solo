@@ -64,9 +64,10 @@ def board_row(rec: PatientRecord, me: Optional[Doctor] = None) -> dict:
 
 
 def board_sort_key(row: dict):
-    """Urgent first, then more red flags, then my patients (doctor), then longest waiting (same order idea as staff.py)."""
+    """A doctor's own patients first (as the old doctor page did), then most urgent flags, most flags, longest unchanged
+    (as the old staff board did). Staff rows are never "mine", so the staff board is urgent-first."""
     urgent = sum(1 for f in row["redFlags"] if f["severity"] == "urgent")
-    return (-urgent, -len(row["redFlags"]), not row["mine"], row["updatedAt"])
+    return (not row["mine"], -urgent, -len(row["redFlags"]), row["updatedAt"])
 
 
 def doctor_for(username: str) -> Optional[Doctor]:

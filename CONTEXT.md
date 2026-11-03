@@ -8,25 +8,24 @@ Two things sit OUTSIDE the repo folder, one level up: `../Final_Drugs_data/` (th
 1. What: an offline clinic OPD app. A patient answers an adaptive quiz (en/hi/mr); staff see red flags; a doctor gets a summary and a deterministic dosage-check engine; old paper records can be scanned by a local vision model.
 2. Users: patients (kiosk quiz), staff (red-flag board, vitals), doctors (summary, dosage check, audit log). Patients never see dosing output.
 3. Offline/local-only: only allowed outbound call is `localhost:11434` (Ollama); data are local JSON files; an offline badge and `OFFLINE_STRICT` guard prove it. Dosing code has no network, no LLM, no randomness.
-4. Status: prototype. Every formulary drug is `verified: false`; the UI shows "Prototype data, not clinically verified". Synthetic data only. Tests: 838 pass.
+4. Status: prototype. Every formulary drug is `verified: false`; the UI shows "Prototype data, not clinically verified". Synthetic data only. UI: FastAPI (`api/`) + React (`web/`) since 2026-11-04 (Streamlit retired). Tests: 829 Python, 17 Vitest, 16 Playwright pass.
 5. Hackathon context: not stated in code. Folder is `Phaltan_hacktahon`; a "Hackathon 2K26 at College of Engineering Phaltan, 3-4 Nov 2026" is NOT in the repo (hackathon name/rules/judging: not found). `docs/DEMO_SCRIPT.md` is a ~4 minute demo script.
 
 ## 2. Tech stack, run, tests, demo
-Stack: Python (CLAUDE.md says 3.14; tests also passed on 3.13), Streamlit UI, pydantic models, pytest, pandas, pillow, requests.
-`requirements.txt`: streamlit, pillow, pydantic, requests, pytest, pandas. OCR = Qwen3-VL via local Ollama (`OCR_MODEL`, default `qwen3-vl:8b-instruct`). Optional doctor-summary paragraph = local Ollama `INTAKE_LLM_MODEL` (default `qwen3:8b`), off by default.
+Stack: Python 3.14 (also 3.13), FastAPI + uvicorn (one worker), pydantic, pytest, pillow, requests; web: Vite, React 19, TypeScript, Tailwind v4, TanStack Query, Zod, lucide-react, self-hosted Noto Sans/Devanagari, Vitest, Playwright + axe.
+`requirements.txt`: pillow, pydantic, requests, pytest, fastapi, uvicorn, python-multipart, httpx. Web deps: `web/package.json`. OCR = Qwen3-VL via local Ollama (`OCR_MODEL`, default `qwen3-vl:8b-instruct`). Optional doctor-summary paragraph = local Ollama `INTAKE_LLM_MODEL` (default `qwen3:8b`), off by default.
 
 ```bash
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 cp .env.example .env                                   # optional; defaults work
 .venv/bin/python scripts/create_user.py <name> <doctor|staff>   # once; writes data/users.json (gitignored)
-.venv/bin/streamlit run main_app.py                    # main 3-step flow (sign in -> patient -> staff/doctor/dosage/audit)
-.venv/bin/streamlit run intake_app.py                  # older: quiz + staff + doctor only
-.venv/bin/streamlit run app.py                         # older: OCR review UI only
-.venv/bin/python -m pytest -q                          # 838 passed in ~50 s (verified); dosing only: tests/test_dosing_*.py
+.venv/bin/python scripts/run_server.py               # builds web/ if needed, serves /kiosk, /staff, /doctor and /api on :8000
+.venv/bin/python -m pytest -q                          # 829 passed in ~25 s; API: tests/api; dosing only: tests/test_dosing_*.py
+npm --prefix web test; npm --prefix web run e2e        # 17 Vitest; 16 Playwright (kiosk, staff, doctor, axe, offline, viewports)
 .venv/bin/python scripts/dosing_demo.py                # the 3 demo patients as text (temp data folder)
 .venv/bin/python scripts/reset_demo_data.py            # remove demo records + demo audit entries (--rechain-others)
-DEMO_MODE=1 .venv/bin/streamlit run main_app.py                    # demo: "Load demo patient" + red DEMO bar
-OFFLINE_STRICT=1 DEMO_MODE=1 .venv/bin/streamlit run main_app.py   # non-localhost connect raises + is logged
+DEMO_MODE=1 .venv/bin/python scripts/run_server.py                    # demo: "Load demo patient" + red DEMO bar + /gallery
+OFFLINE_STRICT=1 DEMO_MODE=1 .venv/bin/python scripts/run_server.py   # non-localhost connect raises + is logged
 ```
 Other scripts: `validate_graph.py`, `intake_cli.py [en|hi|mr]`, `intake_smoke.py`, `make_fixtures.py` (writes `fixtures/*.png` + `.expected.json`; both gitignored), `ocr_smoke.py` (needs Ollama), `list_unsourced_rules.py`, `list_unreviewed_translations.py`, `list_boundary_overlaps.py`, `list_region_followups.py`.
 Dosing and the quiz need no Ollama; OCR scanning does.
@@ -50,15 +49,15 @@ Env flags (from `.env.example`, `dosing/config.py`, `intake/offline.py`):
 
 ## 3. Repo map
 Top level:
-- `main_app.py` - main entry (navigation: Sign in; Patient; Staff board; Doctor summary; Dosage check; Audit log for doctors).
-- `intake_app.py` - older entry (Patient, Staff, Doctor). `app.py` - older OCR-only review UI.
+- `api/` - FastAPI app (`main.py` create_app, `deps.py` lock/login/roles, `routers/`, `sessions.py`, `events.py`, `result_card.py`). `web/` - React app (`src/kiosk`, `src/staff`, `src/doctor`, `src/components`, `src/dosing`, `src/gallery`, `e2e/`).
+- The Streamlit entry points (`main_app.py`, `intake_app.py`, `app.py`) and pages (`intake/ui/`) were removed in the rebuild; `docs/REBUILD_PLAN.md` maps every old feature to its new place.
 - `README.md` - three-step flow, OCR, quiz, demo features. `CLAUDE.md` - commands, layout, hard rules for Claude sessions.
 - `PROMPT_demo_features.md` - a prompt file used to ask for the demo features (not code).
 - `.env.example`, `.gitignore` (ignores `.venv/`, `.env*`, `tmp/`, `fixtures/*.png`, `fixtures/*.expected.json`, `data/users.json`, `data_local/`), `requirements.txt`.
-- `docs/` - `DOSING_LOGIC.md` (engine rules, Updates 2 and 3), `DOSING_DATA_ISSUES.md` (26 numbered data problems), `DEMO_SCRIPT.md`.
+- `docs/` - `DOSING_LOGIC.md` (engine rules, Updates 2 and 3), `DOSING_DATA_ISSUES.md` (26 numbered data problems), `DEMO_SCRIPT.md`, `REBUILD_PLAN.md`, `DESIGN.md`, `UI_HIGHLIGHTS.md`, `screens/` (screenshots + demo.webm).
 - `data/` - `intake_graph.json` (quiz), `red_flags.json` (10 draft rules), `body_regions.json` (54 regions), `doctors.json` (4 synthetic doctors), `formulary.json` (OCR seed list of 15 generic names + aliases; NOT the dosing formulary), `users.json` (logins, gitignored).
 - `dosing/` - the dosage engine (below). `dosing/data/` - `med_synonyms.json`, `safety_map.json`, `plausibility.json`, `growth_reference.json`.
-- `intake/` - quiz engine and Streamlit pages. `intake/ui/` - pages. `records/` - patient record schema/store. `ocr/` - local OCR module.
+- `intake/` - quiz engine, red flags, summary, offline guard. `records/` - patient record schema/store. `ocr/` - local OCR module.
 - `fixtures/` - OCR test images (rx_01..03, lab_01) and `fixtures/demo/demo_patient_{a,b,c}.json`.
 - `scripts/` - CLIs listed in section 2. `tests/` - 29 test files + `snapshots/summary_adult_chest_pain.txt`.
 - `data_local/` (gitignored runtime data: `records/PT-*.json`, `audit/dosing_audit.jsonl`), `tmp/ocr` (gitignored), `.venv/`, `.pytest_cache/`.
@@ -66,7 +65,7 @@ Not found in the repo folder: LICENSE, Dockerfile, CI config, setup/pyproject.
 
 `dosing/` files: `engine.py` (evaluate entry point), `service.py` (record glue, confirm, history), `mapper.py` (quiz -> context), `context.py` (PatientContext + provenance), `rules.py` (rule selection), `calc.py` (dose arithmetic), `derived.py` (renal formulas, safe AST eval), `products.py` (round to products), `safety.py` (contraindications, pregnancy, renal, hepatic, warnings), `interactions.py`, `history.py` (History check), `meds.py` (synonym parsing), `ocr_meds.py` (confirmed scan meds), `formulary.py` (load/validate), `config.py`, `audit.py`, `audit_view.py`, `messages.py` (all user strings, English only), `demo.py`.
 `intake/` files: `models.py` (pydantic graph), `engine.py` (pure flow), `conditions.py`, `redflags.py`, `session.py` (IntakeSession), `bodymap.py`, `summary.py` (doctor summary), `llm_summary.py`, `offline.py`, `doctors.py`, `demo.py`, `simulate.py`, `synthetic.py`.
-`intake/ui/`: `patient.py`, `staff.py`, `doctor.py`, `dosage.py`, `dosing_panel.py`, `result_card.py`, `audit_log.py`, `demo_loader.py`, `offline_badge.py`, `gate.py`, `signin.py`, `ocr_panel.py`, `ocr_scan.py`, `bodymap_input.py` (+ `bodymap_component/index.html`), `strings.py`, `common.py`.
+UI code lives in `web/src/` (React) over `api/routers/` (FastAPI).
 `records/`: `schema.py` (PatientRecord), `build.py` (answers -> record), `store.py` (JSON store), `vitals.py`. `ocr/`: `service.py` (`extract()`/`health()`), `prompt.py`, `schema.py`, `frequency.py`, `formulary.py` (fuzzy match to the 15 names), `postprocess.py`, `timeline.py`, `auth.py`, `ollama_client.py`, `imageprep.py`, `session.py`, `config.py`.
 
 ## 4. Quiz
@@ -142,12 +141,14 @@ Engine-side data (`dosing/data/`, all DRAFT, a clinician/pharmacist should revie
 - `growth_reference.json` - status "needs data": structure only, empty `rows` for WHO CGS 0-5 y, WHO 2007 5-10 y, IAP 2015 5-18 y, adult limits (boys/girls). Row format `{age_months, minus3sd_kg, plus3sd_kg}`. The check flags about -3 SD to +3 SD and never corrects weight.
 Other data: `data/formulary.json` (OCR name seed, 15 generics + aliases), `data/doctors.json` (dr_general, dr_heart, dr_child, dr_women; synthetic), `fixtures/demo/demo_patient_{a,b,c}.json`.
 
-## 7. UI (Streamlit)
-Pages (`main_app.py`): 1 Sign in (`signin.py`/`gate.py`, roles staff|doctor, idle timeout 900 s, lockout after 5 failures) -> 2 Patient (optional OCR scan, doctor confirms each scan; then quiz: consent, questions with Back/Skip/"Not sure", language toggle en/hi/mr, review, doctor choice) -> Staff board (red flags first with rule id + triggering answers; vitals entry) -> Doctor summary (editable structured summary with edit tracking, language selector, highlighted body diagrams, optional AI paragraph, Demo patient box) -> Dosage check -> Audit log (doctor only; the page also refuses other roles).
-Dosage check panel (`dosing_panel.py`, `result_card.py`; doctor-only, patient never sees it): pick patient, drug, indication, optional form/route/visit drugs/"show every rule"; History check (only unknown items + "None of these apply" + Save); tick-box to confirm patient-reported weight; **Run dosage check**. Result card header per status: "Dose ready for doctor review" (ok), "More information needed" (needs_input, with an inline checklist and **Update and recompute**), "Blocked: safety rule" (blocked, with sources and the override form), "Refused: no data for this case". Dose, ranges, regimen and steps are hidden on blocked/refused. Red "Override recorded" line after an override. "I have checked these" tick-box gates Confirm. Always shows "Prototype data, not clinically verified".
-Offline badge (`offline_badge.py`, rendered on every page of all three entry apps): states the only allowed target (`OLLAMA_URL`, localhost) and whether it answers; "Network details" lists local services; shows "Internet: unreachable" or amber "reachable (not used by this app)" from a cached background TCP probe (30 s refresh). Strict mode explains the guard.
-Audit viewer (`audit_log.py`, `audit_view.py`): read-only table newest first (time, doctor, patient, drug, status, action: evaluated/confirmed/override/history), filters (patient, drug, action, date range), row expander (inputs, provenance, steps, warnings, interactions, blocks, sources, override category + reason), JSON/CSV export of shown rows, "Chain verified/broken".
-Demo loader (`demo_loader.py`, `dosing/demo.py`): with `DEMO_MODE=1` and a doctor signed in, **Load demo patient** replays a fixture's answers through the real `IntakeSession`, saves the record and selects it. `demo.run_fixture(key)` runs the check through `service.evaluate_for_record` (audit written). The Patient page also has a separate pre-filled chest-pain "demo" button. Fixtures: A = 4 y, 16 kg, fever, paracetamol (expect ok after weight confirmed; token PT-DEMOA2); B = adult with diabetes + kidney disease, metformin (expect needs_input for rule pick + creatinine, then ok); C = penicillin allergy, amoxicillin (expect blocked, then override; token PT-DEMOC2). Step-by-step timings and expected numbers: `docs/DEMO_SCRIPT.md`.
+## 7. UI (FastAPI + React; Streamlit retired 2026-11-04)
+One server (`scripts/run_server.py`, one uvicorn worker, 0.0.0.0:8000) serves `/api` and the built React app. Details: `docs/REBUILD_PLAN.md` (parity checklist, permissions matrix, API list), `docs/DESIGN.md` (tokens, review log), `docs/UI_HIGHLIGHTS.md`.
+- **Kiosk `/kiosk`** (no login; a per-session `X-Kiosk-Key` opens only its own token): language -> consent -> one question per screen (tiles, keypad, 0-10, multi-choice with exclusive none, free text, SVG body map with list alternative) with Back / Not sure / Skip -> review and edit -> choose doctor -> token slip (queue number, room, floor-line colour) -> auto reset. Listen again only with a local speech voice; Call staff; larger text and high contrast; 90 s idle reset. Sessions rebuild from the saved record after a restart. Patients see only red-flag patient messages.
+- **Staff `/staff`** (staff or doctor login): live board via SSE (10 s polling fallback), urgent red flags pinned with draft label and triggering answers, help-request banner, table with search/sort/filters and bulk doctor assignment, patient panel (answers in en/hi/mr, vitals with server bounds, doctor reassignment, scan upload for the doctor to confirm). No dosing.
+- **Doctor `/doctor`** (doctor login): my queue; patient workspace (Summary with edit tracking and body diagrams, Vitals, Timeline with scan confirmation, Notes, Dosage check, Dosing record); Audit log (cursor-paged, chain seal, export, no edit/delete); Load demo patient (DEMO_MODE).
+- **Dosage check** mirrors the old panel and result card: drug combobox, indication, optional form/route/visit drugs/every rule, History check, weight confirmation, Run; result headers per status, needs_input checklist with Update and recompute, override form (category + 10 chars, server-enforced, audit-logged), dose ruler for ok only, Confirm gated by the server's canConfirm (server-cached result only).
+- **Auth**: `ocr/auth.py` users, lockout after 5 failures, idle timeout; in-memory sessions with an httpOnly SameSite=Strict cookie; every mutating call needs `X-Requested-With: medikiosk`.
+- **Offline badge**: `GET /api/system/offline-status` (same `intake/offline.py` status and headline).
 
 ## 8. Hard rules (from CLAUDE.md and docs; do not break)
 - No LLM, network or randomness in `dosing/`. Pure functions; same input gives byte-identical output.
@@ -161,7 +162,7 @@ Demo loader (`demo_loader.py`, `dosing/demo.py`): with `DEMO_MODE=1` and a docto
 - Synthetic data only; local-only network (localhost). Tests derive expected values from the formulary JSON, not typed-in numbers (except arithmetic tests). Engine strings live in `dosing/messages.py`. Match surrounding style; no new frameworks.
 
 ## 9. Current state
-Tests: 838 passed in ~50 s (run on a copy of the repo with Python 3.13 and the formulary in the sibling folder). 29 test files; dosing: engine (45 tests), mapper (28), scenarios, data, audit, interactions, OCR meds, UI; also quiz, red flags, body map, offline, auth, OCR, demo features.
+Tests: 829 Python (domain + `tests/api/`: role matrix over every route, CSRF, lockout, idle, write-lock concurrency, SSE, kiosk parity with IntakeSession, restart rebuild, idempotent finish, byte-identical evaluate, override and confirm rules, audit paging and tampering, error states, OFFLINE_STRICT), 17 Vitest (no dose number unless ok, ruler only for ok, components), 16 Playwright (full Hindi kiosk flow, three demo scenarios, live staff board, axe, offline, four viewports, Ollama down). The 55 Streamlit AppTest functions were removed; see `docs/REBUILD_PLAN.md`.
 Done: quiz graph + 10 draft red flags + body map; record store; doctor summary; staff board; doctor login; local OCR with doctor confirmation; dosing engine for 15 drugs (rule selection, caps, rounding, renal, hepatic, pregnancy, interactions, History check, overrides, hash-chained audit); result card; audit viewer; offline badge + strict guard; demo patients + reset script; demo script.
 Not done / not found: verified clinical data; growth tables; Hindi/Marathi for dosing messages (`messages.py` is English only); native review of any hi/mr text; sources for the 10 red-flag rules; IBW/ABW selection rule; G6PD logic (field shown only); CrCl for children and ages 16-18; REST API for OCR (functions are framework-free only); formulary inside the repo; deployment/packaging, CI, license.
 Known issues (`docs/DOSING_DATA_ISSUES.md`, 26 items; formulary not modified):
@@ -191,5 +192,5 @@ Where to add things:
 - Add a quiz question or red-flag rule: edit `data/intake_graph.json` / `data/red_flags.json` only when asked (CLAUDE.md forbids unrequested edits), give en/hi/mr text, run `scripts/validate_graph.py` and the quiz tests. Map new facts into the engine in `dosing/mapper.py`.
 - Add a demo fixture: create `fixtures/demo/demo_patient_<x>.json` with `key`, `displayName`, `title`, `token`, `synthetic: true`, `answers` (by graph node id), `check` (`drug`, `indication`, `selected_rule_id`, `history`: e.g. `none_apply`) and `runs` (`label`, optional `confirmed`/`doctor_inputs`/override fields, `expect_status`). Register it in `dosing/demo.py`; expected statuses are checked by `tests/test_dosing_scenarios.py` and `tests/test_demo_features.py`. Take expected numbers from `scripts/dosing_demo.py` output, not from memory, and update `docs/DEMO_SCRIPT.md`.
 - Add an engine message: `dosing/messages.py` (add hi/mr there when translations are available).
-- Add a UI string: `intake/ui/strings.py` (en/hi/mr tuple).
+- Add a kiosk UI string: `web/src/i18n/kiosk.json` (en/hi/mr, hi/mr machine-drafted); staff/doctor screens are English.
 - Before finishing any change: `.venv/bin/python -m pytest -q`; keep the banner; do not mark anything verified.

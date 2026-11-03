@@ -1,6 +1,6 @@
 """Pure wording for the Dosage check result card: one plain header per status, the reason in one sentence, the rule or input
 responsible, sources for blocks and a fill-in checklist for needs_input. Display only: it never computes or alters a dose.
-Moved here from intake/ui/result_card.py (which re-exports it) so the API does not import Streamlit."""
+Moved here from the retired Streamlit result card; tests in tests/test_demo_features.py."""
 from dosing.config import OVERRIDE_CATEGORIES
 from dosing.engine import CALC_INPUTS, NUM_FIELDS, STR_FIELDS, is_tri_field
 

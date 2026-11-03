@@ -190,10 +190,7 @@ function SummarySection({ pv }: { pv: PatientView }) {
               </span>
               {save.isError && <span className="text-sm font-semibold text-red">{(save.error as Error).message}</span>}
             </div>
-            <section className="rounded-panel border border-line bg-surface p-4">
-              <h3 className="text-md font-semibold">Short paragraph (template, deterministic)</h3>
-              <p className="mt-1 text-base">{s.data.paragraph}</p>
-            </section>
+            <Paragraph token={pv.token} lang={lang} template={s.data.paragraph} />
           </>
         )}
       </div>
@@ -219,6 +216,26 @@ function SummarySection({ pv }: { pv: PatientView }) {
         )}
       </aside>
     </div>
+  );
+}
+
+/** Template paragraph (deterministic); optionally a local-model draft that sees a number-free fact sheet. Off until asked. */
+function Paragraph({ token, lang, template }: { token: string; lang: Lang; template: string }) {
+  const ai = useMutation({ mutationFn: () => post<{ source: string; text: string; reason?: string | null; label?: string | null }>(`/api/patients/${token}/summary/paragraph?lang=${lang}`) });
+  const drafted = ai.data?.source === "ai-drafted";
+  return (
+    <section className="rounded-panel border border-line bg-surface p-4" aria-label="Short paragraph">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h3 className="text-md font-semibold">{drafted ? "Short paragraph (local AI draft)" : "Short paragraph (template, deterministic)"}</h3>
+        <Button size="sm" variant="ghost" loading={ai.isPending} onClick={() => ai.mutate()}>
+          Draft with the local model
+        </Button>
+      </div>
+      {drafted && <p className="mt-1 text-xs text-muted">{ai.data?.label}</p>}
+      <p className="mt-1 text-base">{drafted ? ai.data?.text : template}</p>
+      {ai.data && !drafted && <p className="mt-1 text-xs text-muted">Template used: {ai.data.reason || "the local model did not give a usable draft"}.</p>}
+      {ai.isError && <p className="mt-1 text-xs text-red">{(ai.error as Error).message}</p>}
+    </section>
   );
 }
 

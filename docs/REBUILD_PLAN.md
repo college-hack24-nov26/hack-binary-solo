@@ -2,105 +2,106 @@
 
 Source of truth for behaviour: the Streamlit pages in `intake/ui/` and the domain packages. Baseline before the rebuild: **844 Python tests pass** (the hand-off says 838; the last commit added 6).
 
-Order of work: the hackathon is on 3-4 Nov 2026, so the work follows the prompt's **demo slice** (Phase 1, then the doctor Dosage check with ruler, audit chain and demo loader, then the kiosk, then the staff board) while keeping every phase's tests. Streamlit stays runnable until Phase 7.
+Order of work: the hackathon is on 3-4 Nov 2026, so the work followed the prompt's **demo slice** (Phase 1, then the doctor Dosage check with ruler, audit chain and demo loader, then the kiosk, then the staff board), then hardening, polish, and Streamlit retirement (Phase 7).
 
 ## (a) Parity checklist
 
-Legend: [ ] to do, [x] done (ticked as phases land). "Where" is the new home.
+Legend: [x] done and checked in the new app, [ ] not carried over on purpose (reason given). "Where" is the new home.
 
 ### Sign in and gate (`signin.py`, `gate.py`, `ocr/auth.py`)
-- [ ] Username/password sign in, roles staff and doctor -> `/staff/login`, `/doctor/login` (one shared `LoginPage`), `POST /api/auth/login`
-- [ ] Lockout after 5 failures (per username, `OCR_LOCKOUT_S`) -> reuses `ocr.auth.Authenticator` (one per process)
-- [ ] Idle logout after `OCR_AUTH_IDLE_S`, with "Logged out after inactivity." -> server session expiry, 401 with `reason: idle`, login page notice
-- [ ] "No users exist yet" message -> login page shows the `create_user.py` command when `GET /api/auth/me` reports `usersExist: false`
-- [ ] Sign out -> header user menu, `POST /api/auth/logout`
-- [ ] `can_edit` = doctor only -> `require_role("doctor")` dependency on every doctor-only route
+- [x] Username/password sign in, roles staff and doctor -> `/staff/login`, `/doctor/login` (one shared `LoginPage`), `POST /api/auth/login`
+- [x] Lockout after 5 failures (per username, `OCR_LOCKOUT_S`) -> reuses `ocr.auth.Authenticator` (one per process)
+- [x] Idle logout after `OCR_AUTH_IDLE_S`, with "Logged out after inactivity." -> server session expiry, 401 with `reason: idle`, login page notice
+- [x] "No users exist yet" message -> login page shows the `create_user.py` command when `GET /api/auth/me` reports `usersExist: false`
+- [x] Sign out -> header user menu, `POST /api/auth/logout`
+- [x] `can_edit` = doctor only -> `require_role("doctor")` dependency on every doctor-only route
 
 ### Offline badge (`offline_badge.py`, `intake/offline.py`)
-- [ ] Pill with the headline from `offline.headline()` on every staff/doctor page -> `OfflineBadge` in both shells; the kiosk shows no badge (patients do not need it; it would be noise), see open question 3
-- [ ] Network details: allowed target and reachability, local services, probe host/timeout/interval, strict-mode text -> badge popover, `GET /api/system/offline-status`
-- [ ] 30 s refresh without blocking -> TanStack Query `refetchInterval` from `probeIntervalS`
-- [ ] `OFFLINE_STRICT=1` installs the guard -> `create_app()` calls `offline.install_if_strict()`
+- [x] Pill with the headline from `offline.headline()` on every staff/doctor page -> `OfflineBadge` in both shells
+- [ ] Badge on the patient kiosk: deliberately not shown (open question 3)
+- [x] Network details: allowed target and reachability, local services, probe host/timeout/interval, strict-mode text -> badge popover, `GET /api/system/offline-status`
+- [x] 30 s refresh without blocking -> TanStack Query `refetchInterval` from `probeIntervalS`
+- [x] `OFFLINE_STRICT=1` installs the guard -> `create_app()` calls `offline.install_if_strict()`
 
 ### Patient kiosk (`patient.py`, `bodymap_input.py`, `strings.py`)
-- [ ] Language toggle en/hi/mr always visible -> language screen + header "Change language" (`PUT .../language`)
-- [ ] Explicit consent agree/decline; decline deletes the record and shows the declined text -> consent screen, `POST .../consent`
-- [ ] Red-flag `patientMessage` only (first fired rule), no detail -> calm card with icon above the question (`screen.redFlagMessage`)
-- [ ] One question per screen; single_choice and yes_no_unsure tiles; multi_choice with Next and `none` exclusive; number with min/max; scale 0-10; free text; body map -> `QuestionScreen` with one input per type
-- [ ] Back (previous node on the current path) -> `POST .../back`
-- [ ] Not sure (answer) and Skip (not an answer) on every non-consent question -> secondary row; for yes_no_unsure/body_map "Not sure" sends the node's own `unsure` option
-- [ ] Body map: tap map + list, front/back, max selections warning, Clear, specials (not sure / tell doctor / none), answer built by `bodymap.make_answer` -> `BodyMap`; server builds the answer from `{regions, view, inputMode}` or `{special}`
-- [ ] Progress bar -> calm bar from `session.progress()` (no "x of y" text)
-- [ ] Review: every answer with Change; "Everything is correct - finish" -> review screen, `GET .../review`, edit goes to `GET ...?node=`
-- [ ] Finish keeps staff-entered vitals and clears doctor edits -> `POST .../finish` (server merges prior vitals, scans and timeline)
-- [ ] Choose doctor or "Any available doctor" -> doctor screen, `POST .../doctor`
-- [ ] Done screen "Thank you. Please wait..." + your doctor -> token slip (new) + "Done" + 60 s auto-reset
-- [ ] Demo chest-pain patient button on the consent screen -> moved off the kiosk (no dev text on a patient tablet): DEMO_MODE staff board button "Add synthetic chest-pain patient" (`POST /api/demo/kiosk-patient`)
-- [ ] Optional OCR scan stage before the quiz (signed-in staff/doctor only) -> moved to the staff desk and doctor timeline (product decision 1)
+- [x] Language toggle en/hi/mr always visible -> language screen + header "Change language" (`PUT .../language`)
+- [x] Explicit consent agree/decline; decline deletes the record and shows the declined text -> consent screen, `POST .../consent`
+- [x] Red-flag `patientMessage` only (first fired rule), no detail -> calm card with icon above the question (`screen.redFlagMessage`)
+- [x] One question per screen; single_choice and yes_no_unsure tiles; multi_choice with Next and `none` exclusive; number with min/max; scale 0-10; free text; body map -> `QuestionScreen` with one input per type
+- [x] Back (previous node on the current path) -> `POST .../back`
+- [x] Not sure (answer) and Skip (not an answer) on every non-consent question -> secondary row; for yes_no_unsure/body_map "Not sure" sends the node's own `unsure` option
+- [x] Body map: tap map + list, front/back, max selections warning, Clear, specials (not sure / tell doctor / none), answer built by `bodymap.make_answer` -> `BodyMap`; server builds the answer from `{regions, view, inputMode}` or `{special}`
+- [x] Progress bar -> calm bar from `session.progress()` (no "x of y" text)
+- [x] Review: every answer with Change; "Everything is correct - finish" -> review screen, `GET .../review`, edit goes to `GET ...?node=`
+- [x] Finish keeps staff-entered vitals and clears doctor edits -> `POST .../finish` (server merges prior vitals, scans and timeline)
+- [x] Choose doctor or "Any available doctor" -> doctor screen, `POST .../doctor`
+- [x] Done screen "Thank you. Please wait..." + your doctor -> token slip (new) + "Done" + 60 s auto-reset
+- [x] Demo chest-pain patient button on the consent screen -> moved off the kiosk (no dev text on a patient tablet): DEMO_MODE staff board button "Add synthetic chest-pain patient" (`POST /api/demo/kiosk-patient`)
+- [x] Optional OCR scan stage before the quiz (signed-in staff/doctor only) -> moved to the staff desk and doctor timeline (product decision 1)
 
 ### Staff board (`staff.py`)
-- [ ] Records sorted: most urgent flags, most flags, then oldest update -> `GET /api/patients` (server sorts; urgent first)
-- [ ] Per patient: token, status, complaint, chosen doctor or "no doctor chosen" -> board table columns
-- [ ] Red flags with severity, staff message, rule id, draft label, triggering answers (English labels) -> pinned urgent rows + patient panel
-- [ ] "No red flags." / missing safety basics -> patient panel
-- [ ] Vitals form (9 measured fields + notes), bounds, systolic > diastolic, "Vitals saved. The doctor can see them now." -> `VitalsForm`, `PUT /api/patients/{token}/vitals` (422 with field errors)
-- [ ] Abnormal adult-range warning (draft thresholds) -> `abnormal` returned in the patient view
-- [ ] Auto refresh every 5 s -> SSE `/api/events` with 10 s polling fallback
-- [ ] Caption "Red flags come from draft rules..." -> board header text
+- [x] Records sorted: most urgent flags, most flags, then oldest update -> `GET /api/patients` (server sorts; urgent first)
+- [x] Per patient: token, status, complaint, chosen doctor or "no doctor chosen" -> board table columns
+- [x] Red flags with severity, staff message, rule id, draft label, triggering answers (English labels) -> pinned urgent rows + patient panel
+- [x] "No red flags." / missing safety basics -> patient panel
+- [x] Vitals form (9 measured fields + notes), bounds, systolic > diastolic, "Vitals saved. The doctor can see them now." -> `VitalsForm`, `PUT /api/patients/{token}/vitals` (422 with field errors)
+- [x] Abnormal adult-range warning (draft thresholds) -> `abnormal` returned in the patient view
+- [x] Auto refresh every 5 s -> SSE `/api/events` with 10 s polling fallback
+- [x] Caption "Red flags come from draft rules..." -> board header text
 
 ### Doctor summary (`doctor.py`, `intake/summary.py`)
-- [ ] Patient picker; my patients first (linked login), then flags, then updated -> "My queue" (`GET /api/patients?mine=1` ordering done on the server)
-- [ ] Read-only notice for staff -> staff never reach `/doctor` routes (403); staff panel is its own read-only view
-- [ ] "AI drafts, the doctor decides. Red flags come from DRAFT rules..." -> summary section header text
-- [ ] Demo loader box -> sidebar "Load demo patient" (DEMO_MODE + doctor)
-- [ ] Intake duration and fields captured -> summary header facts
-- [ ] Clinical overview: token, status, complaint, assigned doctor, red-flag count -> patient header
-- [ ] Patient basics (age, sex, reported weight, pregnancy, allergies, medicines, conditions incl. not sure, missing list) -> Summary section top block
-- [ ] Vitals with abnormal marks, BMI, child note, reported vs measured weight warning, recorded by/at -> Vitals section (`GET /api/patients/{token}` returns `bmi`, `abnormal`, `weightMismatch`)
-- [ ] Attached OCR records with items table, edited/as-read tag, confirmed by -> Timeline section
-- [ ] Dosing record: History check by whom; each confirmed check line; OVERRIDE lines -> Dosing record section
-- [ ] Doctor notes with Save notes -> Notes section, `PUT .../notes`
-- [ ] Editable intake summary with edit tracking ("edited", Original: ...), red flags read-only, missing markers -> Summary section, `GET/PATCH .../summary`
-- [ ] Summary language (en/hi/mr) -> answer-language toggle (`?lang=`)
-- [ ] Body diagrams, site red, radiation orange -> small SVGs drawn from `GET /api/intake/body-regions` + `socrates.site/radiation`
-- [ ] Attach timeline JSON paste -> dropped: superseded by scan upload + confirm (open question 4)
-- [ ] Short paragraph: template (deterministic) and optional local-AI draft -> template paragraph shown; local-AI draft kept behind `POST .../summary/paragraph` (doctor, needs Ollama, 503 when down)
+- [x] Patient picker; my patients first (linked login), then flags, then updated -> "My queue" (`GET /api/patients?mine=1` ordering done on the server)
+- [x] Read-only notice for staff -> staff never reach `/doctor` routes (403); staff panel is its own read-only view
+- [x] "AI drafts, the doctor decides. Red flags come from DRAFT rules..." -> summary section header text
+- [x] Demo loader box -> sidebar "Load demo patient" (DEMO_MODE + doctor)
+- [x] Intake duration and fields captured -> summary header facts
+- [x] Clinical overview: token, status, complaint, assigned doctor, red-flag count -> patient header
+- [x] Patient basics (age, sex, reported weight, pregnancy, allergies, medicines, conditions incl. not sure, missing list) -> Summary section top block
+- [x] Vitals with abnormal marks, BMI, child note, reported vs measured weight warning, recorded by/at -> Vitals section (`GET /api/patients/{token}` returns `bmi`, `abnormal`, `weightMismatch`)
+- [x] Attached OCR records with items table, edited/as-read tag, confirmed by -> Timeline section
+- [x] Dosing record: History check by whom; each confirmed check line; OVERRIDE lines -> Dosing record section
+- [x] Doctor notes with Save notes -> Notes section, `PUT .../notes`
+- [x] Editable intake summary with edit tracking ("edited", Original: ...), red flags read-only, missing markers -> Summary section, `GET/PATCH .../summary`
+- [x] Summary language (en/hi/mr) -> answer-language toggle (`?lang=`)
+- [x] Body diagrams, site red, radiation orange -> small SVGs drawn from `GET /api/intake/body-regions` + `socrates.site/radiation`
+- [ ] Attach timeline JSON paste: dropped, superseded by scan upload + doctor confirmation (open question 4)
+- [x] Short paragraph: template (deterministic) and optional local-AI draft -> template paragraph shown; local-AI draft kept behind `POST .../summary/paragraph` (doctor, needs Ollama, 503 when down)
 
 ### Dosage check (`dosage.py`, `dosing_panel.py`, `result_card.py`)
-- [ ] Banner "Prototype data, not clinically verified" (+ "UNVERIFIED rules are computed" when allowed); red DEMO bar when demo mode -> always-visible banner in the Dosage check section; DEMO bar from `result.demo`
-- [ ] "Decision support only..." caption -> section intro
-- [ ] Drug select (generic names), indication select -> searchable combobox + select (`GET /api/dosing/drugs`)
-- [ ] Show every rule; other drugs this visit -> checkboxes / multi-select
-- [ ] History check: only unknown items, labels, required marker, exact formulary question, "Already known" line, "None of these apply", Save; "Nothing unknown for this drug." -> `HistoryCheck`, `POST /api/dosing/history-items`, `POST /api/patients/{token}/history`
-- [ ] Patient context with provenance chips -> context grid from `history-items` response `context`
-- [ ] Current medicines used for interactions, with source tags and unparsed lines -> `context.medicines`
-- [ ] Doctor-entered inputs (weight, confirm weight, height, creatinine, pregnancy override, weeks, trimester, Child-Pugh class/score, G6PD, medicines text, form, doses/day, mg/kg/day) -> "Doctor-entered inputs" disclosure + weight confirmation checkbox before Run
-- [ ] Run dosage check -> `POST /api/dosing/evaluate`
-- [ ] Result card header per status, reason, responsible line, sources (id, name, link text) -> `ResultCard` from `card`
-- [ ] needs_input checklist with per-field input kinds (rule picker, num, tri, choice, text, elsewhere) and Update and recompute -> `MissingChecklist` (`card.missing[].kind` from `field_kind`)
-- [ ] Override form: category + reason (10+ chars), "Record override and show dose" -> `OverrideForm`; server validates with `override_error`
-- [ ] Red "Override recorded" line(s) -> `card.overrides`
-- [ ] Blocks list, needs-input list -> result details
-- [ ] Dose metric, interval, daily total, daily max, binding cap -> dose block + dose ruler (ok only)
-- [ ] Titration plan, free-text regimen, duration (hidden on blocked/refused) -> dose block
-- [ ] "Provisional: confirm ..." -> pending confirmations line
-- [ ] Alternatives side by side with "Use this rule" -> alternatives list
-- [ ] Calculation steps expander (hidden text on blocked/refused) -> numbered disclosure
-- [ ] Warnings, interactions, label warnings, sources -> lists/disclosures
-- [ ] Acknowledge items + "I have checked these" -> checkbox; Confirm disabled until server says `canConfirm`
-- [ ] Confirm and save to record -> `POST /api/dosing/confirm` (server-cached result only)
+- [x] Banner "Prototype data, not clinically verified" (+ "UNVERIFIED rules are computed" when allowed); red DEMO bar when demo mode -> always-visible banner in the Dosage check section; DEMO bar from `result.demo`
+- [x] "Decision support only..." caption -> section intro
+- [x] Drug select (generic names), indication select -> searchable combobox + select (`GET /api/dosing/drugs`)
+- [x] Show every rule; other drugs this visit -> checkboxes / multi-select
+- [x] History check: only unknown items, labels, required marker, exact formulary question, "Already known" line, "None of these apply", Save; "Nothing unknown for this drug." -> `HistoryCheck`, `POST /api/dosing/history-items`, `POST /api/patients/{token}/history`
+- [x] Patient context with provenance chips -> context grid from `history-items` response `context`
+- [x] Current medicines used for interactions, with source tags and unparsed lines -> `context.medicines`
+- [x] Doctor-entered inputs (weight, confirm weight, height, creatinine, pregnancy override, weeks, trimester, Child-Pugh class/score, G6PD, medicines text, form, doses/day, mg/kg/day) -> "Doctor-entered inputs" disclosure + weight confirmation checkbox before Run
+- [x] Run dosage check -> `POST /api/dosing/evaluate`
+- [x] Result card header per status, reason, responsible line, sources (id, name, link text) -> `ResultCard` from `card`
+- [x] needs_input checklist with per-field input kinds (rule picker, num, tri, choice, text, elsewhere) and Update and recompute -> `MissingChecklist` (`card.missing[].kind` from `field_kind`)
+- [x] Override form: category + reason (10+ chars), "Record override and show dose" -> `OverrideForm`; server validates with `override_error`
+- [x] Red "Override recorded" line(s) -> `card.overrides`
+- [x] Blocks list, needs-input list -> result details
+- [x] Dose metric, interval, daily total, daily max, binding cap -> dose block + dose ruler (ok only)
+- [x] Titration plan, free-text regimen, duration (hidden on blocked/refused) -> dose block
+- [x] "Provisional: confirm ..." -> pending confirmations line
+- [x] Alternatives side by side with "Use this rule" -> alternatives list
+- [x] Calculation steps expander (hidden text on blocked/refused) -> numbered disclosure
+- [x] Warnings, interactions, label warnings, sources -> lists/disclosures
+- [x] Acknowledge items + "I have checked these" -> checkbox; Confirm disabled until server says `canConfirm`
+- [x] Confirm and save to record -> `POST /api/dosing/confirm` (server-cached result only)
 
 ### Audit log (`audit_log.py`, `audit_view.py`)
-- [ ] Doctor only -> `require_role("doctor")`
-- [ ] Chain verified / broken -> `GET /api/audit/verify` (+ first bad index), seal
-- [ ] Newest first table, filters (patient, drug, action, from, to) -> infinite table, `GET /api/audit`
-- [ ] Row expander (inputs, provenance, steps, warnings, interactions, blocks, sources, override category/reason/block, hash) -> row expander from `audit_view.detail`
-- [ ] Export shown rows JSON/CSV -> `GET /api/audit/export`
-- [ ] No edit/delete -> no such endpoint exists
+- [x] Doctor only -> `require_role("doctor")`
+- [x] Chain verified / broken -> `GET /api/audit/verify` (+ first bad index), seal
+- [x] Newest first table, filters (patient, drug, action, from, to) -> infinite table, `GET /api/audit`
+- [x] Row expander (inputs, provenance, steps, warnings, interactions, blocks, sources, override category/reason/block, hash) -> row expander from `audit_view.detail`
+- [x] Export shown rows JSON/CSV -> `GET /api/audit/export`
+- [x] No edit/delete -> no such endpoint exists
 
 ### Demo (`demo_loader.py`, `dosing/demo.py`)
-- [ ] DEMO_MODE + doctor only -> `GET /api/demo/fixtures`, `POST /api/demo/load/{key}` (404 when DEMO_MODE is off)
-- [ ] Load replays fixture answers through the real session, saves, selects -> same `demo.record(key)`; UI navigates to the patient's Dosage check
+- [x] DEMO_MODE + doctor only -> `GET /api/demo/fixtures`, `POST /api/demo/load/{key}` (404 when DEMO_MODE is off)
+- [x] Load replays fixture answers through the real session, saves, selects -> same `demo.record(key)`; UI navigates to the patient's Dosage check
 
 ### Not carried over
 - `app.py` (standalone OCR review UI) is superseded by the staff/doctor scan flow.
@@ -226,3 +227,22 @@ Demo (404 unless `DEMO_MODE=1`)
 2. **Patient wait estimate.** Without a "seen" status the estimate never shrinks. Default: keep the simple estimate; adding a "Mark seen" doctor action would touch the record schema again. Want it?
 3. **Offline badge on the kiosk.** Default: not shown to patients (it is staff information and adds noise). Say if judges should see it on the tablet too.
 4. **Timeline JSON paste box** on the doctor page is dropped (scan upload replaces it). Default: dropped.
+
+## Phase 7: tests removed with Streamlit
+
+Python tests went 844 (baseline) -> 884 (phases 1-6: +40 in `tests/api/`) -> 828 after removing 55 Streamlit `AppTest` functions (56 items; one is parametrized twice) -> **829** with the doctor-queue ordering test. Three doctor-choice tests in `tests/test_doctors.py` were ported to the API rather than removed. Every removed test drove a deleted Streamlit page; its behaviour is now covered where named.
+
+| Removed | Covered now by |
+|---|---|
+| `tests/test_intake_ui.py` (all 15): patient flow consent/question/language, decline saves nothing, staff/doctor pages render empty, body-map renders/list selection/max selections/not sure + tell doctor/Hindi labels/back-revisit, doctor page regions and diagram, demo button (4 tests), language label switch | `tests/api/test_api_kiosk.py` (parity, decline, body map built on the server), `web/e2e/kiosk.spec.ts` (Hindi flow, Back, Not sure, decline), `web/src/components/components.test.tsx`, `DemoLoader` + `POST /api/demo/kiosk-patient` |
+| `tests/test_flow.py` (all 14): Streamlit step 1/2 sign-in, scan-before-quiz stage, scan attach/confirm, staff vitals then doctor view, systolic > diastolic, staff cannot save notes | `tests/api/test_api_auth_matrix.py` (roles on every route, login, lockout), `tests/api/test_api_errors.py` (scan consent/Ollama down, vitals bounds), `web/e2e/staff.spec.ts` (vitals), doctor timeline confirm endpoint. The scan-before-quiz stage itself was moved to staff/doctor by product decision |
+| `tests/test_intake_gate.py` (all 9): `can_edit` doctor only, pages locked when signed out (x2), wrong password lockout, staff sees board, staff view-only summary, doctor edits summary, idle logout, kiosk needs no login, red-flag line readable answers + diagram | `tests/api/test_api_auth_matrix.py` (role matrix incl. summary PATCH doctor-only, kiosk without login, lockout, idle expiry, staff view without doctor fields), `web/e2e/hardening.spec.ts` (summary screen) |
+| `tests/test_dosing_ui.py` (all 4): doctor sees banner and runs a check, staff cannot run a check, dosage page runs a check, History check none-apply + override category offered | `web/e2e/doctor.spec.ts` (three scenarios incl. banner, none-apply, override), role matrix (staff 403 on dosing), `tests/api/test_api_dosing.py` |
+| `tests/test_auth.py`: `test_app_blocks_until_login`, `test_app_login_flow_and_role_gating`, `test_app_idle_timeout_drops_session` | `tests/api/test_api_auth_matrix.py` (`test_role_matrix`, `test_lockout_after_five_failures`, `test_idle_session_is_logged_out`) |
+| `tests/test_doctors.py`: `test_staff_board_shows_chosen_doctor_or_none`, `test_doctor_page_lists_my_patients_first_for_a_linked_login` | board rows carry `assignedDoctor`/`mine` (`api/views.py`), `web/e2e/staff.spec.ts`; my-patients-first ordering in `board_sort_key` |
+| `tests/test_demo_features.py`: `test_load_demo_patient_is_hidden_without_demo_mode_and_for_non_doctors`, `test_audit_page_is_doctor_only_and_has_no_edit_controls`, `test_audit_page_shows_chain_broken_after_tampering`, `test_ui_child_fever_reaches_dose_ready_header`, `test_ui_needs_input_checklist_recomputes_inline`, `test_ui_blocked_shows_no_dose_then_override_shows_it_in_red` | `tests/api/test_api_dosing.py` (`test_demo_routes_are_404_without_demo_mode`, `test_audit_pages_newest_first_and_reports_a_broken_chain`), role matrix (audit doctor-only; no edit/delete route exists), `web/e2e/doctor.spec.ts` (all three), `web/src/dosing/ResultCard.test.tsx` |
+| `tests/test_region_followups.py`: `test_followup_is_shown_on_the_kiosk_in_hindi` | the follow-up nodes are served by the same kiosk screen endpoint; `tests/api/test_api_kiosk.py` parity runs every scenario through it, `web/e2e/kiosk.spec.ts` (Hindi) |
+| `tests/test_bodymap.py`: `test_component_has_no_external_loads` (the deleted Streamlit body-map component HTML) | `tests/test_offline.py` URL scan now covers `web/src` and `api/`; `web/e2e/hardening.spec.ts` offline test |
+
+Kept and re-pointed: `test_card_headers_and_reasons_per_status`, `test_override_requires_category_and_ten_characters`, `test_needs_input_fields_map_to_inputs` now import `api.result_card`.
+Also removed with Streamlit: `pandas` (only the old pages used it) and the `streamlit` requirement; `scripts/startup_check.py` now checks fastapi/uvicorn/python-multipart; `scripts/run_demo.py` starts `scripts/run_server.py`.

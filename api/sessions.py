@@ -101,7 +101,7 @@ def rebuild(graph: Graph, rules: list[RedFlagRule], rec: PatientRecord) -> Intak
 
 
 def build_for_save(s: IntakeSession, complete: bool = False) -> PatientRecord:
-    """The record to save for a kiosk session. Mirrors intake/ui/patient.py: during the quiz the prior record's doctor/staff
+    """The record to save for a kiosk session. Mirrors the old Streamlit kiosk page: during the quiz the prior record's doctor/staff
     fields survive (records.build does that); on finish, staff vitals are kept and doctor edits cleared. Staff-attached scans
     (timeline, pendingScans) and the queue fields are owned by the API and always carried over."""
     prior = store.load(s.token)

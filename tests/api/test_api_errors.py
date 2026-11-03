@@ -51,3 +51,23 @@ def test_offline_strict_installs_the_guard_and_the_badge_says_so(env, monkeypatc
         assert c.get("/api/system/config").json()["strict"] is True
     finally:
         offline.remove_guard()
+
+
+def test_doctor_queue_lists_my_patients_first(app):
+    from fastapi.testclient import TestClient
+
+    from api_helpers import login
+    from dosing import demo
+    from intake.demo import load_demo
+    from intake.models import load_graph
+    from intake.redflags import load_rules
+    from records import store
+    urgent = load_demo(load_graph(), load_rules()).finish()                  # red flag, no doctor
+    mine = demo.record("child_fever").model_copy(update={"assignedDoctor": "dr_general"})
+    store.save(urgent)
+    store.save(mine)
+    doc = login(TestClient(app), "doctor1")                                   # linked to dr_general
+    rows = doc.get("/api/patients").json()["rows"]
+    assert [r["token"] for r in rows][:2] == [mine.token, urgent.token] and rows[0]["mine"]
+    staff = login(TestClient(app), "staff_t")
+    assert staff.get("/api/patients").json()["rows"][0]["token"] == urgent.token

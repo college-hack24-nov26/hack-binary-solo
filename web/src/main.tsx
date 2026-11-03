@@ -8,7 +8,14 @@ import { Chooser } from "./Chooser";
 
 function on401(e: unknown) {
   // a staff/doctor login that expired: show the sign-in page (kiosk calls never use the login)
-  if (e instanceof ApiError && e.status === 401 && !location.pathname.startsWith("/kiosk")) qc.setQueryData(["me"], null);
+  if (e instanceof ApiError && e.status === 401 && !location.pathname.startsWith("/kiosk")) {
+    try {
+      if (e.message.includes("inactivity")) sessionStorage.setItem("mk.login.notice", e.message);
+    } catch {
+      /* ignore */
+    }
+    qc.setQueryData(["me"], null);
+  }
 }
 
 const qc = new QueryClient({

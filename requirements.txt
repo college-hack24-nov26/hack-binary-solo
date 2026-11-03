@@ -1,9 +1,7 @@
-streamlit
 pillow
 pydantic
 requests
 pytest
-pandas
 fastapi
 uvicorn
 python-multipart

@@ -65,7 +65,7 @@ def _publish(request: Request, s: IntakeSession, before: set[str]) -> None:
 
 
 def _apply(request: Request, s: IntakeSession, fn) -> dict:
-    """Run a session change under the write lock, save like intake/ui/patient.py did, publish events, return the next screen."""
+    """Run a session change under the write lock, save like the old Streamlit kiosk page did, publish events, return the next screen."""
     with WRITE_LOCK:
         rec = store.load(s.token)
         if rec is not None and rec.queueNumber:

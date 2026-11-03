@@ -91,7 +91,16 @@ export function RequireRole({ roles, loginRole, children }: { roles: ("staff" | 
         <Skeleton className="h-8 w-64" />
       </div>
     );
-  if (!me.data) return <LoginPage role={loginRole} />;
+  if (!me.data) {
+    let notice: string | undefined;
+    try {
+      notice = sessionStorage.getItem("mk.login.notice") ?? undefined;
+      sessionStorage.removeItem("mk.login.notice");
+    } catch {
+      /* ignore */
+    }
+    return <LoginPage role={loginRole} notice={notice} />;
+  }
   if (!roles.includes(me.data.role))
     return (
       <main className="grid min-h-dvh place-items-center p-6">

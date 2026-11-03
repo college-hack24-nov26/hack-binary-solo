@@ -244,14 +244,3 @@ def test_red_flag_fires_the_moment_the_triggering_answer_is_given():
     assert s.red_flags[0].triggeredBy["cp_site"]["regions"] == ["chest_center"]
 
 
-def test_followup_is_shown_on_the_kiosk_in_hindi(tmp_path, monkeypatch):
-    from pathlib import Path as P
-    from streamlit.testing.v1 import AppTest
-    monkeypatch.setenv("INTAKE_DATA_DIR", str(tmp_path))
-    s = run_bank(G, RULES, {"chief_complaint": "chest_pain", "cp_site": m("chest_center")}, stop_at="cpx_episode_len")
-    at = AppTest.from_file(str(P(__file__).resolve().parent.parent / "intake" / "ui" / "patient.py"), default_timeout=20)
-    at.session_state["sess"], at.session_state["stage"], at.session_state["view"] = s, "flow", None
-    at.run()
-    assert at.header[0].value == "When the pain comes, how long does it last?"
-    at.radio[0].set_value("hi").run()
-    assert at.header[0].value == G.node("cpx_episode_len").text.hi and not at.exception

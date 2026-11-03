@@ -1,10 +1,8 @@
 """Patient chooses a doctor after the quiz; staff and doctor pages show it."""
 import json
-import time
 from pathlib import Path
 
 import pytest
-from streamlit.testing.v1 import AppTest
 
 from intake.demo import DEMO_TOKEN
 from intake.doctors import DOCTORS_PATH, doctor_for_login, get_doctor, load_doctors
@@ -27,20 +25,27 @@ def env(tmp_path, monkeypatch):
     monkeypatch.setenv("OCR_USERS_FILE", str(users))
 
 
-def page(name, role=None, user=None):
-    at = AppTest.from_file(str(ROOT / "intake" / "ui" / f"{name}.py"), default_timeout=20)
-    if role:
-        at.session_state["auth"] = {"username": user or role, "role": role, "last_seen": time.time()}
-    return at
+H = {"X-Requested-With": "medikiosk"}
 
 
-def finish_demo(lang="en"):
-    at = page("patient").run()
-    if lang != "en":
-        at.radio[0].set_value(lang).run()
-    at.button(key="demo_mode").click().run()
-    next(b for b in at.button if b.key is None and ("finish" in b.label.lower() or "पूरा करें" in b.label)).click().run()
-    return at
+def kiosk_at_review(lang="en"):
+    """The synthetic bank patient answered through the HTTP kiosk API up to the review screen (replaces the Streamlit demo button)."""
+    from fastapi.testclient import TestClient
+
+    from api.main import create_app
+    from intake.synthetic import BANK
+    c = TestClient(create_app(dist=ROOT / "no_dist"))
+    r = c.post("/api/kiosk/sessions", json={"language": lang}, headers=H).json()
+    t, kh = r["token"], {**H, "X-Kiosk-Key": r["kioskKey"]}
+    s = c.post(f"/api/kiosk/sessions/{t}/consent", json={"choice": "agree"}, headers=kh).json()
+    while s["stage"] == "question":
+        n = s["node"]
+        v = BANK[n["id"]]
+        url = "bodymap" if n["type"] == "body_map" else "answers"
+        body = {"nodeId": n["id"], **v} if url == "bodymap" else {"nodeId": n["id"], "value": v}
+        s = c.post(f"/api/kiosk/sessions/{t}/{url}", json=body, headers=kh).json()
+    assert s["stage"] == "review"
+    return c, t, kh
 
 
 def test_doctors_file_is_valid_synthetic_and_translated():
@@ -67,26 +72,30 @@ def test_old_records_without_the_field_still_load():
 
 
 def test_kiosk_asks_for_a_doctor_after_the_quiz_and_stores_the_choice():
-    at = finish_demo()
-    assert not at.exception and "Which doctor" in at.subheader[0].value
-    assert [k for k in ("doc_dr_general", "doc_dr_heart", "doc_dr_child", "doc_dr_women", "doc_any")
-            if at.button(key=k)] == ["doc_dr_general", "doc_dr_heart", "doc_dr_child", "doc_dr_women", "doc_any"]
-    assert store.load(DEMO_TOKEN).assignedDoctor is None and store.load(DEMO_TOKEN).status == "complete"
-    at.button(key="doc_dr_heart").click().run()
-    assert store.load(DEMO_TOKEN).assignedDoctor == "dr_heart"
-    assert "Rohan Deshmukh" in at.info[0].value and any("Thank you" in s.value for s in at.success)
+    c, t, kh = kiosk_at_review()
+    assert [d["id"] for d in c.get("/api/doctors").json()] == ["dr_general", "dr_heart", "dr_child", "dr_women"]
+    assert store.load(t).assignedDoctor is None
+    assert c.post(f"/api/kiosk/sessions/{t}/doctor", json={"doctorId": "dr_heart"}, headers=kh).status_code == 200
+    assert store.load(t).assignedDoctor == "dr_heart"
+    slip = c.post(f"/api/kiosk/sessions/{t}/finish", headers=kh).json()
+    assert slip["doctor"]["name"] == "Dr. Rohan Deshmukh" and store.load(t).status == "complete"
+    assert store.load(t).assignedDoctor == "dr_heart"
 
 
 def test_any_available_doctor_leaves_it_unassigned():
-    at = finish_demo()
-    at.button(key="doc_any").click().run()
-    assert store.load(DEMO_TOKEN).assignedDoctor is None and not at.exception
+    c, t, kh = kiosk_at_review()
+    assert c.post(f"/api/kiosk/sessions/{t}/doctor", json={"doctorId": None}, headers=kh).status_code == 200
+    slip = c.post(f"/api/kiosk/sessions/{t}/finish", headers=kh).json()
+    assert store.load(t).assignedDoctor is None and slip["doctor"] is None and slip["guidance"] == "reception"
 
 
 def test_doctor_choice_screen_in_hindi():
-    at = finish_demo("hi")
-    assert "डॉक्टर" in at.subheader[0].value and "सामान्य चिकित्सक" in at.button(key="doc_dr_general").label
-    assert "कोई भी उपलब्ध" in at.button(key="doc_any").label
+    c, t, kh = kiosk_at_review("hi")
+    docs = {d["id"]: d for d in c.get("/api/doctors").json()}
+    assert docs["dr_general"]["specialty"]["hi"] == "सामान्य चिकित्सक"
+    import json as _j
+    web = _j.loads((ROOT / "web" / "src" / "i18n" / "kiosk.json").read_text(encoding="utf-8"))
+    assert "कोई भी उपलब्ध" in web["strings"]["anyDoctor"]["hi"] and "डॉक्टर" in web["strings"]["chooseDoctor"]["hi"]
 
 
 def test_choice_survives_a_rebuild_of_the_record():
@@ -97,18 +106,3 @@ def test_choice_survives_a_rebuild_of_the_record():
     assert s.to_record(prior=rec).assignedDoctor == "dr_child"
 
 
-def test_staff_board_shows_chosen_doctor_or_none():
-    store.save(run_bank(load_graph(), load_rules(), token="PT-AAAAAA").finish().model_copy(update={"assignedDoctor": "dr_heart"}))
-    store.save(run_bank(load_graph(), load_rules(), token="PT-BBBBBB").finish())
-    labels = [e.label for e in page("staff", "staff").run().expander]
-    assert any("PT-AAAAAA" in l and "→ Dr. Rohan Deshmukh" in l for l in labels)
-    assert any("PT-BBBBBB" in l and "no doctor chosen" in l for l in labels)
-
-
-def test_doctor_page_lists_my_patients_first_for_a_linked_login():
-    for tok, doc in (("PT-AAAAAA", "dr_heart"), ("PT-BBBBBB", "dr_general")):
-        store.save(run_bank(load_graph(), load_rules(), token=tok).finish().model_copy(update={"assignedDoctor": doc}))
-    at = page("doctor", "doctor", "doctor1").run()
-    assert not at.exception and at.selectbox[0].options[0].startswith("👤 PT-BBBBBB")
-    at = page("doctor", "doctor", "other").run()            # login not linked to a doctor: no reordering, no marker
-    assert not any(o.startswith("👤") for o in at.selectbox[0].options)

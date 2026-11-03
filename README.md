@@ -1,34 +1,69 @@
-# Start here: the three-step flow
+# MediKiosk OPD: patient kiosk, staff desk, doctor workstation
 
-```bash
-.venv/bin/python scripts/create_user.py <username> <doctor|staff>   # once
-.venv/bin/streamlit run main_app.py
-```
-1. **Sign in** (staff or doctor). 2. **Scan old records** with local OCR (optional; a doctor confirms each scan and it is attached to the patient). 3. **Patient quiz**, then the patient **chooses a doctor** (`data/doctors.json`, synthetic; the choice is stored as `assignedDoctor` on the record). Staff board and Doctor summary follow in the sidebar. The older `app.py` (OCR only) and `intake_app.py` (quiz, staff, doctor) still run on their own.
-
----
-
-# OCR module (Qwen3-VL via local Ollama) - Streamlit MVP
-
-Offline only: the one network call is to `localhost:11434`. Synthetic data only. AI drafts, the doctor confirms.
+An offline clinic OPD app. One laptop runs the server; the waiting-area tablet and the staff and doctor screens open it over the hospital LAN with no internet. FastAPI serves the API and the built React app from one origin. Synthetic data only. **Prototype data, not clinically verified.**
 
 ```bash
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
-cp .env.example .env                       # optional; defaults work
+.venv/bin/python scripts/create_user.py <username> <doctor|staff>    # once; writes data/users.json (gitignored)
+.venv/bin/python scripts/run_server.py                               # builds web/ if needed, then serves on :8000
+```
+Open `http://<this-computer>:8000/` and pick a screen:
+
+| Screen | Address | Who |
+|---|---|---|
+| Patient kiosk | `/kiosk` | the tablet: language, consent, one question per screen, body map, review, doctor choice, token slip |
+| Staff desk | `/staff` | live board (red flags, help requests), patient panel, vitals, scans |
+| Doctor workstation | `/doctor` | my queue, summary, vitals, scan confirmation, notes, Dosage check, dosing record, audit log |
+| Component gallery | `/gallery` | every component in every state (development builds or `DEMO_MODE=1`) |
+
+Run options:
+```bash
+DEMO_MODE=1 .venv/bin/python scripts/run_server.py                    # Load demo patient, red DEMO bar, /gallery
+OFFLINE_STRICT=1 DEMO_MODE=1 .venv/bin/python scripts/run_server.py   # any non-localhost connection raises and is logged
+./run_demo.sh --demo-mode                                             # startup check, demo login and patients if none, then the server
+OPD_MINUTES_PER_PATIENT=12 ...                                        # wait estimate on the token slip (default 10)
+```
+One uvicorn worker only: records are JSON files and the audit log is a hash chain, guarded by one process-wide lock (`api/deps.py`). OCR scanning needs Ollama on localhost; the quiz, boards and dosing do not.
+
+**Pin the tablet:** open `/kiosk` in Chrome, add it to the home screen, then use Android screen pinning (Settings > Security > App pinning) or a kiosk-browser app, so patients cannot reach other screens. The kiosk itself has no links to `/staff` or `/doctor`.
+
+## Develop and test
+```bash
+.venv/bin/python -m pytest -q                       # Python: domain + API (tests/api)
+npm --prefix web ci                                 # once (needs the npm registry or a cache)
+npm --prefix web run dev                            # Vite on :5173, proxies /api to :8000 (start run_server.py --no-build)
+npm --prefix web test                               # Vitest
+npm --prefix web run e2e                            # Playwright: kiosk, staff, doctor, hardening (axe, offline, viewports)
+(cd web && SCREENS=kiosk npx playwright test e2e/screens.spec.ts)    # screenshots into docs/screens/
+npm --prefix web run gen:api                        # regenerate web/src/api/generated.ts from the OpenAPI schema
+```
+Docs: `docs/REBUILD_PLAN.md` (parity, permissions, API), `docs/DESIGN.md` (tokens and review log), `docs/UI_HIGHLIGHTS.md`, `docs/DEMO_SCRIPT.md`, `docs/DOSING_LOGIC.md`, `docs/DOSING_DATA_ISSUES.md`.
+
+| Piece | Where |
+|---|---|
+| API (routers, auth, lock, SSE, kiosk sessions) | `api/` (`api/main.py` app factory, OpenAPI at `/api/openapi.json`) |
+| React app | `web/src/` (`kiosk/`, `staff/`, `doctor/`, `components/`, `dosing/`, `gallery/`) |
+| Quiz engine, red flags, summary, offline guard | `intake/` |
+| Patient record and store | `records/` (folder `data_local/`, gitignored) |
+| Dosage engine and audit log | `dosing/` |
+| Local OCR | `ocr/` |
+
+---
+
+# OCR (Qwen3-VL via local Ollama)
+
+Offline only: the one network call is to `localhost:11434`. AI drafts, the doctor confirms. Staff or a doctor attach a photo to a patient's token (`POST /api/patients/{token}/scans`, `<input capture>` works over plain HTTP); the draft waits until a doctor confirms or discards it on the Timeline.
+
+```bash
 .venv/bin/python scripts/make_fixtures.py  # 3 synthetic Rx + 1 lab report -> fixtures/
 .venv/bin/python scripts/ocr_smoke.py      # real model, per-field PASS/FAIL + latency
-.venv/bin/python -m pytest                 # unit + localhost-only + fake-Ollama e2e
-.venv/bin/streamlit run app.py             # review UI
 ```
-
 | Piece | File |
 |---|---|
-| `extract()` / `health()` (the "endpoints") | `ocr/service.py` |
-| VLM prompt constant | `ocr/prompt.py` |
-| Schema (pydantic) + `format` JSON schema | `ocr/schema.py` |
+| `extract()` / `health()` | `ocr/service.py` |
+| VLM prompt, schema | `ocr/prompt.py`, `ocr/schema.py` |
 | Frequency parser, fuzzy matcher, needsReview | `ocr/frequency.py`, `ocr/formulary.py`, `ocr/postprocess.py` |
 | Temp image lifecycle | `ocr/session.py` |
-| Formulary seed (15 generics) | `data/formulary.json` |
 
 Config (env): `OCR_MODEL` (default `qwen3-vl:8b-instruct`), `OLLAMA_URL` (must be localhost), `OCR_MAX_EDGE`, `OCR_KEEP_ALIVE`, `OCR_SESSION_TTL_S`, `OCR_REVIEW_THRESHOLD`.
 
@@ -44,55 +79,45 @@ Offline, synthetic data only. AI drafts, the doctor decides. No diagnosis or adv
 .venv/bin/python scripts/intake_smoke.py             # 3 synthetic patients: record + doctor summary
 .venv/bin/python scripts/list_unsourced_rules.py     # red-flag rules still lacking a source
 .venv/bin/python scripts/list_unreviewed_translations.py
-.venv/bin/streamlit run intake_app.py                # pages: Patient, Staff, Doctor
 ```
 
 | Piece | File |
 |---|---|
 | Question graph (data) | `data/intake_graph.json` (pydantic: `intake/models.py`) |
-| Condition language | `intake/conditions.py` (equals, in, gte, lte, all, any, not, answered, unanswered) |
+| Condition language | `intake/conditions.py` (equals, in, gte, lte, all, any, not, answered, unanswered, regionsAny, regionsAll) |
 | Pure engine | `intake/engine.py`: `next_node`, `recompute_path`, `validate_graph` |
 | Red-flag rules (DRAFT) | `data/red_flags.json`, `intake/redflags.py` |
-| Record + local JSON store | `records/schema.py`, `records/build.py`, `records/store.py` (folder `data_local/`, gitignored) |
+| Record + local JSON store | `records/schema.py`, `records/build.py`, `records/store.py` |
 | Doctor summary, edit tracking | `intake/summary.py`; optional local-LLM paragraph `intake/llm_summary.py` |
+| Kiosk over HTTP | `api/routers/kiosk.py`, `api/sessions.py` (sessions rebuilt from the saved record after a restart) |
 
 Answer semantics: **"Not sure" (`unsure`) is an answer; skipped (`__skipped__`) is not.** Both continue the flow and both put the item in `dosingInputs.missing`. "Not sure" never matches a concrete value in any rule.
 
-Red flags: all 10 rules are drafts with `source: null`, `sourceChecked: false`; the UI labels them "Draft rule, source check pending". Fill sources (WHO IMCI, ICMR STW) yourself, then set `sourceChecked: true`. Severities are placeholders too.
-
-The optional AI paragraph (Doctor page, off by default) uses Ollama on localhost (`INTAKE_LLM_MODEL`, default `qwen3:8b`). It sees a number-free fact sheet; output containing digits, dose words or diagnostic language is discarded and the template is shown.
+Red flags: all 10 rules are drafts with `source: null`, `sourceChecked: false`; every screen labels them "Draft rule, source check pending". Patients see only each rule's patient message.
 
 ## Translations need native review
-Every node's Hindi and Marathi (and the red-flag patient messages, and `intake/ui/strings.py`) is **machine-drafted, needs native review**. Not reviewed. Nodes: consent, age_years, age_months, sex, pregnancy, preg_bleeding, weight_kg, allergies, allergy_other, meds_any, meds_list, kidney, liver, diabetes, hypertension, asthma, chief_complaint, other_text, fev_site, cb_site, body_map_radiation, fev_onset, fev_course, fev_temp, fev_assoc, fev_relieve, fev_severity, cb_main, cb_onset, cb_rest, cb_sputum, cb_assoc, cb_pattern, cb_severity, cb_relieve, ab_site, ab_onset, ab_character, ab_assoc, ab_pattern, ab_severity, ab_relieve, hd_site, hd_onset, hd_character, hd_worst, hd_assoc, hd_course, hd_severity, hd_trigger, hd_relieve, cp_site, cp_onset, cp_char, cp_assoc, cp_course, cp_exac, cp_relieve, cp_severity, danger_signs, hx_fever, hx_cough, hx_abdomen, hx_head, hx_chest, hx_similar. Also every region label in `data/body_regions.json` and the body-map special options.
+Every node's Hindi and Marathi, the red-flag patient messages, the body-region labels, the doctors' specialty/floor/line names and the kiosk UI strings (`web/src/i18n/kiosk.json`) are **machine-drafted, needs native review**. `scripts/list_unreviewed_translations.py` lists all of them.
 
 ## Body map (Site and Radiation questions)
-Node type `body_map`: tappable front/back outline, multi-select up to `maxSelections`, always with "I'm not sure" and "I'd prefer to tell the doctor" (radiation also "It does not spread"; fever/cough site also "No particular place"). Used by `fev_site`, `cb_site`, `ab_site`, `hd_site`, `cp_site` and the shared `body_map_radiation` (chest and abdominal pain).
-
-- **Regions and artwork:** `data/body_regions.json`: 54 stable region ids, own plain polygons (no third-party art), en/hi/mr labels, all machine-drafted. **`right`/`left` are always the patient's own side**: on the front view the patient's right is on the viewer's left; on the back view it is on the viewer's right. The diagram says "Patient's right" / "Patient's left".
-- **Stored answer:** `{regions, view, inputMode: "map"|"list"}` (+ `special` for tell-doctor / none). "I'm not sure" is the ordinary `unsure` answer. The map and the list both go through `bodymap.make_answer`: same regions give the same `regions` and `view`, in catalog order; only `inputMode` records which input was used. Record: `socrates.site = {regions, view, inputMode}`, `socrates.radiation = {regions}`.
-- **Conditions:** `regionsAny` and `regionsAll`. The chest-pain rule now reads: chest pain and (sweating, or chest_left/chest_center with spread to a shoulder/arm/hand, jaw or neck). Still a draft: `source: null`, `sourceChecked: false`.
-- **Offline UI:** a tiny local Streamlit component (`intake/ui/bodymap_component/index.html`, no CDN, no packages) only reports the tap position; Python resolves it with point-in-polygon (`hit_test`, with a 4-unit slop for fingers). A checkbox list of the same regions is always available.
-- **Doctor page:** regions in words in the doctor's language (en/hi/mr selector), plus small highlighted diagrams (site red, radiation orange).
-- **Future work (not built):** child/other body-type variants, 3D, any inference from body location.
+- **Regions and artwork:** `data/body_regions.json`: 54 stable region ids, own polygons (no third-party art), en/hi/mr labels. **`right`/`left` are always the patient's own side**; the kiosk says "Patient's right" / "Patient's left".
+- **Input:** the kiosk highlights taps in the browser and offers "Choose from a list" at all times; the server builds and validates the answer with `bodymap.make_answer` (`{regions, view, inputMode}` + `special` for tell-doctor / none).
+- **Doctor:** regions in words in en/hi/mr plus small diagrams (site red, spreads-to orange).
 
 ---
 
-# Demo features (offline proof, demo patients, result card, audit log, scanned medicines)
-
+# Demo
 ```bash
-.venv/bin/python scripts/reset_demo_data.py                  # clear demo records and demo audit entries
-DEMO_MODE=1 .venv/bin/streamlit run main_app.py              # "Load demo patient" appears for doctors
-OFFLINE_STRICT=1 DEMO_MODE=1 .venv/bin/streamlit run main_app.py   # any non-localhost connection raises and is logged
-.venv/bin/python scripts/dosing_demo.py                      # the three fixtures as text
+.venv/bin/python scripts/reset_demo_data.py         # clear demo records and demo audit entries
+.venv/bin/python scripts/dosing_demo.py             # the three fixtures as text (source of the expected numbers)
 ```
-Click-through with timings: `docs/DEMO_SCRIPT.md`. Logic: `docs/DOSING_LOGIC.md` (Update 3).
+Click-through: `docs/DEMO_SCRIPT.md`. Video of the 60-second judge path: `docs/screens/demo.webm`.
 
 | Feature | Where |
 |---|---|
-| Offline badge, probe, `OFFLINE_STRICT` guard | `intake/offline.py`, `intake/ui/offline_badge.py`, `tests/test_offline.py` |
-| Demo fixtures, Load demo patient, reset | `fixtures/demo/*.json`, `dosing/demo.py`, `intake/ui/demo_loader.py`, `scripts/reset_demo_data.py` |
-| Result card (four statuses, checklist, override) | `intake/ui/result_card.py` |
-| Audit-log page (doctor only) | `intake/ui/audit_log.py`, `dosing/audit_view.py` |
+| Offline badge, probe, `OFFLINE_STRICT` guard | `intake/offline.py`, `GET /api/system/offline-status`, `web/src/components/OfflineBadge.tsx` |
+| Demo fixtures, Load demo patient, reset | `fixtures/demo/*.json`, `dosing/demo.py`, `api/routers/demo.py`, `scripts/reset_demo_data.py` |
+| Result card wording (four statuses, checklist, override) | `api/result_card.py`, `web/src/dosing/ResultCard.tsx`, `web/src/doctor/DosageCheck.tsx` |
+| Audit log (doctor only, read-only) | `dosing/audit.py`, `dosing/audit_view.py`, `api/routers/audit.py`, `web/src/doctor/AuditLog.tsx` |
 | Medicines from confirmed scans | `dosing/ocr_meds.py` |
 
-Env: `OFFLINE_STRICT`, `OFFLINE_PROBE_HOST`, `OFFLINE_PROBE_PORT`, `OFFLINE_PROBE_TIMEOUT_S` (2), `OFFLINE_CHECK_INTERVAL_S` (30), `DEMO_MODE`. Everything is synthetic and **not clinically verified**.
+Env: `DEMO_MODE`, `OFFLINE_STRICT`, `OFFLINE_PROBE_HOST`, `OFFLINE_PROBE_PORT`, `OFFLINE_PROBE_TIMEOUT_S` (2), `OFFLINE_CHECK_INTERVAL_S` (30), `OPD_MINUTES_PER_PATIENT` (10), `HTTPS` (marks the login cookie Secure). Everything is synthetic and **not clinically verified**.

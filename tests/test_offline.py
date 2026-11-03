@@ -12,7 +12,7 @@ from intake import offline
 
 ROOT = Path(__file__).resolve().parent.parent
 APP_DIRS = ["intake", "ocr", "dosing", "records", "scripts", "api"]
-APP_FILES = ["app.py", "main_app.py", "intake_app.py"]
+APP_FILES: list[str] = []      # the Streamlit entry points were removed; the app is api/ + web/
 WEB_DIRS = ["web/src", "web/index.html"]        # the React app: no CDN, fonts or icons from outside
 WEB_EXT = {".ts", ".tsx", ".js", ".jsx", ".css", ".html", ".json", ".svg"}
 URL = re.compile(r"""https?://([A-Za-z0-9.\-\[\]:]+)""")

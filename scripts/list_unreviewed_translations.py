@@ -27,7 +27,7 @@ def main() -> int:
     for d in docs["doctors"]:
         print(f"doctor {d['id']:12s} specialty, floor, lineName  {docs['translationStatus']}")
     print(f"\n{len(todo)} of {len(g.nodes)} nodes + {len(rules)} rule messages + {len(regions)} body regions + {len(web['strings'])} web kiosk "
-          f"strings + {len(docs['doctors'])} doctors need native review (hi, mr). UI chrome: intake/ui/strings.py, web/src/i18n/kiosk.json")
+          f"strings + {len(docs['doctors'])} doctors need native review (hi, mr). UI chrome: web/src/i18n/kiosk.json")
     return 0
 
 

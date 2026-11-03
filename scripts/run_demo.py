@@ -1,5 +1,5 @@
-"""One-command demo launcher: startup check, demo login and synthetic patients if none exist, then Streamlit.
-Run: python3 scripts/run_demo.py [--port 8501] [--demo-mode] [--no-seed] [--check-only]
+"""One-command demo launcher: startup check, demo login and synthetic patients if none exist, then the FastAPI + React app
+(scripts/run_server.py). Run: python3 scripts/run_demo.py [--port 8000] [--demo-mode] [--no-seed] [--check-only]
 Works without Ollama (OCR scan is then unavailable; quiz, staff board, doctor summary and dosing work)."""
 import argparse
 import os
@@ -15,13 +15,13 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--port", type=int, default=8501)
-    ap.add_argument("--demo-mode", action="store_true", help="red DEMO banner and UNVERIFIED rules allowed (DOSING_DEMO_MODE=1)")
+    ap.add_argument("--port", type=int, default=8000)
+    ap.add_argument("--demo-mode", action="store_true", help="DEMO_MODE=1: Load demo patient, red DEMO bar, UNVERIFIED rules allowed, /gallery")
     ap.add_argument("--no-seed", action="store_true", help="do not add the three synthetic dosing patients")
     ap.add_argument("--check-only", action="store_true")
     a = ap.parse_args()
     if a.demo_mode:
-        os.environ["DOSING_DEMO_MODE"] = "1"
+        os.environ["DEMO_MODE"] = "1"
 
     import startup_check
     checks = startup_check.check_all()
@@ -47,9 +47,7 @@ def main() -> int:
             for key in demo.DEMO_PATIENTS:
                 store.save(demo.record(key))
             print("Added 3 synthetic dosing patients: " + ", ".join(p["token"] for p in demo.DEMO_PATIENTS.values()))
-    print(f"\nStarting the app: http://localhost:{a.port}   (Ctrl+C to stop)\n")
-    return subprocess.call([sys.executable, "-m", "streamlit", "run", str(ROOT / "main_app.py"), "--server.port", str(a.port),
-                            "--server.headless", "false"], cwd=ROOT)
+    return subprocess.call([sys.executable, str(ROOT / "scripts" / "run_server.py"), "--port", str(a.port)], cwd=ROOT)
 
 
 if __name__ == "__main__":

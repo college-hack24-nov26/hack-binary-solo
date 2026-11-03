@@ -18,7 +18,7 @@ export default defineConfig({
   },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   webServer: {
-    command: `../.venv/bin/python ../scripts/e2e_server.py --port ${PORT}`,
+    command: `../.venv/bin/python ../scripts/e2e_server.py --port ${PORT}${process.env.E2E_STRICT ? " --strict" : ""}`,
     url: `http://127.0.0.1:${PORT}/api/system/health`,
     reuseExistingServer: false,
     timeout: 60_000,
