@@ -73,6 +73,8 @@ class Node(BaseModel):
     max: Optional[float] = None
     redFlagRefs: list[str] = []
     translationStatus: str = TRANSLATION_STATUS
+    source: Optional[str] = None          # clinical source for the question; null = no source yet
+    sourceChecked: bool = False           # set true only after a clinician has checked the source
 
     @model_validator(mode="after")
     def _shape(self):

@@ -292,7 +292,9 @@ def test_removing_a_selection_recomputes_flags_and_keeps_path_valid():
     assert s.red_flags and s.complete
     path = list(s.path)
     s.answer("cp_site", make_answer(["chest_right"], "map"))                   # untap chest_left
-    assert s.red_flags == [] and s.path == path and s.complete
+    assert s.red_flags == [] and s.pending == "cpx_skin"                       # right chest asks the skin follow-up instead
+    s.answer("cpx_skin", "no")
+    assert s.pending == "cp_course"       # a changed branch re-asks what came after it (recompute_path drops answers off the old path)
     s.answer("cp_site", make_answer(["chest_left"], "list"))                   # tap it again, from the list
     assert [t.ruleId for t in s.red_flags] == ["RF_CHEST_PAIN_RADIATION_SWEATING"]
     s.answer("body_map_radiation", make_answer([], "map", "none"))

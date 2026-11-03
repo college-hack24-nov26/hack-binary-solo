@@ -23,6 +23,8 @@ BANK: dict[str, Any] = {
     "hd_course": "constant", "hd_severity": 3, "hd_trigger": "stress", "hd_relieve": "medicine",
     "cp_site": make_answer(["chest_right"], "map"), "cp_onset": "days", "cp_char": "sharp", "body_map_radiation": make_answer([], "list", "none"), "cp_assoc": NONE,
     "cp_course": "episodes", "cp_exac": "movement", "cp_relieve": "rest", "cp_severity": 3,
+    "cpx_episode_len": "m5_30", "cpx_arm_numb": "no", "cpx_skin": "no", "abx_meals": "no_link", "abx_urine_stool": "no",
+    "hdx_eyes_nose": "no", "hdx_neck_tight": "no",
     "danger_signs": NONE, "hx_fever": NONE, "hx_cough": NONE, "hx_abdomen": NONE, "hx_head": NONE,
     "hx_chest": NONE, "hx_similar": "no",
 }
@@ -53,7 +55,7 @@ PATIENTS: dict[str, dict] = {
         "meds_any": "yes", "meds_list": "metformin, aspirin", "diabetes": UNSURE, "hypertension": "yes",
         "chief_complaint": "chest_pain", "cp_site": make_answer(["chest_center"], "map"), "cp_onset": "sudden", "cp_char": "pressure",
         "body_map_radiation": make_answer(["upper_arm_left", "jaw_front"], "map"), "cp_assoc": ["sweating", "nausea"], "cp_course": "constant",
-        "cp_exac": "exertion", "cp_severity": 8, "hx_chest": ["heart", "smoking"]},
+        "cpx_episode_len": "over_30", "cpx_arm_numb": "yes", "cp_exac": "exertion", "cp_severity": 8, "hx_chest": ["heart", "smoking"]},
     "infant_fever_weight_unknown": {
         "age_years": 0, "age_months": 2, "weight_kg": SKIPPED, "allergies": [UNSURE], "kidney": UNSURE,
         "chief_complaint": "fever", "fev_onset": "today", "fev_assoc": ["chills", "vomiting"], "fev_severity": 6},

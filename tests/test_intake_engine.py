@@ -68,14 +68,24 @@ BRANCHES = [
     # abdominal
     ("ab_site", {}, "ab_onset"), ("ab_onset", {}, "ab_character"), ("ab_character", {}, "body_map_radiation"),
     ("body_map_radiation", {"chief_complaint": "abdominal_pain"}, "ab_assoc"), ("ab_assoc", {}, "ab_pattern"), ("ab_pattern", {}, "ab_severity"),
+    # region-driven follow-ups (more in test_region_followups.py)
+    ("ab_assoc", {"ab_site": {"regions": ["upper_abdomen_left"]}}, "abx_meals"),
+    ("ab_assoc", {"ab_site": {"regions": ["pelvic_area"]}}, "abx_urine_stool"),
+    ("abx_meals", {}, "ab_pattern"), ("abx_urine_stool", {}, "ab_pattern"),
     ("ab_severity", {}, "ab_relieve"), ("ab_relieve", {}, "danger_signs"),
     # headache
     ("hd_site", {}, "hd_onset"), ("hd_onset", {}, "hd_character"), ("hd_character", {}, "hd_worst"),
-    ("hd_worst", {}, "hd_assoc"), ("hd_assoc", {}, "hd_course"), ("hd_course", {}, "hd_severity"),
+    ("hd_worst", {}, "hd_assoc"), ("hd_assoc", {}, "hd_course"),
+    ("hd_assoc", {"hd_site": {"regions": ["head_front"]}}, "hdx_eyes_nose"),
+    ("hd_assoc", {"hd_site": {"regions": ["neck_back"]}}, "hdx_neck_tight"),
+    ("hdx_eyes_nose", {}, "hd_course"), ("hdx_neck_tight", {}, "hd_course"), ("hd_course", {}, "hd_severity"),
     ("hd_severity", {}, "hd_trigger"), ("hd_trigger", {}, "hd_relieve"), ("hd_relieve", {}, "danger_signs"),
     # chest pain
     ("cp_site", {}, "cp_onset"), ("cp_onset", {}, "cp_char"), ("cp_char", {}, "body_map_radiation"),
     ("body_map_radiation", {"chief_complaint": "chest_pain"}, "cp_assoc"), ("cp_assoc", {}, "cp_course"), ("cp_course", {}, "cp_exac"),
+    ("cp_assoc", {"cp_site": {"regions": ["chest_center"]}}, "cpx_episode_len"),
+    ("cp_assoc", {"cp_site": {"regions": ["chest_right"]}}, "cpx_skin"),
+    ("cpx_episode_len", {}, "cpx_arm_numb"), ("cpx_arm_numb", {}, "cp_course"), ("cpx_skin", {}, "cp_course"),
     ("cp_exac", {}, "cp_relieve"), ("cp_relieve", {}, "cp_severity"), ("cp_severity", {}, "danger_signs"),
     # shared tail, routed back to a complaint-specific history question
     ("danger_signs", {"chief_complaint": "fever"}, "hx_fever"),

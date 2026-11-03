@@ -21,7 +21,7 @@ COMPLAINT AND SOCRATES
   Onset: Suddenly (within minutes)
   Character: Pressure, squeezing or heaviness
   Radiation: Jaw; Upper arm, patient's left
-  Associated symptoms: Also has: Sweating, Nausea or vomiting; Danger signs (last 24 h): None of these
+  Associated symptoms: Also has: Sweating, Nausea or vomiting; Episode length: More than 30 minutes; Arm/hand numbness: Yes; Danger signs (last 24 h): None of these
   Time course: Constant
   Exacerbating / relieving: Worse with: Walking or effort; Better with: Rest
   Severity: 8/10
@@ -41,4 +41,4 @@ OLD RECORDS (OCR TIMELINE)
 
 MEASURED
   Intake duration: 0 min 30 s
-  Fields captured: 24
+  Fields captured: 26

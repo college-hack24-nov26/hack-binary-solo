@@ -1640,7 +1640,35 @@
     }
    ],
    "next": {
-    "rules": [],
+    "rules": [
+     {
+      "if": {
+       "regionsAny": [
+        "ab_site",
+        [
+         "upper_abdomen_right",
+         "upper_abdomen_left",
+         "upper_abdomen_center"
+        ]
+       ]
+      },
+      "goto": "abx_meals"
+     },
+     {
+      "if": {
+       "regionsAny": [
+        "ab_site",
+        [
+         "lower_abdomen_right",
+         "lower_abdomen_left",
+         "lower_abdomen_center",
+         "pelvic_area"
+        ]
+       ]
+      },
+      "goto": "abx_urine_stool"
+     }
+    ],
     "default": "ab_pattern"
    },
    "redFlagRefs": [],
@@ -1978,7 +2006,31 @@
     }
    ],
    "next": {
-    "rules": [],
+    "rules": [
+     {
+      "if": {
+       "regionsAny": [
+        "hd_site",
+        [
+         "head_front"
+        ]
+       ]
+      },
+      "goto": "hdx_eyes_nose"
+     },
+     {
+      "if": {
+       "regionsAny": [
+        "hd_site",
+        [
+         "head_back",
+         "neck_back"
+        ]
+       ]
+      },
+      "goto": "hdx_neck_tight"
+     }
+    ],
     "default": "hd_course"
    },
    "redFlagRefs": [
@@ -2324,7 +2376,31 @@
     }
    ],
    "next": {
-    "rules": [],
+    "rules": [
+     {
+      "if": {
+       "regionsAny": [
+        "cp_site",
+        [
+         "chest_left",
+         "chest_center"
+        ]
+       ]
+      },
+      "goto": "cpx_episode_len"
+     },
+     {
+      "if": {
+       "regionsAny": [
+        "cp_site",
+        [
+         "chest_right"
+        ]
+       ]
+      },
+      "goto": "cpx_skin"
+     }
+    ],
     "default": "cp_course"
    },
    "redFlagRefs": [
@@ -2844,6 +2920,298 @@
    "translationStatus": "machine-drafted, needs native review",
    "socrates": "time_course",
    "shortLabel": "Happened before"
+  },
+  {
+   "id": "cpx_episode_len",
+   "type": "single_choice",
+   "section": "module",
+   "text": {
+    "en": "When the pain comes, how long does it last?",
+    "hi": "जब दर्द आता है, तो कितनी देर रहता है?",
+    "mr": "वेदना आली की किती वेळ राहते?"
+   },
+   "options": [
+    {
+     "id": "under_5",
+     "en": "Less than 5 minutes",
+     "hi": "5 मिनट से कम",
+     "mr": "5 मिनिटांपेक्षा कमी"
+    },
+    {
+     "id": "m5_30",
+     "en": "5 to 30 minutes",
+     "hi": "5 से 30 मिनट",
+     "mr": "5 ते 30 मिनिटे"
+    },
+    {
+     "id": "over_30",
+     "en": "More than 30 minutes",
+     "hi": "30 मिनट से ज़्यादा",
+     "mr": "30 मिनिटांपेक्षा जास्त"
+    },
+    {
+     "id": "constant",
+     "en": "It is there all the time",
+     "hi": "हर समय रहता है",
+     "mr": "सतत असते"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "cpx_arm_numb"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "associated",
+   "shortLabel": "Episode length",
+   "source": null,
+   "sourceChecked": false
+  },
+  {
+   "id": "cpx_arm_numb",
+   "type": "yes_no_unsure",
+   "section": "module",
+   "text": {
+    "en": "Do you feel any numbness, tingling or heaviness in your arm or hand?",
+    "hi": "क्या आपको हाथ या बाँह में सुन्नपन, झनझनाहट या भारीपन महसूस होता है?",
+    "mr": "तुमच्या हातात किंवा बाहूत बधिरता, मुंग्या किंवा जडपणा जाणवतो का?"
+   },
+   "options": [
+    {
+     "id": "yes",
+     "en": "Yes",
+     "hi": "हाँ",
+     "mr": "होय"
+    },
+    {
+     "id": "no",
+     "en": "No",
+     "hi": "नहीं",
+     "mr": "नाही"
+    },
+    {
+     "id": "unsure",
+     "en": "Not sure",
+     "hi": "पक्का नहीं",
+     "mr": "खात्री नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "cp_course"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "associated",
+   "shortLabel": "Arm/hand numbness",
+   "source": null,
+   "sourceChecked": false
+  },
+  {
+   "id": "cpx_skin",
+   "type": "yes_no_unsure",
+   "section": "module",
+   "text": {
+    "en": "Is there a rash, blisters, or a spot that hurts to touch on the skin over the painful area?",
+    "hi": "क्या दर्द वाली जगह की त्वचा पर दाने, फफोले या छूने पर दुखने वाली जगह है?",
+    "mr": "वेदनेच्या जागी त्वचेवर पुरळ, फोड किंवा स्पर्शाने दुखणारी जागा आहे का?"
+   },
+   "options": [
+    {
+     "id": "yes",
+     "en": "Yes",
+     "hi": "हाँ",
+     "mr": "होय"
+    },
+    {
+     "id": "no",
+     "en": "No",
+     "hi": "नहीं",
+     "mr": "नाही"
+    },
+    {
+     "id": "unsure",
+     "en": "Not sure",
+     "hi": "पक्का नहीं",
+     "mr": "खात्री नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "cp_course"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "associated",
+   "shortLabel": "Skin over the area",
+   "source": null,
+   "sourceChecked": false
+  },
+  {
+   "id": "abx_meals",
+   "type": "single_choice",
+   "section": "module",
+   "text": {
+    "en": "Is the pain linked to eating?",
+    "hi": "क्या दर्द का खाने से कोई संबंध है?",
+    "mr": "वेदनेचा जेवणाशी काही संबंध आहे का?"
+   },
+   "options": [
+    {
+     "id": "before",
+     "en": "It comes before meals",
+     "hi": "खाने से पहले आता है",
+     "mr": "जेवणापूर्वी येते"
+    },
+    {
+     "id": "after",
+     "en": "It comes after meals",
+     "hi": "खाने के बाद आता है",
+     "mr": "जेवणानंतर येते"
+    },
+    {
+     "id": "no_link",
+     "en": "No link to meals",
+     "hi": "खाने से कोई संबंध नहीं",
+     "mr": "जेवणाशी संबंध नाही"
+    },
+    {
+     "id": "not_eating",
+     "en": "I am not eating at the moment",
+     "hi": "मैं अभी खा नहीं रहा/रही",
+     "mr": "मी सध्या जेवत नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "ab_pattern"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "associated",
+   "shortLabel": "Link to meals",
+   "source": null,
+   "sourceChecked": false
+  },
+  {
+   "id": "abx_urine_stool",
+   "type": "yes_no_unsure",
+   "section": "module",
+   "text": {
+    "en": "Have you noticed any change in your urine or stools, such as colour, amount or how often?",
+    "hi": "क्या पेशाब या मल में कोई बदलाव दिखा है, जैसे रंग, मात्रा या कितनी बार?",
+    "mr": "लघवी किंवा शौचात काही बदल जाणवला आहे का, जसे रंग, प्रमाण किंवा किती वेळा?"
+   },
+   "options": [
+    {
+     "id": "yes",
+     "en": "Yes",
+     "hi": "हाँ",
+     "mr": "होय"
+    },
+    {
+     "id": "no",
+     "en": "No",
+     "hi": "नहीं",
+     "mr": "नाही"
+    },
+    {
+     "id": "unsure",
+     "en": "Not sure",
+     "hi": "पक्का नहीं",
+     "mr": "खात्री नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "ab_pattern"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "associated",
+   "shortLabel": "Urine/stool change",
+   "source": null,
+   "sourceChecked": false
+  },
+  {
+   "id": "hdx_eyes_nose",
+   "type": "yes_no_unsure",
+   "section": "module",
+   "text": {
+    "en": "Do you have pain, redness or watering in the eyes, or a blocked or runny nose?",
+    "hi": "क्या आँखों में दर्द, लालिमा या पानी आना, या नाक बंद या बहना है?",
+    "mr": "डोळ्यांत वेदना, लालसरपणा किंवा पाणी येणे, किंवा नाक चोंदलेले किंवा वाहणारे आहे का?"
+   },
+   "options": [
+    {
+     "id": "yes",
+     "en": "Yes",
+     "hi": "हाँ",
+     "mr": "होय"
+    },
+    {
+     "id": "no",
+     "en": "No",
+     "hi": "नहीं",
+     "mr": "नाही"
+    },
+    {
+     "id": "unsure",
+     "en": "Not sure",
+     "hi": "पक्का नहीं",
+     "mr": "खात्री नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "hd_course"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "associated",
+   "shortLabel": "Eyes/nose symptoms",
+   "source": null,
+   "sourceChecked": false
+  },
+  {
+   "id": "hdx_neck_tight",
+   "type": "yes_no_unsure",
+   "section": "module",
+   "text": {
+    "en": "Do the muscles at the back of your neck or shoulders feel tight or sore?",
+    "hi": "क्या गर्दन के पीछे या कंधों की मांसपेशियाँ कसी हुई या दुखती हैं?",
+    "mr": "मानेच्या मागच्या किंवा खांद्यांच्या स्नायूंमध्ये ताण किंवा दुखणे आहे का?"
+   },
+   "options": [
+    {
+     "id": "yes",
+     "en": "Yes",
+     "hi": "हाँ",
+     "mr": "होय"
+    },
+    {
+     "id": "no",
+     "en": "No",
+     "hi": "नहीं",
+     "mr": "नाही"
+    },
+    {
+     "id": "unsure",
+     "en": "Not sure",
+     "hi": "पक्का नहीं",
+     "mr": "खात्री नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "hd_course"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "associated",
+   "shortLabel": "Neck/shoulder tightness",
+   "source": null,
+   "sourceChecked": false
   }
  ]
 }
