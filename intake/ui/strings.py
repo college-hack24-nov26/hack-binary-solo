@@ -17,6 +17,8 @@ S = {
     "new": ("Start for next patient", "अगले मरीज़ के लिए शुरू करें", "पुढील रुग्णासाठी सुरू करा"),
     "progress": ("Question", "सवाल", "प्रश्न"),
     "pick_many": ("Tap all that apply, then press Next.", "जो लागू हों सब चुनें, फिर आगे दबाएँ।", "जे लागू असेल ते सर्व निवडा, मग पुढे दाबा."),
+    "demo": ("Demo mode: load a synthetic chest-pain patient", "डेमो मोड: एक नकली छाती-दर्द मरीज़ लोड करें", "डेमो मोड: एक कृत्रिम छातीदुखी रुग्ण लोड करा"),
+    "demo_note": ("Synthetic demo patient loaded. Check the answers, then finish.", "नकली डेमो मरीज़ लोड हुआ। जवाब जाँचें, फिर पूरा करें।", "कृत्रिम डेमो रुग्ण लोड झाला. उत्तरे तपासा, मग पूर्ण करा."),
     "bm_list": ("Choose from a list instead", "इसके बजाय सूची से चुनें", "त्याऐवजी यादीतून निवडा"),
     "bm_clear": ("Clear", "हटाएँ", "पुसा"),
     "bm_none_selected": ("Tap the body, or use the list below.", "शरीर पर दबाएँ, या नीचे की सूची से चुनें।", "शरीरावर दाबा, किंवा खालील यादी वापरा."),

@@ -2,6 +2,7 @@
 import streamlit as st
 
 from intake.conditions import SKIPPED, UNSURE
+from intake.demo import load_demo
 from intake.engine import answer_label
 from intake.models import load_graph
 from intake.redflags import load_rules
@@ -27,6 +28,7 @@ def _new():
     g, r = _data()
     lang = ss.get("lang", "en")
     ss.sess, ss.view, ss.stage = IntakeSession(g, r, language=lang), None, "flow"
+    ss.demo = False
 
 
 if "sess" not in ss:
@@ -47,6 +49,13 @@ def _set(node_id, value):
         store.delete(sess.token)
     else:
         _save()
+
+
+def _demo():
+    g, r = _data()
+    ss.sess, ss.view, ss.stage = load_demo(g, r, language=ss.get("lang", "en")), None, "flow"
+    ss.demo = True
+    store.save(ss.sess.to_record(complete=False, prior=store.load(ss.sess.token)))
 
 
 def _go_back(view):
@@ -77,6 +86,8 @@ if ss.stage == "done":
 view = ss.view or sess.pending
 if view is None:                                   # path complete -> review screen
     st.subheader(t("review", lang))
+    if ss.get("demo"):
+        st.info(t("demo_note", lang))
     for nid in sess.path:
         n = g.node(nid)
         if n.section == "consent":
@@ -153,3 +164,5 @@ if not is_consent:
     if b3.button(t("skip", lang), key="skip", use_container_width=True):
         _set(view, SKIPPED)
         st.rerun()
+else:
+    st.button(t("demo", lang), key="demo_mode", on_click=_demo, use_container_width=True)

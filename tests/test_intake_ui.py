@@ -126,3 +126,31 @@ def test_doctor_page_shows_regions_and_diagram(tmp_path):
     assert any("Chest, patient's left" in t.value for t in at.text_area)
     at.radio[0].set_value("hi").run()
     assert any("छाती" in t.value for t in at.text_area) and not at.exception
+
+
+# ------------------------------------------------------------ demo mode
+def test_demo_button_loads_chest_pain_patient_to_review_and_saves_record():
+    at = page("patient").run()
+    at.button(key="demo_mode").click().run()
+    assert not at.exception
+    assert "Synthetic demo patient" in at.info[0].value
+    assert at.button(key="chg_cp_site")                                  # review screen lists the body-map question
+    recs = store.list_records()
+    assert len(recs) == 1 and recs[0].complaint.id == "chest_pain" and recs[0].status == "in_progress"
+    assert [f.ruleId for f in recs[0].redFlags] == ["RF_CHEST_PAIN_RADIATION_SWEATING"]
+
+
+def test_demo_flow_finishes_and_hindi_strings_exist():
+    at = page("patient").run()
+    at.radio[0].set_value("hi").run()
+    assert "डेमो" in at.button(key="demo_mode").label
+    at.button(key="demo_mode").click().run()
+    assert "डेमो" in at.info[0].value
+    next(b for b in at.button if "पूरा करें" in b.label).click().run()    # finish
+    assert not at.exception
+    assert store.list_records()[0].status == "complete"
+
+
+def test_demo_button_not_offered_after_consent():
+    at, _ = at_site()
+    assert "demo_mode" not in [b.key for b in at.button]
