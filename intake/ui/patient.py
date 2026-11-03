@@ -5,6 +5,7 @@ import streamlit as st
 
 from intake.conditions import SKIPPED, UNSURE
 from intake.demo import load_demo
+from intake.doctors import get_doctor, load_doctors
 from intake.engine import answer_label
 from intake.models import load_graph
 from intake.redflags import load_rules
@@ -75,7 +76,25 @@ if sess.declined:
     st.button(t("new", lang), on_click=_new)
     st.stop()
 
+if ss.stage == "doctor":                           # patient picks the doctor after the quiz
+    st.subheader(t("choose_doctor", lang))
+    st.caption(t("choose_doctor_hint", lang))
+
+    def _choose(doctor_id):
+        sess.assigned_doctor = doctor_id
+        rec = store.load(sess.token)
+        if rec is not None:
+            store.save(rec.model_copy(update={"assignedDoctor": doctor_id}))
+        ss.stage = "done"
+
+    for d in load_doctors():
+        st.button(f"**{d.name}**  \n{d.specialty.get(lang)}", key=f"doc_{d.id}", use_container_width=True, on_click=_choose, args=(d.id,))
+    st.button(t("any_doctor", lang), key="doc_any", use_container_width=True, on_click=_choose, args=(None,))
+    st.stop()
+
 if ss.stage == "done":
+    if (d := get_doctor(sess.assigned_doctor)):
+        st.info(f"{t('your_doctor', lang)}: {d.label(lang)}")
     st.success(t("done", lang))
     st.button(t("new", lang), on_click=_new)
     st.stop()
@@ -98,7 +117,7 @@ if view is None:                                   # path complete -> review scr
         rec = sess.finish()
         rec = rec.model_copy(update={"doctorEdits": {}, "editedFields": []})
         store.save(rec)
-        ss.stage = "done"
+        ss.stage = "doctor"
         st.rerun()
     st.stop()
 

@@ -95,6 +95,7 @@ class PatientRecord(BaseModel):
     timeline: list[TimelineEntry] = []
     intakeDurationSeconds: Optional[int] = None
     fieldsCaptured: int = 0
+    assignedDoctor: Optional[str] = None   # doctor id chosen by the patient (data/doctors.json); None = no preference
     doctorEdits: dict[str, DoctorEdit] = {}
     editedByDoctor: bool = False
     editedFields: list[str] = Field(default_factory=list)

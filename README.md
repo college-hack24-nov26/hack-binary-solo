@@ -4,7 +4,7 @@
 .venv/bin/python scripts/create_user.py <username> <doctor|staff>   # once
 .venv/bin/streamlit run main_app.py
 ```
-1. **Sign in** (staff or doctor). 2. **Scan old records** with local OCR (optional; a doctor confirms each scan and it is attached to the patient). 3. **Patient quiz**. Staff board and Doctor summary follow in the sidebar. The older `app.py` (OCR only) and `intake_app.py` (quiz, staff, doctor) still run on their own.
+1. **Sign in** (staff or doctor). 2. **Scan old records** with local OCR (optional; a doctor confirms each scan and it is attached to the patient). 3. **Patient quiz**, then the patient **chooses a doctor** (`data/doctors.json`, synthetic; the choice is stored as `assignedDoctor` on the record). Staff board and Doctor summary follow in the sidebar. The older `app.py` (OCR only) and `intake_app.py` (quiz, staff, doctor) still run on their own.
 
 ---
 

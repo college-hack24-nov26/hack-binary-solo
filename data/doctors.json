@@ -1,0 +1,14 @@
+{
+ "_note": "SYNTHETIC doctors for the demo. Hindi/Marathi specialty names are machine-drafted, needs native review. `username` links a doctor to a login (optional); leave null if unlinked.",
+ "translationStatus": "machine-drafted, needs native review",
+ "doctors": [
+  {"id": "dr_general", "name": "Dr. Asha Kulkarni", "username": "doctor1",
+   "specialty": {"en": "General Physician", "hi": "सामान्य चिकित्सक", "mr": "सामान्य वैद्य"}},
+  {"id": "dr_heart", "name": "Dr. Rohan Deshmukh", "username": null,
+   "specialty": {"en": "Cardiologist (heart)", "hi": "हृदय रोग विशेषज्ञ", "mr": "हृदयरोगतज्ज्ञ"}},
+  {"id": "dr_child", "name": "Dr. Meera Joshi", "username": null,
+   "specialty": {"en": "Paediatrician (children)", "hi": "बाल रोग विशेषज्ञ", "mr": "बालरोगतज्ज्ञ"}},
+  {"id": "dr_women", "name": "Dr. Sunita Pawar", "username": null,
+   "specialty": {"en": "Gynaecologist (women's health)", "hi": "स्त्री रोग विशेषज्ञ", "mr": "स्त्रीरोगतज्ज्ञ"}}
+ ]
+}

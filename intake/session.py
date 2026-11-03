@@ -32,6 +32,7 @@ class IntakeSession:
         self.answers: dict[str, Any] = {}
         self.timeline: list = []
         self.finished_at: Optional[datetime] = None
+        self.assigned_doctor: Optional[str] = None     # chosen by the patient after the quiz
         self._res: PathResult = recompute_path(graph, {})
         self.red_flags: list[Triggered] = []
 
@@ -101,7 +102,7 @@ class IntakeSession:
         now = self.finished_at if complete and self.finished_at else self.clock()
         return build_record(self.graph, self.rules, self.answers, token=self.token, language=self.language,
                             consent_at=self.consent_at, created_at=self.created_at, now=now,
-                            complete=complete, timeline=self.timeline, prior=prior)
+                            complete=complete, timeline=self.timeline, prior=prior, assigned_doctor=self.assigned_doctor)
 
     def finish(self):
         if not self.complete:

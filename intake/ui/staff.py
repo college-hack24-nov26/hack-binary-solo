@@ -5,11 +5,13 @@ import streamlit as st
 from intake.engine import answer_label
 from intake.models import load_graph
 from intake.ui.gate import require_login
+from intake.doctors import get_doctor, load_doctors
 from records import store
 
 require_login()          # staff or doctor
 
 g = load_graph()
+DOCTORS = load_doctors()
 st.title("Staff alerts")
 st.caption("Red flags come from draft rules and are only a prompt to look at the patient. Not a diagnosis.")
 
@@ -22,7 +24,9 @@ def board():
         st.info("No patients yet.")
     for r in recs:
         urgent = [f for f in r.redFlags if f.severity == "urgent"]
-        head = f"{r.token} · {r.status.replace('_', ' ')} · {r.complaint.label or 'complaint not yet given'}"
+        doc = get_doctor(r.assignedDoctor, DOCTORS)
+        head = (f"{r.token} · {r.status.replace('_', ' ')} · {r.complaint.label or 'complaint not yet given'}"
+                f" · {'→ ' + doc.name if doc else 'no doctor chosen'}")
         icon = "🔴 " if urgent else "🟠 " if r.redFlags else ""
         with st.expander(f"{icon}{head}", expanded=bool(r.redFlags)):
             for f in r.redFlags:

@@ -96,8 +96,8 @@ def _body_map_answer(node, nid: str, v):
 
 def build_record(graph: Graph, rules: list[RedFlagRule], answers: dict, *, token: str, language: str,
                  consent_at: Optional[datetime], created_at: datetime, now: datetime, complete: bool,
-                 timeline: Optional[list[TimelineEntry]] = None, prior: Optional[PatientRecord] = None
-                 ) -> PatientRecord:
+                 timeline: Optional[list[TimelineEntry]] = None, prior: Optional[PatientRecord] = None,
+                 assigned_doctor: Optional[str] = None) -> PatientRecord:
     res = recompute_path(graph, answers)
     ans, path = res.answers, res.path
 
@@ -135,7 +135,7 @@ def build_record(graph: Graph, rules: list[RedFlagRule], answers: dict, *, token
         dosingInputs=build_dosing_inputs(path, ans), complaint=complaint, socrates=socrates, history=history,
         answers=ans, redFlags=evaluate_rules(rules, ans), timeline=timeline or [],
         intakeDurationSeconds=int((now - started).total_seconds()) if complete and started else None,
-        fieldsCaptured=captured)
+        fieldsCaptured=captured, assignedDoctor=assigned_doctor or (prior.assignedDoctor if prior else None))
     if prior is not None:  # doctor edits survive a rebuild
         rec.doctorEdits, rec.editedByDoctor, rec.editedFields = prior.doctorEdits, prior.editedByDoctor, prior.editedFields
     return rec

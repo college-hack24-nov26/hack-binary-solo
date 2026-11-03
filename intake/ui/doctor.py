@@ -7,6 +7,7 @@ import streamlit as st
 from intake import llm_summary
 from intake.summary import apply_doctor_edits, body_diagram_svgs, build_summary, duration_text, template_paragraph
 from intake.ui.gate import can_edit, require_login
+from intake.doctors import doctor_for_login, get_doctor, load_doctors
 from records import store
 from records.schema import TimelineEntry
 
@@ -20,9 +21,14 @@ recs = store.list_records()
 if not recs:
     st.info("No patients yet.")
     st.stop()
-recs.sort(key=lambda r: (-len(r.redFlags), r.updatedAt))
+DOCTORS = load_doctors()
+me = doctor_for_login(user["username"], DOCTORS)           # the doctor this login is linked to, if any
+mine = lambda r: bool(me) and r.assignedDoctor == me.id
+recs.sort(key=lambda r: (not mine(r), -len(r.redFlags), r.updatedAt))   # my patients first, then by red flags
 token = st.selectbox("Patient token", [r.token for r in recs],
-                     format_func=lambda t: next(f"{r.token} · {r.complaint.label or '-'}{' · 🔴' if r.redFlags else ''}" for r in recs if r.token == t))
+                     format_func=lambda t: next(f"{'👤 ' if mine(r) else ''}{r.token} · {r.complaint.label or '-'}{' · 🔴' if r.redFlags else ''}"
+                                                f" · {d.name if (d := get_doctor(r.assignedDoctor, DOCTORS)) else 'no doctor chosen'}"
+                                                for r in recs if r.token == t))
 rec = store.load(token)
 lang = st.radio("Summary language (body regions)", ["en", "hi", "mr"], horizontal=True,
                 format_func={"en": "English", "hi": "हिन्दी", "mr": "मराठी"}.get)
