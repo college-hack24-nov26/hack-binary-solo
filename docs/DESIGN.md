@@ -315,3 +315,11 @@ Captured 22 screenshots (`docs/screens/gallery/`, 4 viewports, en/hi/mr, light/d
 - Drug name truncated in a two-column row at 1440; drug and indication stack in the left column on wide screens.
 - **Removed decoration:** the teal 2 px frame around the Run section.
 - Dark: surfaces step up in lightness, the DEMO bar keeps white-on-red, the chain seal stays green with text.
+
+### Review 3: kiosk, portrait 800x1280 (Marathi) and landscape 1280x800 (Hindi)
+- Type was too timid for an elderly reader: Devanagari tile labels read about 20 px. Tiles are now 28 px, the question 36-52 px, and the language screen has a hero line in English with the Hindi and Marathi lines under it, 52 px language names and the product mark.
+- Body-map side labels were drawn inside the SVG at about 7 px; they are now real text under the figure ("Patient's right" / "Patient's left", swapped on the back view).
+- The stamp overlapped the token; it now sits in the flow under the token and can never cover it. The slip's "Room 12 · Ground floor" and "estimate · ahead" meta strings became a comma and a line break.
+- The floor line was a thin bar; it now runs edge to edge across the slip, and under the slip a full-width "You are here > > > Room 12" strip in the room's colour (text colour chosen for AA on that colour; the yellow line gets an ink edge). This is the kiosk's signature moment.
+- Checked: one primary action per screen (Continue or the tiles themselves; Not sure and Skip are secondary in their own row under a dashed rule); Marathi consent text wraps without clipping at line height 1.5; landscape puts the question left and answers right.
+- **Removed decoration:** the second dashed rule that separated the slip's wait line.

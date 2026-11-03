@@ -217,6 +217,8 @@ Demo (404 unless `DEMO_MODE=1`)
 - OCR images stay only for `OCR_SESSION_TTL_S` (900 s): a doctor confirming a scan later sees the draft without the image.
 - The kiosk does not show the offline badge (see open question 3).
 
+- Records layer quirk (pre-existing, not changed): `PatientRecord.socrates` is a union, so a saved radiation answer loads back as `SiteAnswer` with `view`/`inputMode` = null. Harmless for every reader; the parity test compares records after the same JSON round trip.
+
 ## (d) Open questions (yours to decide; work continues with the default)
 1. **Doctor names on the slip.** `data/doctors.json` has realistic synthetic doctor names ("Dr. Asha Kulkarni"). The no-real-names rule is about patients, so I keep them. Default: keep.
 2. **Patient wait estimate.** Without a "seen" status the estimate never shrinks. Default: keep the simple estimate; adding a "Mark seen" doctor action would touch the record schema again. Want it?

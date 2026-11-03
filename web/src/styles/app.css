@@ -123,12 +123,14 @@
   /* kiosk scale (base 20); rem-based so "A+ larger text" scales everything together */
   --text-k-body: 1.25rem;
   --text-k-body--line-height: 1.5;
-  --text-k-tile: 1.5rem;
+  --text-k-tile: 1.75rem;
   --text-k-tile--line-height: 1.4;
-  --text-k-lead: 1.75rem;
+  --text-k-lead: 1.875rem;
   --text-k-lead--line-height: 1.35;
-  --text-k-question: clamp(2rem, 1.2rem + 2.2vw, 2.75rem);
+  --text-k-question: clamp(2.25rem, 1.4rem + 2.6vw, 3.25rem);
   --text-k-question--line-height: 1.3;
+  --text-k-hero: clamp(2.5rem, 1.6rem + 3vw, 3.75rem);
+  --text-k-hero--line-height: 1.25;
   --text-k-queue: 7.5rem;
   --text-k-queue--line-height: 1;
 

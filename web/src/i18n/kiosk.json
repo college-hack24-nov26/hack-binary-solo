@@ -2,68 +2,335 @@
   "_note": "Kiosk UI chrome in en/hi/mr. Question and option text comes from data/intake_graph.json via the API, not from here. Strings shared with intake/ui/strings.py keep its wording. All Hindi and Marathi here are machine-drafted, needs native review (listed by scripts/list_unreviewed_translations.py).",
   "translationStatus": "machine-drafted, needs native review",
   "strings": {
-    "appName": { "en": "Patient check-in", "hi": "मरीज़ पंजीकरण", "mr": "रुग्ण नोंदणी" },
-    "chooseLanguage": { "en": "Choose your language", "hi": "अपनी भाषा चुनें", "mr": "तुमची भाषा निवडा" },
-    "languageHint": { "en": "Tap to begin", "hi": "शुरू करने के लिए दबाएँ", "mr": "सुरू करण्यासाठी दाबा" },
-    "back": { "en": "Back", "hi": "पीछे", "mr": "मागे" },
-    "listen": { "en": "Listen again", "hi": "फिर से सुनें", "mr": "पुन्हा ऐका" },
-    "changeLanguage": { "en": "Language", "hi": "भाषा", "mr": "भाषा" },
-    "help": { "en": "Call staff", "hi": "स्टाफ को बुलाएँ", "mr": "कर्मचाऱ्यांना बोलवा" },
-    "helpSent": { "en": "Staff have been told. Someone will come to you.", "hi": "स्टाफ को बता दिया गया है। कोई आपके पास आएगा।", "mr": "कर्मचाऱ्यांना कळवले आहे. कोणीतरी तुमच्याकडे येईल." },
-    "helpFailed": { "en": "Could not call staff from here. Please wave to the desk.", "hi": "यहाँ से स्टाफ को नहीं बुला सके। कृपया काउंटर की ओर हाथ हिलाएँ।", "mr": "इथून कर्मचाऱ्यांना बोलवता आले नाही. कृपया काउंटरकडे हात हलवा." },
-    "unsure": { "en": "Not sure", "hi": "पक्का नहीं", "mr": "खात्री नाही" },
-    "skip": { "en": "Skip", "hi": "छोड़ें", "mr": "वगळा" },
-    "continue": { "en": "Continue", "hi": "आगे बढ़ें", "mr": "पुढे चला" },
-    "selected": { "en": "Selected", "hi": "चुना गया", "mr": "निवडले" },
-    "pickMany": { "en": "Tap all that apply, then press Continue.", "hi": "जो लागू हों सब चुनें, फिर आगे बढ़ें दबाएँ।", "mr": "जे लागू असेल ते सर्व निवडा, मग पुढे चला दाबा." },
-    "typeHere": { "en": "Type here", "hi": "यहाँ लिखें", "mr": "येथे लिहा" },
-    "range": { "en": "Between {min} and {max}", "hi": "{min} से {max} के बीच", "mr": "{min} ते {max} दरम्यान" },
-    "outOfRange": { "en": "Enter a number between {min} and {max}.", "hi": "{min} से {max} के बीच की संख्या लिखें।", "mr": "{min} ते {max} दरम्यानची संख्या लिहा." },
-    "deleteDigit": { "en": "Delete last digit", "hi": "आखिरी अंक मिटाएँ", "mr": "शेवटचा अंक खोडा" },
-    "clear": { "en": "Clear", "hi": "मिटाएँ", "mr": "पुसा" },
-    "scaleLow": { "en": "None", "hi": "बिल्कुल नहीं", "mr": "अजिबात नाही" },
-    "scaleHigh": { "en": "Worst", "hi": "सबसे ज़्यादा", "mr": "सर्वात जास्त" },
-    "declined": { "en": "No problem. No questions were asked and nothing was saved. Please speak to the staff.", "hi": "कोई बात नहीं। कोई सवाल नहीं पूछा गया और कुछ सहेजा नहीं गया। कृपया स्टाफ से बात करें।", "mr": "ठीक आहे. कोणताही प्रश्न विचारला नाही आणि काहीही जतन केले नाही. कृपया कर्मचाऱ्यांशी बोला." },
-    "review": { "en": "Please check your answers", "hi": "कृपया अपने जवाब जाँचें", "mr": "कृपया तुमची उत्तरे तपासा" },
-    "change": { "en": "Change", "hi": "बदलें", "mr": "बदला" },
-    "confirmAll": { "en": "Everything is correct", "hi": "सब सही है", "mr": "सर्व बरोबर आहे" },
-    "chooseDoctor": { "en": "Which doctor would you like to see?", "hi": "आप किस डॉक्टर को दिखाना चाहते हैं?", "mr": "तुम्हाला कोणत्या डॉक्टरांना दाखवायचे आहे?" },
-    "chooseDoctorHint": { "en": "Tap one. The staff will call you in turn.", "hi": "एक चुनें। स्टाफ आपको क्रम से बुलाएगा।", "mr": "एक निवडा. कर्मचारी तुम्हाला क्रमाने बोलावतील." },
-    "anyDoctor": { "en": "Any available doctor", "hi": "कोई भी उपलब्ध डॉक्टर", "mr": "कोणतेही उपलब्ध डॉक्टर" },
-    "room": { "en": "Room {room}", "hi": "कमरा {room}", "mr": "खोली {room}" },
-    "followLine": { "en": "Follow the {line} line to Room {room}", "hi": "{line} लाइन के साथ कमरा {room} तक जाएँ", "mr": "{line} रेषेने खोली {room} कडे जा" },
-    "goToRoom": { "en": "Go to Room {room}", "hi": "कमरा {room} में जाएँ", "mr": "खोली {room} मध्ये जा" },
-    "reception": { "en": "Reception will guide you", "hi": "रिसेप्शन आपको रास्ता बताएगा", "mr": "स्वागत कक्ष तुम्हाला मार्ग दाखवेल" },
-    "tokenTitle": { "en": "OPD token", "hi": "ओपीडी टोकन", "mr": "ओपीडी टोकन" },
-    "registered": { "en": "You are registered", "hi": "आपका पंजीकरण हो गया", "mr": "तुमची नोंदणी झाली" },
-    "stamp": { "en": "Registered", "hi": "दर्ज", "mr": "नोंद झाली" },
-    "anyDoctorSlip": { "en": "Next available doctor", "hi": "अगले उपलब्ध डॉक्टर", "mr": "पुढील उपलब्ध डॉक्टर" },
-    "waitEstimate": { "en": "About {min} minutes (estimate)", "hi": "लगभग {min} मिनट (अनुमान)", "mr": "सुमारे {min} मिनिटे (अंदाज)" },
-    "ahead": { "en": "{n} ahead of you", "hi": "आपसे पहले {n}", "mr": "तुमच्या आधी {n}" },
-    "next": { "en": "You are next (estimate)", "hi": "अगली बारी आपकी है (अनुमान)", "mr": "पुढचा क्रमांक तुमचा आहे (अंदाज)" },
-    "print": { "en": "Print slip", "hi": "पर्ची छापें", "mr": "पावती छापा" },
-    "done": { "en": "Done", "hi": "हो गया", "mr": "झाले" },
-    "wait": { "en": "Thank you. Please wait for the staff to call you.", "hi": "धन्यवाद। कृपया स्टाफ के बुलाने तक प्रतीक्षा करें।", "mr": "धन्यवाद. कृपया कर्मचाऱ्यांनी बोलावेपर्यंत थांबा." },
-    "autoReset": { "en": "This screen clears itself in {s} seconds.", "hi": "यह स्क्रीन {s} सेकंड में अपने आप साफ़ हो जाएगी।", "mr": "ही स्क्रीन {s} सेकंदात आपोआप रिकामी होईल." },
-    "stillThere": { "en": "Are you still there?", "hi": "क्या आप अभी भी यहाँ हैं?", "mr": "तुम्ही अजून इथे आहात का?" },
-    "stillThereBody": { "en": "Tap Continue to keep going. Otherwise this screen starts over in {s} seconds.", "hi": "जारी रखने के लिए आगे बढ़ें दबाएँ। नहीं तो यह स्क्रीन {s} सेकंड में फिर से शुरू होगी।", "mr": "सुरू ठेवण्यासाठी पुढे चला दाबा. नाहीतर ही स्क्रीन {s} सेकंदात पुन्हा सुरू होईल." },
-    "startOver": { "en": "Start over", "hi": "फिर से शुरू करें", "mr": "पुन्हा सुरू करा" },
-    "error": { "en": "Something went wrong. Please show this screen to staff.", "hi": "कुछ गड़बड़ हो गई। कृपया यह स्क्रीन स्टाफ को दिखाएँ।", "mr": "काहीतरी चुकले. कृपया ही स्क्रीन कर्मचाऱ्यांना दाखवा." },
-    "retry": { "en": "Try again", "hi": "फिर कोशिश करें", "mr": "पुन्हा प्रयत्न करा" },
-    "largerText": { "en": "Larger text", "hi": "बड़े अक्षर", "mr": "मोठी अक्षरे" },
-    "highContrast": { "en": "High contrast", "hi": "गहरे रंग", "mr": "ठळक रंग" },
-    "bmList": { "en": "Choose from a list", "hi": "सूची से चुनें", "mr": "यादीतून निवडा" },
-    "bmMap": { "en": "Show the body picture", "hi": "शरीर का चित्र दिखाएँ", "mr": "शरीराचे चित्र दाखवा" },
-    "bmTap": { "en": "Tap the place on the body. Tap again to remove it.", "hi": "शरीर पर उस जगह को दबाएँ। हटाने के लिए फिर से दबाएँ।", "mr": "शरीरावर ती जागा दाबा. काढण्यासाठी पुन्हा दाबा." },
-    "bmNone": { "en": "Nothing chosen yet.", "hi": "अभी कुछ नहीं चुना।", "mr": "अजून काही निवडले नाही." },
-    "bmMax": { "en": "You can choose at most {n}.", "hi": "आप अधिकतम {n} चुन सकते हैं।", "mr": "तुम्ही जास्तीत जास्त {n} निवडू शकता." },
-    "bmChosen": { "en": "Chosen", "hi": "चुनी गई जगहें", "mr": "निवडलेल्या जागा" },
-    "remove": { "en": "Remove {x}", "hi": "{x} हटाएँ", "mr": "{x} काढा" },
-    "progress": { "en": "Progress", "hi": "प्रगति", "mr": "प्रगती" },
-    "loading": { "en": "Loading", "hi": "लोड हो रहा है", "mr": "लोड होत आहे" },
-    "finishing": { "en": "Making your token", "hi": "आपका टोकन बन रहा है", "mr": "तुमचा टोकन तयार होत आहे" },
-    "tokenLabel": { "en": "Token", "hi": "टोकन", "mr": "टोकन" },
-    "queueLabel": { "en": "Your number", "hi": "आपका नंबर", "mr": "तुमचा क्रमांक" },
-    "doctorLabel": { "en": "Doctor", "hi": "डॉक्टर", "mr": "डॉक्टर" }
+    "appName": {
+      "en": "Patient check-in",
+      "hi": "मरीज़ पंजीकरण",
+      "mr": "रुग्ण नोंदणी"
+    },
+    "chooseLanguage": {
+      "en": "Choose your language",
+      "hi": "अपनी भाषा चुनें",
+      "mr": "तुमची भाषा निवडा"
+    },
+    "languageHint": {
+      "en": "Tap to begin",
+      "hi": "शुरू करने के लिए दबाएँ",
+      "mr": "सुरू करण्यासाठी दाबा"
+    },
+    "back": {
+      "en": "Back",
+      "hi": "पीछे",
+      "mr": "मागे"
+    },
+    "listen": {
+      "en": "Listen again",
+      "hi": "फिर से सुनें",
+      "mr": "पुन्हा ऐका"
+    },
+    "changeLanguage": {
+      "en": "Language",
+      "hi": "भाषा",
+      "mr": "भाषा"
+    },
+    "help": {
+      "en": "Call staff",
+      "hi": "स्टाफ को बुलाएँ",
+      "mr": "कर्मचाऱ्यांना बोलवा"
+    },
+    "helpSent": {
+      "en": "Staff have been told. Someone will come to you.",
+      "hi": "स्टाफ को बता दिया गया है। कोई आपके पास आएगा।",
+      "mr": "कर्मचाऱ्यांना कळवले आहे. कोणीतरी तुमच्याकडे येईल."
+    },
+    "helpFailed": {
+      "en": "Could not call staff from here. Please wave to the desk.",
+      "hi": "यहाँ से स्टाफ को नहीं बुला सके। कृपया काउंटर की ओर हाथ हिलाएँ।",
+      "mr": "इथून कर्मचाऱ्यांना बोलवता आले नाही. कृपया काउंटरकडे हात हलवा."
+    },
+    "unsure": {
+      "en": "Not sure",
+      "hi": "पक्का नहीं",
+      "mr": "खात्री नाही"
+    },
+    "skip": {
+      "en": "Skip",
+      "hi": "छोड़ें",
+      "mr": "वगळा"
+    },
+    "continue": {
+      "en": "Continue",
+      "hi": "आगे बढ़ें",
+      "mr": "पुढे चला"
+    },
+    "selected": {
+      "en": "Selected",
+      "hi": "चुना गया",
+      "mr": "निवडले"
+    },
+    "pickMany": {
+      "en": "Tap all that apply, then press Continue.",
+      "hi": "जो लागू हों सब चुनें, फिर आगे बढ़ें दबाएँ।",
+      "mr": "जे लागू असेल ते सर्व निवडा, मग पुढे चला दाबा."
+    },
+    "typeHere": {
+      "en": "Type here",
+      "hi": "यहाँ लिखें",
+      "mr": "येथे लिहा"
+    },
+    "range": {
+      "en": "Between {min} and {max}",
+      "hi": "{min} से {max} के बीच",
+      "mr": "{min} ते {max} दरम्यान"
+    },
+    "outOfRange": {
+      "en": "Enter a number between {min} and {max}.",
+      "hi": "{min} से {max} के बीच की संख्या लिखें।",
+      "mr": "{min} ते {max} दरम्यानची संख्या लिहा."
+    },
+    "deleteDigit": {
+      "en": "Delete last digit",
+      "hi": "आखिरी अंक मिटाएँ",
+      "mr": "शेवटचा अंक खोडा"
+    },
+    "clear": {
+      "en": "Clear",
+      "hi": "मिटाएँ",
+      "mr": "पुसा"
+    },
+    "scaleLow": {
+      "en": "None",
+      "hi": "बिल्कुल नहीं",
+      "mr": "अजिबात नाही"
+    },
+    "scaleHigh": {
+      "en": "Worst",
+      "hi": "सबसे ज़्यादा",
+      "mr": "सर्वात जास्त"
+    },
+    "declined": {
+      "en": "No problem. No questions were asked and nothing was saved. Please speak to the staff.",
+      "hi": "कोई बात नहीं। कोई सवाल नहीं पूछा गया और कुछ सहेजा नहीं गया। कृपया स्टाफ से बात करें।",
+      "mr": "ठीक आहे. कोणताही प्रश्न विचारला नाही आणि काहीही जतन केले नाही. कृपया कर्मचाऱ्यांशी बोला."
+    },
+    "review": {
+      "en": "Please check your answers",
+      "hi": "कृपया अपने जवाब जाँचें",
+      "mr": "कृपया तुमची उत्तरे तपासा"
+    },
+    "change": {
+      "en": "Change",
+      "hi": "बदलें",
+      "mr": "बदला"
+    },
+    "confirmAll": {
+      "en": "Everything is correct",
+      "hi": "सब सही है",
+      "mr": "सर्व बरोबर आहे"
+    },
+    "chooseDoctor": {
+      "en": "Which doctor would you like to see?",
+      "hi": "आप किस डॉक्टर को दिखाना चाहते हैं?",
+      "mr": "तुम्हाला कोणत्या डॉक्टरांना दाखवायचे आहे?"
+    },
+    "chooseDoctorHint": {
+      "en": "Tap one. The staff will call you in turn.",
+      "hi": "एक चुनें। स्टाफ आपको क्रम से बुलाएगा।",
+      "mr": "एक निवडा. कर्मचारी तुम्हाला क्रमाने बोलावतील."
+    },
+    "anyDoctor": {
+      "en": "Any available doctor",
+      "hi": "कोई भी उपलब्ध डॉक्टर",
+      "mr": "कोणतेही उपलब्ध डॉक्टर"
+    },
+    "room": {
+      "en": "Room {room}",
+      "hi": "कमरा {room}",
+      "mr": "खोली {room}"
+    },
+    "followLine": {
+      "en": "Follow the {line} line to Room {room}",
+      "hi": "{line} लाइन के साथ कमरा {room} तक जाएँ",
+      "mr": "{line} रेषेने खोली {room} कडे जा"
+    },
+    "goToRoom": {
+      "en": "Go to Room {room}",
+      "hi": "कमरा {room} में जाएँ",
+      "mr": "खोली {room} मध्ये जा"
+    },
+    "reception": {
+      "en": "Reception will guide you",
+      "hi": "रिसेप्शन आपको रास्ता बताएगा",
+      "mr": "स्वागत कक्ष तुम्हाला मार्ग दाखवेल"
+    },
+    "tokenTitle": {
+      "en": "OPD token",
+      "hi": "ओपीडी टोकन",
+      "mr": "ओपीडी टोकन"
+    },
+    "registered": {
+      "en": "You are registered",
+      "hi": "आपका पंजीकरण हो गया",
+      "mr": "तुमची नोंदणी झाली"
+    },
+    "stamp": {
+      "en": "Registered",
+      "hi": "दर्ज",
+      "mr": "नोंद झाली"
+    },
+    "anyDoctorSlip": {
+      "en": "Next available doctor",
+      "hi": "अगले उपलब्ध डॉक्टर",
+      "mr": "पुढील उपलब्ध डॉक्टर"
+    },
+    "waitEstimate": {
+      "en": "About {min} minutes (estimate)",
+      "hi": "लगभग {min} मिनट (अनुमान)",
+      "mr": "सुमारे {min} मिनिटे (अंदाज)"
+    },
+    "ahead": {
+      "en": "{n} ahead of you",
+      "hi": "आपसे पहले {n}",
+      "mr": "तुमच्या आधी {n}"
+    },
+    "next": {
+      "en": "You are next (estimate)",
+      "hi": "अगली बारी आपकी है (अनुमान)",
+      "mr": "पुढचा क्रमांक तुमचा आहे (अंदाज)"
+    },
+    "print": {
+      "en": "Print slip",
+      "hi": "पर्ची छापें",
+      "mr": "पावती छापा"
+    },
+    "done": {
+      "en": "Done",
+      "hi": "हो गया",
+      "mr": "झाले"
+    },
+    "wait": {
+      "en": "Thank you. Please wait for the staff to call you.",
+      "hi": "धन्यवाद। कृपया स्टाफ के बुलाने तक प्रतीक्षा करें।",
+      "mr": "धन्यवाद. कृपया कर्मचाऱ्यांनी बोलावेपर्यंत थांबा."
+    },
+    "autoReset": {
+      "en": "This screen clears itself in {s} seconds.",
+      "hi": "यह स्क्रीन {s} सेकंड में अपने आप साफ़ हो जाएगी।",
+      "mr": "ही स्क्रीन {s} सेकंदात आपोआप रिकामी होईल."
+    },
+    "stillThere": {
+      "en": "Are you still there?",
+      "hi": "क्या आप अभी भी यहाँ हैं?",
+      "mr": "तुम्ही अजून इथे आहात का?"
+    },
+    "stillThereBody": {
+      "en": "Tap Continue to keep going. Otherwise this screen starts over in {s} seconds.",
+      "hi": "जारी रखने के लिए आगे बढ़ें दबाएँ। नहीं तो यह स्क्रीन {s} सेकंड में फिर से शुरू होगी।",
+      "mr": "सुरू ठेवण्यासाठी पुढे चला दाबा. नाहीतर ही स्क्रीन {s} सेकंदात पुन्हा सुरू होईल."
+    },
+    "startOver": {
+      "en": "Start over",
+      "hi": "फिर से शुरू करें",
+      "mr": "पुन्हा सुरू करा"
+    },
+    "error": {
+      "en": "Something went wrong. Please show this screen to staff.",
+      "hi": "कुछ गड़बड़ हो गई। कृपया यह स्क्रीन स्टाफ को दिखाएँ।",
+      "mr": "काहीतरी चुकले. कृपया ही स्क्रीन कर्मचाऱ्यांना दाखवा."
+    },
+    "retry": {
+      "en": "Try again",
+      "hi": "फिर कोशिश करें",
+      "mr": "पुन्हा प्रयत्न करा"
+    },
+    "largerText": {
+      "en": "Larger text",
+      "hi": "बड़े अक्षर",
+      "mr": "मोठी अक्षरे"
+    },
+    "highContrast": {
+      "en": "High contrast",
+      "hi": "गहरे रंग",
+      "mr": "ठळक रंग"
+    },
+    "bmList": {
+      "en": "Choose from a list",
+      "hi": "सूची से चुनें",
+      "mr": "यादीतून निवडा"
+    },
+    "bmMap": {
+      "en": "Show the body picture",
+      "hi": "शरीर का चित्र दिखाएँ",
+      "mr": "शरीराचे चित्र दाखवा"
+    },
+    "bmTap": {
+      "en": "Tap the place on the body. Tap again to remove it.",
+      "hi": "शरीर पर उस जगह को दबाएँ। हटाने के लिए फिर से दबाएँ।",
+      "mr": "शरीरावर ती जागा दाबा. काढण्यासाठी पुन्हा दाबा."
+    },
+    "bmNone": {
+      "en": "Nothing chosen yet.",
+      "hi": "अभी कुछ नहीं चुना।",
+      "mr": "अजून काही निवडले नाही."
+    },
+    "bmMax": {
+      "en": "You can choose at most {n}.",
+      "hi": "आप अधिकतम {n} चुन सकते हैं।",
+      "mr": "तुम्ही जास्तीत जास्त {n} निवडू शकता."
+    },
+    "bmChosen": {
+      "en": "Chosen",
+      "hi": "चुनी गई जगहें",
+      "mr": "निवडलेल्या जागा"
+    },
+    "remove": {
+      "en": "Remove {x}",
+      "hi": "{x} हटाएँ",
+      "mr": "{x} काढा"
+    },
+    "progress": {
+      "en": "Progress",
+      "hi": "प्रगति",
+      "mr": "प्रगती"
+    },
+    "loading": {
+      "en": "Loading",
+      "hi": "लोड हो रहा है",
+      "mr": "लोड होत आहे"
+    },
+    "finishing": {
+      "en": "Making your token",
+      "hi": "आपका टोकन बन रहा है",
+      "mr": "तुमचा टोकन तयार होत आहे"
+    },
+    "tokenLabel": {
+      "en": "Token",
+      "hi": "टोकन",
+      "mr": "टोकन"
+    },
+    "queueLabel": {
+      "en": "Your number",
+      "hi": "आपका नंबर",
+      "mr": "तुमचा क्रमांक"
+    },
+    "doctorLabel": {
+      "en": "Doctor",
+      "hi": "डॉक्टर",
+      "mr": "डॉक्टर"
+    },
+    "youAreHere": {
+      "en": "You are here",
+      "hi": "आप यहाँ हैं",
+      "mr": "तुम्ही इथे आहात"
+    },
+    "patientRight": {
+      "en": "Patient's right",
+      "hi": "मरीज़ का दायाँ",
+      "mr": "रुग्णाचा उजवा"
+    },
+    "patientLeft": {
+      "en": "Patient's left",
+      "hi": "मरीज़ का बायाँ",
+      "mr": "रुग्णाचा डावा"
+    }
   }
 }

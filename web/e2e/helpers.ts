@@ -45,10 +45,14 @@ export async function answerCurrent(page: Page, nodeId: string, choice?: string)
   const q = page.getByTestId("kiosk-question");
   const type = await q.getAttribute("data-type");
   const before = nodeId;
+  const pick = async (pref: string) => {
+    const want = page.getByTestId(`opt-${pref}`);
+    await ((await want.count()) ? want : page.locator("[data-testid^=opt-]").first()).click();
+  };
   if (type === "consent") await page.getByTestId("opt-agree").click();
-  else if (type === "single_choice" || type === "yes_no_unsure") await page.getByTestId(`opt-${choice ?? "no"}`).or(page.locator("[data-testid^=opt-]").first()).first().click();
+  else if (type === "single_choice" || type === "yes_no_unsure") await pick(choice ?? "no");
   else if (type === "multi_choice") {
-    await page.getByTestId(`opt-${choice ?? "none"}`).or(page.locator("[data-testid^=opt-]").first()).first().click();
+    await pick(choice ?? "none");
     await page.getByTestId("continue").click();
   } else if (type === "number") {
     for (const ch of choice ?? "30") await page.getByTestId(`key-${ch}`).click();
@@ -61,7 +65,10 @@ export async function answerCurrent(page: Page, nodeId: string, choice?: string)
     if (choice) {
       await page.getByTestId(`region-${choice}`).first().click();
       await page.getByTestId("continue").click();
-    } else await page.getByTestId("special-none").or(page.getByTestId("special-tell_doctor")).first().click();
+    } else {
+      const none = page.getByTestId("special-none");
+      await ((await none.count()) ? none : page.getByTestId("special-tell_doctor")).click();
+    }
   }
   await expect(page.getByTestId("kiosk-question").and(page.locator(`[data-node="${before}"]`))).toHaveCount(0);
 }

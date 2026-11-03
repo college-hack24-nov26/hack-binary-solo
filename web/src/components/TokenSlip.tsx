@@ -1,4 +1,4 @@
-import { Check } from "lucide-react";
+import { Check, ChevronRight } from "lucide-react";
 import type { TokenSlip as Slip } from "../api/client";
 import { t, type Lang } from "../i18n/i18n";
 import { cn } from "../lib/cn";
@@ -7,6 +7,32 @@ import { cn } from "../lib/cn";
  * The parchi: perforated edge, large queue number, token, doctor and room, then the floor-line stripe with
  * "Follow the green line to Room 12". Only queue number, token, doctor and room. No name, no answers, no red flags.
  */
+/** "You are here -> Room 12" along the room's painted floor line, for the screen under the slip (not printed). */
+export function WayStrip({ slip, lang }: { slip: Slip; lang: Lang }) {
+  const d = slip.doctor;
+  if (!d?.lineColor || !slip.room) return null;
+  const fg = d.lineTextColor ?? "#FFFFFF";
+  return (
+    <div className="no-print w-full" data-testid="way-strip">
+      <div
+        className={cn("relative flex min-h-20 items-center justify-between gap-4 overflow-hidden rounded-tile px-5", d.lineColor.toUpperCase() === "#F2B33D" && "border-2 border-ink")}
+        style={{ backgroundColor: d.lineColor, color: fg }}
+      >
+        <span className="flex items-center gap-2 text-k-body font-bold">
+          <span className="inline-block size-5 rounded-full border-4" style={{ borderColor: fg }} aria-hidden />
+          {t("youAreHere", lang)}
+        </span>
+        <span className="flex flex-1 justify-center gap-1 opacity-80" aria-hidden>
+          {Array.from({ length: 6 }, (_, i) => (
+            <ChevronRight key={i} size={30} strokeWidth={3} />
+          ))}
+        </span>
+        <span className="text-k-lead font-bold tabular">{t("room", lang, { room: slip.room })}</span>
+      </div>
+    </div>
+  );
+}
+
 export function TokenSlip({ slip, lang, stamped }: { slip: Slip; lang: Lang; stamped?: boolean }) {
   const d = slip.doctor;
   const line = d?.lineColor;
@@ -33,8 +59,8 @@ export function TokenSlip({ slip, lang, stamped }: { slip: Slip; lang: Lang; sta
         </p>
         <p className="mt-1 text-k-lead font-semibold tabular tracking-normal">{slip.token}</p>
         {stamped && (
-          <span className="absolute bottom-14 right-0" data-testid="stamp">
-            <span className="animate-stamp inline-flex items-center gap-1 rounded-full border-[3px] border-green bg-surface/80 px-3 py-1 text-k-body font-bold text-green">
+          <span className="mt-3 inline-block" data-testid="stamp">
+            <span className="animate-stamp inline-flex items-center gap-1 rounded-full border-[3px] border-green px-4 py-1 text-k-body font-bold text-green">
               <Check size={22} strokeWidth={3} aria-hidden />
               {t("stamp", lang)}
             </span>
@@ -49,20 +75,20 @@ export function TokenSlip({ slip, lang, stamped }: { slip: Slip; lang: Lang; sta
         {slip.room && (
           <p className="mt-2 text-k-lead font-bold tabular">
             {t("room", lang, { room: slip.room })}
-            {slip.floor && <span className="font-normal text-muted"> · {slip.floor[lang] ?? slip.floor.en}</span>}
+            {slip.floor && <span className="font-normal text-muted">, {slip.floor[lang] ?? slip.floor.en}</span>}
           </p>
         )}
       </div>
 
       {line ? (
-        <div className="mt-4">
+        <div className="mt-5">
           <div
-            className={cn("h-5 rounded-sm", line.toUpperCase() === "#F2B33D" && "border-2 border-ink")}
+            className={cn("-mx-7 h-7", line.toUpperCase() === "#F2B33D" && "border-y-2 border-ink")}
             style={{ backgroundColor: line }}
             data-testid="floor-line"
             aria-hidden
           />
-          <p className="mt-2 text-k-lead font-bold">{where}</p>
+          <p className="mt-3 text-k-lead font-bold leading-snug">{where}</p>
         </div>
       ) : (
         <p className="mt-4 text-k-lead font-bold">{where}</p>
@@ -71,7 +97,9 @@ export function TokenSlip({ slip, lang, stamped }: { slip: Slip; lang: Lang; sta
       <p className="mt-4 text-k-body text-muted tabular">
         {slip.patientsAhead > 0 ? (
           <>
-            {t("waitEstimate", lang, { min: slip.estimatedWaitMinutes })} · {t("ahead", lang, { n: slip.patientsAhead })}
+            {t("waitEstimate", lang, { min: slip.estimatedWaitMinutes })}
+            <br />
+            {t("ahead", lang, { n: slip.patientsAhead })}
           </>
         ) : (
           t("next", lang)
