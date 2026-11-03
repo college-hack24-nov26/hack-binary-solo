@@ -32,6 +32,8 @@ c1, c2 = st.columns(2)
 c1.metric("Intake duration (measured)", duration_text(rec.intakeDurationSeconds))
 c2.metric("Fields captured", rec.fieldsCaptured)
 
+if msg := st.session_state.pop(f"saved_{token}", None):      # shown once, after the rerun that reloads the saved record
+    st.success(msg)
 values = {}
 with st.form(f"edit_{token}"):
     for sec in summ.sections:
@@ -40,7 +42,7 @@ with st.form(f"edit_{token}"):
             if not f.editable:
                 (st.error if sec.title == "Red flags" else st.write)(f"**{f.label}**: {f.value}")
                 continue
-            lbl = f"{'⚠ ' if f.missing else ''}{f.label}{' (edited)' if f.edited else ''}"
+            lbl = f"{'⚠ ' if f.missing else ''}{f.label}{' :orange[**(edited)**]' if f.edited else ''}"
             values[f.key] = st.text_area(lbl, value=f.value, key=f"{token}_{lang}_{f.key}", height=70, disabled=not editable)
             if f.missing:
                 st.caption("⚠ missing - not captured at intake")
@@ -49,14 +51,14 @@ with st.form(f"edit_{token}"):
     if st.form_submit_button("Save edits", type="primary", disabled=not editable):
         rec = apply_doctor_edits(rec, values, datetime.now().astimezone(), lang)
         store.save(rec)
-        st.success(f"Saved. Edited fields: {', '.join(rec.editedFields) or 'none'}")
+        st.session_state[f"saved_{token}"] = f"Saved. Edited fields: {', '.join(rec.editedFields) or 'none'}"
         st.rerun()
 
 svgs = body_diagram_svgs(rec, lang)
 if svgs:
     with st.expander("Body diagram (site red, radiation orange)"):
         for col, svg in zip(st.columns(len(svgs)), svgs):
-            col.html(svg)
+            col.image(svg)
 
 with st.expander("Attach scanned-record timeline entries (JSON from the OCR page)"):
     raw = st.text_area("Paste a JSON list of timeline entries", key=f"tl_{token}", disabled=not editable)

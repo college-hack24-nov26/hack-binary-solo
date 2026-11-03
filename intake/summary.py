@@ -9,6 +9,7 @@ from records.schema import DoctorEdit, PatientRecord, RadiationAnswer, SiteAnswe
 
 from . import bodymap
 from .conditions import SKIPPED, is_unsure
+from .engine import answer_label
 from .models import ROOT, load_graph
 
 MISSING = "MISSING"
@@ -93,7 +94,9 @@ def _base_fields(rec: PatientRecord, lang: str = "en") -> list[tuple[str, Field]
     sec = "Red flags"
     if rec.redFlags:
         for t in rec.redFlags:
-            ans = "; ".join(f"{n}={v}" for n, v in t.triggeredBy.items())
+            g = load_graph()
+            ans = "; ".join(f"{g.node(n).shortLabel or g.node(n).text.en}: {answer_label(g.node(n), v, lang)}"
+                            for n, v in t.triggeredBy.items())
             out.append((sec, Field(key=f"redFlag.{t.ruleId}", label=t.severity.upper(), editable=False,
                                    value=f"{t.staffMessage} [rule {t.ruleId}; {t.label}] Triggered by: {ans}")))
     else:

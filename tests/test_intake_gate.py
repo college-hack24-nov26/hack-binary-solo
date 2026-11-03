@@ -84,3 +84,10 @@ def test_idle_session_is_logged_out():
 def test_patient_kiosk_needs_no_login():
     at = page("patient").run()
     assert not at.exception and "I agree" in [b.label for b in at.button]
+
+
+def test_doctor_red_flag_line_uses_readable_answers_and_diagram_renders():
+    at = login(page("doctor").run(), "dr")
+    flag = at.error[0].value
+    assert "Triggered by:" in flag and "{'regions'" not in flag and "Site: Chest, centre" in flag
+    assert at.expander[0].label.startswith("Body diagram") and not at.exception

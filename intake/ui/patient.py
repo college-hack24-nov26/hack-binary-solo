@@ -1,4 +1,6 @@
 """Patient kiosk page: consent -> questions -> review -> done. Large tap targets, Back, language toggle."""
+import html
+
 import streamlit as st
 
 from intake.conditions import SKIPPED, UNSURE
@@ -108,9 +110,12 @@ if view is None:                                   # path complete -> review scr
 node = g.node(view)
 done, total = sess.progress()
 st.progress(min(done / max(total, 1), 1.0), text=f"{t('progress', lang)} {done + 1 if view not in sess.answers else done} / ~{total}")
-st.header(node.text.get(lang))
 cur = sess.answers.get(view)
 is_consent = node.section == "consent"
+if is_consent:   # the consent paragraph is long: normal-weight text, not a page-sized header
+    st.markdown(f"<p style='font-size:1.35rem;line-height:1.5'>{html.escape(node.text.get(lang))}</p>", unsafe_allow_html=True)
+else:
+    st.header(node.text.get(lang))
 
 if node.type in ("single_choice", "yes_no_unsure"):
     for o in node.options:

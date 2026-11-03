@@ -2,7 +2,7 @@ INTAKE SUMMARY  PT-SNAPAA
 AI drafts, the doctor decides. Draft red-flag rules are unverified.
 
 RED FLAGS
-  URGENT: Chest pain reported with sweating, or centre/left chest pain spreading to an arm, shoulder, jaw or neck. [rule RF_CHEST_PAIN_RADIATION_SWEATING; Draft rule, source check pending] Triggered by: chief_complaint=chest_pain; cp_assoc=['sweating', 'nausea']; cp_site={'regions': ['chest_center'], 'view': 'front', 'inputMode': 'map'}; body_map_radiation={'regions': ['jaw_front', 'upper_arm_left'], 'view': 'front', 'inputMode': 'map'}
+  URGENT: Chest pain reported with sweating, or centre/left chest pain spreading to an arm, shoulder, jaw or neck. [rule RF_CHEST_PAIN_RADIATION_SWEATING; Draft rule, source check pending] Triggered by: What is the main problem today?: Chest pain; Also has: Sweating, Nausea or vomiting; Site: Chest, centre; Spreads to: Jaw; Upper arm, patient's left
 
 DOSING INPUTS
   Age (years): 54
