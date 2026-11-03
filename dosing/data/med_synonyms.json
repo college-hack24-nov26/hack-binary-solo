@@ -1,0 +1,1013 @@
+{
+ "_note": "Name-to-label table for free-text medicines and allergies. Names are lowercase; labels use the vocabulary of the formulary interaction rows (singular, lowercase). DATA, easy to extend. Brand names and class members are engine-side mapping, not formulary content: a pharmacist should review before clinical use. Herbal words map to 'herbal ayurvedic' (no interaction data exists).",
+ "entries": [
+  {
+   "names": [
+    "paracetamol",
+    "acetaminophen",
+    "crocin",
+    "dolo",
+    "dolo 650",
+    "calpol",
+    "metacin",
+    "pacimol",
+    "febrex"
+   ],
+   "labels": [
+    "paracetamol"
+   ],
+   "generic": "paracetamol",
+   "drug_id": "paracetamol",
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "amoxicillin",
+    "amoxycillin",
+    "mox",
+    "novamox",
+    "amoxil"
+   ],
+   "labels": [
+    "amoxicillin",
+    "penicillin"
+   ],
+   "generic": "amoxicillin",
+   "drug_id": "amoxicillin",
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "amoxicillin clavulanate",
+    "amoxicillin-clavulanate",
+    "amoxiclav",
+    "amoxyclav",
+    "co-amoxiclav",
+    "augmentin",
+    "clavam",
+    "moxclav"
+   ],
+   "labels": [
+    "amoxicillin clavulanate",
+    "penicillin"
+   ],
+   "generic": "amoxicillin-clavulanate",
+   "drug_id": "amoxicillin_clavulanate",
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "azithromycin",
+    "azithral",
+    "zithromax",
+    "azee",
+    "azithro"
+   ],
+   "labels": [
+    "azithromycin",
+    "macrolide",
+    "qt-prolonging"
+   ],
+   "generic": "azithromycin",
+   "drug_id": "azithromycin",
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "metronidazole",
+    "flagyl",
+    "metrogyl"
+   ],
+   "labels": [
+    "metronidazole",
+    "nitroimidazole"
+   ],
+   "generic": "metronidazole",
+   "drug_id": "metronidazole",
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "pantoprazole",
+    "pantocid",
+    "pantop",
+    "pan 40",
+    "pan40"
+   ],
+   "labels": [
+    "pantoprazole",
+    "ppi"
+   ],
+   "generic": "pantoprazole",
+   "drug_id": "pantoprazole",
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "diclofenac",
+    "voveran",
+    "voltaren",
+    "dynapar",
+    "diclo"
+   ],
+   "labels": [
+    "diclofenac",
+    "nsaid"
+   ],
+   "generic": "diclofenac",
+   "drug_id": "diclofenac",
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "ibuprofen",
+    "brufen",
+    "advil",
+    "ibugesic"
+   ],
+   "labels": [
+    "ibuprofen",
+    "nsaid"
+   ],
+   "generic": "ibuprofen",
+   "drug_id": "ibuprofen",
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "cetirizine",
+    "cetzine",
+    "okacet",
+    "alerid",
+    "zyrtec"
+   ],
+   "labels": [
+    "cetirizine",
+    "antihistamine"
+   ],
+   "generic": "cetirizine",
+   "drug_id": "cetirizine",
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "metformin",
+    "glycomet",
+    "glucophage",
+    "obimet"
+   ],
+   "labels": [
+    "metformin",
+    "biguanide"
+   ],
+   "generic": "metformin",
+   "drug_id": "metformin",
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "amlodipine",
+    "amlong",
+    "norvasc",
+    "amlokind",
+    "stamlo"
+   ],
+   "labels": [
+    "amlodipine",
+    "dihydropyridine ccb"
+   ],
+   "generic": "amlodipine",
+   "drug_id": "amlodipine",
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "telmisartan",
+    "telma",
+    "micardis",
+    "telsartan"
+   ],
+   "labels": [
+    "telmisartan",
+    "arb"
+   ],
+   "generic": "telmisartan",
+   "drug_id": "telmisartan",
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "doxycycline",
+    "doxy 1",
+    "doxy-1",
+    "vibramycin",
+    "doxt"
+   ],
+   "labels": [
+    "doxycycline",
+    "tetracycline"
+   ],
+   "generic": "doxycycline",
+   "drug_id": "doxycycline",
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "ondansetron",
+    "zofran",
+    "emeset",
+    "vomikind",
+    "ondem"
+   ],
+   "labels": [
+    "ondansetron",
+    "5-ht3 antagonist",
+    "qt-prolonging"
+   ],
+   "generic": "ondansetron",
+   "drug_id": "ondansetron",
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "ciprofloxacin",
+    "ciplox",
+    "cifran",
+    "cipro"
+   ],
+   "labels": [
+    "ciprofloxacin",
+    "fluoroquinolone",
+    "qt-prolonging"
+   ],
+   "generic": "ciprofloxacin",
+   "drug_id": "ciprofloxacin",
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "combiflam"
+   ],
+   "labels": [
+    "ibuprofen",
+    "nsaid",
+    "paracetamol"
+   ],
+   "generic": "ibuprofen + paracetamol",
+   "drug_id": null,
+   "kind": "brand"
+  },
+  {
+   "names": [
+    "warfarin",
+    "coumadin",
+    "warf",
+    "uniwarfin"
+   ],
+   "labels": [
+    "warfarin",
+    "anticoagulant",
+    "oral anticoagulant"
+   ],
+   "generic": "warfarin",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "acenocoumarol",
+    "nicoumalone",
+    "acitrom"
+   ],
+   "labels": [
+    "acenocoumarol",
+    "anticoagulant",
+    "oral anticoagulant"
+   ],
+   "generic": "acenocoumarol",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "methotrexate",
+    "folitrax"
+   ],
+   "labels": [
+    "methotrexate"
+   ],
+   "generic": "methotrexate",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "lithium",
+    "lithosun"
+   ],
+   "labels": [
+    "lithium"
+   ],
+   "generic": "lithium",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "digoxin",
+    "lanoxin"
+   ],
+   "labels": [
+    "digoxin"
+   ],
+   "generic": "digoxin",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "aspirin",
+    "ecosprin",
+    "disprin",
+    "acetylsalicylic acid"
+   ],
+   "labels": [
+    "aspirin",
+    "nsaid"
+   ],
+   "generic": "aspirin",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "naproxen",
+    "naprosyn"
+   ],
+   "labels": [
+    "naproxen",
+    "nsaid"
+   ],
+   "generic": "naproxen",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "nimesulide",
+    "nise",
+    "nimulid"
+   ],
+   "labels": [
+    "nimesulide",
+    "nsaid"
+   ],
+   "generic": "nimesulide",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "etoricoxib",
+    "nucoxia",
+    "arcoxia"
+   ],
+   "labels": [
+    "etoricoxib",
+    "nsaid"
+   ],
+   "generic": "etoricoxib",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "ramipril",
+    "cardace"
+   ],
+   "labels": [
+    "ramipril",
+    "ace inhibitor"
+   ],
+   "generic": "ramipril",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "enalapril",
+    "envas"
+   ],
+   "labels": [
+    "enalapril",
+    "ace inhibitor"
+   ],
+   "generic": "enalapril",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "lisinopril"
+   ],
+   "labels": [
+    "lisinopril",
+    "ace inhibitor"
+   ],
+   "generic": "lisinopril",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "losartan",
+    "losar",
+    "cozaar"
+   ],
+   "labels": [
+    "losartan",
+    "arb"
+   ],
+   "generic": "losartan",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "olmesartan",
+    "olmezest"
+   ],
+   "labels": [
+    "olmesartan",
+    "arb"
+   ],
+   "generic": "olmesartan",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "furosemide",
+    "lasix",
+    "frusemide"
+   ],
+   "labels": [
+    "furosemide",
+    "diuretic"
+   ],
+   "generic": "furosemide",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "hydrochlorothiazide",
+    "hctz"
+   ],
+   "labels": [
+    "hydrochlorothiazide",
+    "diuretic"
+   ],
+   "generic": "hydrochlorothiazide",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "spironolactone",
+    "aldactone"
+   ],
+   "labels": [
+    "spironolactone",
+    "diuretic",
+    "k-sparing diuretic"
+   ],
+   "generic": "spironolactone",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "amiloride"
+   ],
+   "labels": [
+    "amiloride",
+    "diuretic",
+    "k-sparing diuretic"
+   ],
+   "generic": "amiloride",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "potassium chloride",
+    "kcl",
+    "potassium"
+   ],
+   "labels": [
+    "potassium supplement"
+   ],
+   "generic": "potassium chloride",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "disulfiram",
+    "antabuse"
+   ],
+   "labels": [
+    "disulfiram"
+   ],
+   "generic": "disulfiram",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "alcohol",
+    "daru",
+    "liquor",
+    "beer",
+    "whisky"
+   ],
+   "labels": [
+    "alcohol"
+   ],
+   "generic": "alcohol",
+   "drug_id": null,
+   "kind": "class"
+  },
+  {
+   "names": [
+    "tizanidine",
+    "sirdalud",
+    "tizan"
+   ],
+   "labels": [
+    "tizanidine"
+   ],
+   "generic": "tizanidine",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "theophylline",
+    "deriphyllin",
+    "etophylline"
+   ],
+   "labels": [
+    "theophylline"
+   ],
+   "generic": "theophylline",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "glimepiride",
+    "amaryl"
+   ],
+   "labels": [
+    "glimepiride",
+    "sulfonylurea"
+   ],
+   "generic": "glimepiride",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "glibenclamide",
+    "daonil"
+   ],
+   "labels": [
+    "glibenclamide",
+    "sulfonylurea"
+   ],
+   "generic": "glibenclamide",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "gliclazide",
+    "diamicron"
+   ],
+   "labels": [
+    "gliclazide",
+    "sulfonylurea"
+   ],
+   "generic": "gliclazide",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "antacid",
+    "digene",
+    "gelusil",
+    "mucaine"
+   ],
+   "labels": [
+    "antacid"
+   ],
+   "generic": "antacid",
+   "drug_id": null,
+   "kind": "class"
+  },
+  {
+   "names": [
+    "iron",
+    "ferrous sulphate",
+    "ferrous sulfate",
+    "autrin"
+   ],
+   "labels": [
+    "iron"
+   ],
+   "generic": "iron",
+   "drug_id": null,
+   "kind": "class"
+  },
+  {
+   "names": [
+    "calcium",
+    "shelcal"
+   ],
+   "labels": [
+    "calcium"
+   ],
+   "generic": "calcium",
+   "drug_id": null,
+   "kind": "class"
+  },
+  {
+   "names": [
+    "zinc"
+   ],
+   "labels": [
+    "zinc"
+   ],
+   "generic": "zinc",
+   "drug_id": null,
+   "kind": "class"
+  },
+  {
+   "names": [
+    "simvastatin",
+    "simvotin",
+    "zocor"
+   ],
+   "labels": [
+    "simvastatin"
+   ],
+   "generic": "simvastatin",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "rilpivirine"
+   ],
+   "labels": [
+    "rilpivirine"
+   ],
+   "generic": "rilpivirine",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "apomorphine"
+   ],
+   "labels": [
+    "apomorphine"
+   ],
+   "generic": "apomorphine",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "probenecid"
+   ],
+   "labels": [
+    "probenecid"
+   ],
+   "generic": "probenecid",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "allopurinol",
+    "zyloric"
+   ],
+   "labels": [
+    "allopurinol"
+   ],
+   "generic": "allopurinol",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "duloxetine",
+    "duzela"
+   ],
+   "labels": [
+    "duloxetine"
+   ],
+   "generic": "duloxetine",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "tramadol",
+    "tramazac",
+    "ultracet"
+   ],
+   "labels": [
+    "tramadol"
+   ],
+   "generic": "tramadol",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "nelfinavir"
+   ],
+   "labels": [
+    "nelfinavir"
+   ],
+   "generic": "nelfinavir",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "phenytoin",
+    "eptoin"
+   ],
+   "labels": [
+    "phenytoin"
+   ],
+   "generic": "phenytoin",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "ergometrine"
+   ],
+   "labels": [
+    "ergometrine"
+   ],
+   "generic": "ergometrine",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "cyclosporine",
+    "ciclosporin"
+   ],
+   "labels": [
+    "cyclosporine"
+   ],
+   "generic": "cyclosporine",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "tacrolimus"
+   ],
+   "labels": [
+    "tacrolimus"
+   ],
+   "generic": "tacrolimus",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "ketoconazole",
+    "itraconazole",
+    "clarithromycin",
+    "ritonavir"
+   ],
+   "labels": [
+    "cyp3a inhibitor"
+   ],
+   "generic": "ketoconazole",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "acetazolamide",
+    "diamox",
+    "topiramate",
+    "zonisamide"
+   ],
+   "labels": [
+    "carbonic anhydrase inhibitor"
+   ],
+   "generic": "acetazolamide",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "mifepristone"
+   ],
+   "labels": [
+    "mifepristone"
+   ],
+   "generic": "mifepristone",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "amiodarone",
+    "sotalol",
+    "quinidine",
+    "procainamide"
+   ],
+   "labels": [
+    "qt-prolonging",
+    "antiarrhythmic"
+   ],
+   "generic": "amiodarone",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "amitriptyline",
+    "nortriptyline"
+   ],
+   "labels": [
+    "qt-prolonging",
+    "tricyclic"
+   ],
+   "generic": "amitriptyline",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "haloperidol",
+    "risperidone",
+    "olanzapine",
+    "quetiapine"
+   ],
+   "labels": [
+    "qt-prolonging",
+    "antipsychotic"
+   ],
+   "generic": "haloperidol",
+   "drug_id": null,
+   "kind": "generic"
+  },
+  {
+   "names": [
+    "ashwagandha"
+   ],
+   "labels": [
+    "herbal ayurvedic"
+   ],
+   "generic": "ashwagandha",
+   "drug_id": null,
+   "kind": "herbal"
+  },
+  {
+   "names": [
+    "giloy"
+   ],
+   "labels": [
+    "herbal ayurvedic"
+   ],
+   "generic": "giloy",
+   "drug_id": null,
+   "kind": "herbal"
+  },
+  {
+   "names": [
+    "tulsi"
+   ],
+   "labels": [
+    "herbal ayurvedic"
+   ],
+   "generic": "tulsi",
+   "drug_id": null,
+   "kind": "herbal"
+  },
+  {
+   "names": [
+    "kadha"
+   ],
+   "labels": [
+    "herbal ayurvedic"
+   ],
+   "generic": "kadha",
+   "drug_id": null,
+   "kind": "herbal"
+  },
+  {
+   "names": [
+    "churna"
+   ],
+   "labels": [
+    "herbal ayurvedic"
+   ],
+   "generic": "churna",
+   "drug_id": null,
+   "kind": "herbal"
+  },
+  {
+   "names": [
+    "arishta"
+   ],
+   "labels": [
+    "herbal ayurvedic"
+   ],
+   "generic": "arishta",
+   "drug_id": null,
+   "kind": "herbal"
+  },
+  {
+   "names": [
+    "asava"
+   ],
+   "labels": [
+    "herbal ayurvedic"
+   ],
+   "generic": "asava",
+   "drug_id": null,
+   "kind": "herbal"
+  },
+  {
+   "names": [
+    "bhasma"
+   ],
+   "labels": [
+    "herbal ayurvedic"
+   ],
+   "generic": "bhasma",
+   "drug_id": null,
+   "kind": "herbal"
+  },
+  {
+   "names": [
+    "triphala"
+   ],
+   "labels": [
+    "herbal ayurvedic"
+   ],
+   "generic": "triphala",
+   "drug_id": null,
+   "kind": "herbal"
+  },
+  {
+   "names": [
+    "ayurvedic"
+   ],
+   "labels": [
+    "herbal ayurvedic"
+   ],
+   "generic": "ayurvedic",
+   "drug_id": null,
+   "kind": "herbal"
+  },
+  {
+   "names": [
+    "herbal"
+   ],
+   "labels": [
+    "herbal ayurvedic"
+   ],
+   "generic": "herbal",
+   "drug_id": null,
+   "kind": "herbal"
+  },
+  {
+   "names": [
+    "homeopathy"
+   ],
+   "labels": [
+    "herbal ayurvedic"
+   ],
+   "generic": "homeopathy",
+   "drug_id": null,
+   "kind": "herbal"
+  }
+ ]
+}

@@ -98,6 +98,20 @@ class Vitals(BaseModel):
                                                           "respRate", "weightKg", "heightCm", "bloodGlucose"))
 
 
+class DosingCheck(BaseModel):
+    """A dosage check the doctor confirmed. Stored beside the quiz data; never overwrites DosingInputs or answers."""
+    at: str
+    doctorId: str
+    drug: str
+    indication: Optional[str] = None
+    ruleId: Optional[str] = None
+    status: str
+    dataStatus: str = "UNVERIFIED"
+    result: dict = {}                      # the full engine Result at confirmation
+    doctorInputs: dict = {}                # what the doctor typed (weight, creatinine, ...), kept apart from the quiz answers
+    overrideReasons: list[str] = []
+
+
 class PatientRecord(BaseModel):
     schemaVersion: str = SCHEMA_VERSION
     token: str
@@ -121,3 +135,4 @@ class PatientRecord(BaseModel):
     doctorEdits: dict[str, DoctorEdit] = {}
     editedByDoctor: bool = False
     editedFields: list[str] = Field(default_factory=list)
+    dosingChecks: list[DosingCheck] = []   # confirmed dosage checks (doctor), see dosing/service.py

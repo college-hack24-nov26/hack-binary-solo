@@ -6,6 +6,7 @@ import streamlit as st
 
 from intake import llm_summary
 from intake.summary import apply_doctor_edits, body_diagram_svgs, build_summary, duration_text, template_paragraph
+from intake.ui import dosing_panel
 from intake.ui.gate import can_edit, require_login
 from intake.doctors import doctor_for_login, get_doctor, load_doctors
 import pandas as pd
@@ -173,3 +174,7 @@ else:
         st.caption(f"Template used: {res.reason}")
     st.caption("Template summary (deterministic)")
     st.write(template_paragraph(summ))
+
+st.divider()
+# -- dosage check (doctor only), last on the page
+dosing_panel.render(rec, user, editable)

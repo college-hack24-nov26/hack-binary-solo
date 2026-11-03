@@ -139,4 +139,5 @@ def build_record(graph: Graph, rules: list[RedFlagRule], answers: dict, *, token
     if prior is not None:  # doctor edits survive a rebuild
         rec.doctorEdits, rec.editedByDoctor, rec.editedFields = prior.doctorEdits, prior.editedByDoctor, prior.editedFields
         rec.vitals, rec.doctorNotes = prior.vitals, prior.doctorNotes
+        rec.dosingChecks = prior.dosingChecks
     return rec

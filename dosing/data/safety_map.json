@@ -1,0 +1,308 @@
+{
+ "_note": "Engine-side mapping from the formulary's free-text safety fields to machine-checkable predicates. Thresholds are captured from the formulary text itself (regex groups); none are typed here. Text with no entry is never dropped: it is shown as 'Not machine-checked, doctor to confirm'. A clinician should review this file.",
+ "ci_map": [
+  {
+   "match": "^Serious penicillin/beta-lactam allergy",
+   "pred": {
+    "kind": "allergy",
+    "class": "penicillins"
+   }
+  },
+  {
+   "match": "^Serious hypersensitivity.*beta-lactams",
+   "pred": {
+    "kind": "allergy",
+    "class": "penicillins"
+   }
+  },
+  {
+   "match": "^Past cholestatic jaundice",
+   "pred": {
+    "kind": "manual"
+   }
+  },
+  {
+   "match": "^Disulfiram within",
+   "pred": {
+    "kind": "med",
+    "label": "disulfiram"
+   }
+  },
+  {
+   "match": "^Alcohol or propylene glycol",
+   "pred": {
+    "kind": "ctx_yes",
+    "fields": [
+     "alcohol"
+    ],
+    "what": "alcohol use"
+   }
+  },
+  {
+   "match": "^Rilpivirine-containing products",
+   "pred": {
+    "kind": "med",
+    "label": "rilpivirine"
+   }
+  },
+  {
+   "match": "^Tablets not for children under (\\d+) years",
+   "pred": {
+    "kind": "age_lt",
+    "n": 1,
+    "unit": "years"
+   }
+  },
+  {
+   "match": "^NSAID allergy$",
+   "pred": {
+    "kind": "allergy",
+    "class": "nsaids"
+   }
+  },
+  {
+   "match": "^US label: known hypersensitivity to diclofenac",
+   "pred": {
+    "kind": "allergy",
+    "class": "nsaids"
+   }
+  },
+  {
+   "match": "^Active peptic ulcer or GI bleeding",
+   "pred": {
+    "kind": "ctx_yes",
+    "fields": [
+     "ulcer",
+     "gi_bleed"
+    ],
+    "what": "peptic ulcer / GI bleeding"
+   }
+  },
+  {
+   "match": "^Severe (renal, hepatic or heart failure|hepatic failure, renal failure or heart failure)",
+   "pred": {
+    "kind": "hint",
+    "fields": [
+     "kidney_disease",
+     "liver_disease",
+     "heart_disease"
+    ],
+    "what": "kidney, liver or heart disease"
+   }
+  },
+  {
+   "match": "^Dehydration",
+   "pred": {
+    "kind": "manual"
+   }
+  },
+  {
+   "match": "^Dengue",
+   "pred": {
+    "kind": "manual"
+   }
+  },
+  {
+   "match": "^Pregnancy from (\\d+) weeks",
+   "pred": {
+    "kind": "weeks_ge",
+    "n": 1
+   }
+  },
+  {
+   "match": "^(Third trimester|Last \\(third\\) trimester)",
+   "pred": {
+    "kind": "trimester",
+    "n": 3
+   }
+  },
+  {
+   "match": "^Established congestive heart failure",
+   "pred": {
+    "kind": "ctx_yes",
+    "fields": [
+     "heart_disease"
+    ],
+    "what": "heart disease",
+    "on_true": "warn"
+   }
+  },
+  {
+   "match": "^Age < (\\d+) months",
+   "pred": {
+    "kind": "age_lt",
+    "n": 1,
+    "unit": "months"
+   }
+  },
+  {
+   "match": "^Hypersensitivity to the active substance, hydroxyzine",
+   "pred": {
+    "kind": "manual"
+   }
+  },
+  {
+   "match": "^Not recommended under (\\d+) years",
+   "pred": {
+    "kind": "age_lt",
+    "n": 1,
+    "unit": "years"
+   }
+  },
+  {
+   "match": "^Tablet should not be used in children under (\\d+) years",
+   "pred": {
+    "kind": "form_age_lt",
+    "form": "tablet",
+    "n": 1,
+    "unit": "years"
+   }
+  },
+  {
+   "match": "^Oral solution: use not recommended in children aged less than (\\d+) years",
+   "pred": {
+    "kind": "form_age_lt",
+    "form": "oral liquid",
+    "n": 1,
+    "unit": "years"
+   }
+  },
+  {
+   "match": "^eGFR < (\\d+)",
+   "pred": {
+    "kind": "egfr_lt",
+    "n": 1
+   }
+  },
+  {
+   "match": "^Under (\\d+) years: ",
+   "pred": {
+    "kind": "age_lt",
+    "n": 1,
+    "unit": "years"
+   }
+  },
+  {
+   "match": "^Pregnancy \\(boxed fetal toxicity\\)",
+   "pred": {
+    "kind": "pregnant"
+   }
+  },
+  {
+   "match": "^Pregnancy and children under (\\d+) years",
+   "pred": {
+    "kind": "any",
+    "of": [
+     {
+      "kind": "pregnant"
+     },
+     {
+      "kind": "age_lt",
+      "n": 1,
+      "unit": "years"
+     }
+    ]
+   }
+  },
+  {
+   "match": "^Children under (\\d+) years",
+   "pred": {
+    "kind": "age_lt",
+    "n": 1,
+    "unit": "years"
+   }
+  },
+  {
+   "match": "^Pregnancy$",
+   "pred": {
+    "kind": "pregnant"
+   }
+  },
+  {
+   "match": "^Congenital long QT syndrome",
+   "pred": {
+    "kind": "hint",
+    "fields": [
+     "qt_history"
+    ],
+    "what": "QT history"
+   }
+  },
+  {
+   "match": "^Apomorphine: concomitant use",
+   "pred": {
+    "kind": "med",
+    "label": "apomorphine"
+   }
+  },
+  {
+   "match": "tizanidine",
+   "pred": {
+    "kind": "med",
+    "label": "tizanidine"
+   }
+  }
+ ],
+ "pregnancy_block_regex": "^Contraindicated",
+ "lactation_against_regex": "not to breastfeed|not breastfeed|Breastfeeding not recommended",
+ "renal_actions": [
+  {
+   "regex": "^(Contraindicated|Do not use|Do not start|Initiation not recommended)",
+   "effect": "block"
+  },
+  {
+   "regex": "^(Usual dose|No change|No adjustment|No dose adjustment|No numeric dose adjustment|Plasma clearance reduced but no dosage)",
+   "effect": "info"
+  },
+  {
+   "regex": "^(Block|Do NOT give)",
+   "effect": "warn"
+  },
+  {
+   "regex": "\\d\\s*mg.*\\b(every|once)\\b",
+   "effect": "dose"
+  }
+ ],
+ "hepatic_actions": [
+  {
+   "regex": "[Rr]educe dose by (\\d+)%",
+   "effect": "reduce_pct"
+  },
+  {
+   "regex": "^Max (\\d+(?:\\.\\d+)?) mg/day",
+   "effect": "max_per_day_mg"
+  }
+ ],
+ "warning_triggers": [
+  {
+   "regex": "asthma",
+   "field": "asthma",
+   "why": "asthma reported"
+  },
+  {
+   "regex": "ischaemic heart disease|heart failure|cardiovascular",
+   "field": "heart_disease",
+   "why": "heart disease reported"
+  },
+  {
+   "regex": "glucose|hypoglyc|glycaem|dysglyc|sulfonylurea|antidiabetic",
+   "field": "diabetes",
+   "why": "diabetes reported"
+  },
+  {
+   "regex": "alcohol",
+   "field": "alcohol",
+   "why": "alcohol use reported"
+  },
+  {
+   "regex": "\\bARB|ACE inhibitor|diuretic",
+   "field": "hypertension",
+   "why": "hypertension reported (may be on ARB/ACE/diuretic)"
+  },
+  {
+   "regex": "\\bQT\\b",
+   "field": "qt_history",
+   "why": "QT history entered"
+  }
+ ]
+}
