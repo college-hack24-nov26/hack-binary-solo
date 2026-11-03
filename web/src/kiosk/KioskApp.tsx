@@ -148,8 +148,8 @@ export default function KioskApp() {
   if (stage.kind === "language") return <LanguageScreen onPick={start} busy={busy} error={error} />;
 
   return (
-    <div className={cn("force-light kiosk-root flex min-h-dvh flex-col bg-paper text-ink", contrast && "kiosk-contrast")} lang={lang}>
-      <header className="sticky top-0 z-20 flex items-center gap-2 border-b border-line bg-paper/95 px-4 py-3 backdrop-blur no-print">
+    <div className={cn("force-light kiosk-root flex min-h-dvh flex-col overflow-x-clip bg-paper text-ink", contrast && "kiosk-contrast")} lang={lang}>
+      <header className="sticky top-0 z-20 flex flex-wrap items-center gap-2 border-b border-line bg-paper/95 px-3 py-3 backdrop-blur sm:px-4 no-print">
         {canBack && stage.kind !== "slip" ? (
           <Button size="kiosk" icon={ArrowLeft} onClick={back} disabled={busy} data-testid="back">
             {t("back", lang)}
@@ -159,15 +159,15 @@ export default function KioskApp() {
         )}
         <div className="flex-1" />
         {voice && questionText && (
-          <Button size="kiosk" variant="ghost" icon={Volume2} onClick={() => speak(voice, [questionText, ...(current?.node?.options ?? []).map((o) => o.label)].join(". "))}>
-            {t("listen", lang)}
+          <Button size="kiosk" variant="ghost" icon={Volume2} onClick={() => speak(voice, [questionText, ...(current?.node?.options ?? []).map((o) => o.label)].join(". "))} aria-label={t("listen", lang)} className="px-4 sm:px-6">
+            <span className="hidden sm:inline">{t("listen", lang)}</span>
           </Button>
         )}
-        <Button size="kiosk" variant="secondary" icon={Languages} onClick={() => setLangOpen(true)} data-testid="change-language">
-          {t("changeLanguage", lang)}
+        <Button size="kiosk" variant="secondary" icon={Languages} onClick={() => setLangOpen(true)} data-testid="change-language" aria-label={t("changeLanguage", lang)} className="px-4 sm:px-6">
+          <span className="hidden sm:inline">{t("changeLanguage", lang)}</span>
         </Button>
-        <Button size="kiosk" variant="secondary" icon={BellRing} onClick={callHelp} data-testid="help">
-          {t("help", lang)}
+        <Button size="kiosk" variant="secondary" icon={BellRing} onClick={callHelp} data-testid="help" aria-label={t("help", lang)} className="px-4 sm:px-6">
+          <span className="hidden sm:inline">{t("help", lang)}</span>
         </Button>
       </header>
       {current && current.stage === "question" && (

@@ -87,7 +87,7 @@ function Staff() {
           nav={items}
           me={me}
           headerExtra={
-            <ToggleButton pressed={sound} onPressedChange={setSound} icon={sound ? Volume2 : VolumeX} size="sm" aria-label="Alert sound">
+            <ToggleButton pressed={sound} onPressedChange={setSound} icon={sound ? Volume2 : VolumeX} size="sm" aria-label={sound ? "Sound on" : "Muted"}>
               <span className="hidden sm:inline">{sound ? "Sound on" : "Muted"}</span>
             </ToggleButton>
           }
@@ -218,7 +218,7 @@ function BoardPage({ me, demo }: { me: Me; demo: boolean }) {
     { key: "flags", header: "Red flags", sortValue: (r) => -r.redFlags.length, cell: (r) => (r.redFlags.length ? <Pill tone="red">{r.redFlags.length} urgent</Pill> : <span className="text-muted">none</span>) },
     { key: "status", header: "Status", cell: (r) => (r.status === "complete" ? "Token issued" : "On the kiosk"), sortValue: (r) => r.status },
     { key: "doctor", header: "Doctor", cell: (r) => docName(r.assignedDoctor), sortValue: (r) => docName(r.assignedDoctor) },
-    { key: "vitals", header: "Vitals", cell: (r) => (r.vitalsPresent ? <Pill tone="green">taken</Pill> : <span className="font-semibold text-on-marigold">needed</span>), sortValue: (r) => (r.vitalsPresent ? 1 : 0) },
+    { key: "vitals", header: "Vitals", cell: (r) => (r.vitalsPresent ? <Pill tone="green">taken</Pill> : <span className="inline-flex items-center gap-1.5 font-semibold"><span className="size-2 rounded-full bg-marigold ring-1 ring-ink/40" aria-hidden />needed</span>), sortValue: (r) => (r.vitalsPresent ? 1 : 0) },
     { key: "scans", header: "Scans", cell: (r) => (r.pendingScans ? <Pill tone="marigold">{r.pendingScans} to confirm</Pill> : "") },
     { key: "wait", header: "Waiting", cell: (r) => <span className="tabular">{r.minutesWaiting} min</span>, sortValue: (r) => r.minutesWaiting },
   ];

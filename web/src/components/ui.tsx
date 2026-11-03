@@ -187,7 +187,7 @@ const NOTICE: Record<NoticeTone, { cls: string; icon: LucideIcon }> = {
 };
 export function Notice({ tone = "info", title, children, className }: { tone?: NoticeTone; title?: ReactNode; children?: ReactNode; className?: string }) {
   const { cls, icon: Icon } = NOTICE[tone];
-  const iconCls = tone === "ok" ? "text-green" : tone === "stop" ? "text-red" : tone === "warn" ? "text-on-marigold" : "text-teal";
+  const iconCls = tone === "ok" ? "text-green" : tone === "stop" ? "text-red" : tone === "warn" ? "text-on-marigold dark:text-marigold" : "text-teal";
   return (
     <div className={cn("flex gap-3 rounded-panel border px-4 py-3", cls, className)}>
       <Icon size={20} aria-hidden className={cn("mt-0.5 shrink-0", iconCls)} />

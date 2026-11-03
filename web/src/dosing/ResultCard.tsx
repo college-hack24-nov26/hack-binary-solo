@@ -145,7 +145,7 @@ export function ResultCard({ result: r, card, slots = {} }: { result: DoseResult
               </p>
             )}
             {!r.final && r.pending_confirmations.length > 0 && (
-              <p className="text-sm font-semibold text-on-marigold">
+              <p className="text-sm font-semibold">
                 <span className="rounded-field bg-marigold px-2 py-0.5">Provisional</span> confirm {r.pending_confirmations.join(", ")}
               </p>
             )}

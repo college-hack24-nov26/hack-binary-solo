@@ -3,6 +3,7 @@ LAN need nothing but this one server. Run one worker only (see api/deps.py): scr
 from pathlib import Path
 
 from fastapi import FastAPI, Request
+from starlette.middleware.gzip import GZipMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 
 from intake import offline
@@ -45,6 +46,8 @@ def create_app(dist: Path | None = None) -> FastAPI:
         resp.headers.setdefault("X-Content-Type-Options", "nosniff")
         resp.headers.setdefault("Referrer-Policy", "no-referrer")
         return resp
+
+    app.add_middleware(GZipMiddleware, minimum_size=1000)   # LAN tablets: smaller JS and fonts. SSE (text/event-stream) is never compressed.
 
     for r in (system, auth, kiosk, patients, staff, doctor, ocr, dosing, audit, demo):
         app.include_router(r.router)

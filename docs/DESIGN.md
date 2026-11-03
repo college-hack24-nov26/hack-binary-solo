@@ -49,7 +49,7 @@ Dark is a deep teal-black, not grey, so the brand survives; surfaces step up in 
 | `ink` | #E6EFED |
 | `muted` | #9DB5B0 |
 | `teal` | #5CC4B8 (text on teal fills uses `paper` #0F1E1C) |
-| `red` | #F97066 (fills use #7A1A12 with ink text) |
+| `red` | #FF8F85 (fills use #7A1A12 with ink text). Changed from #F97066 after axe: that red was 4.35-4.5:1 on dark tint/green surfaces |
 | `green` | #4ADE9B |
 | `marigold` | #F2B33D (with #0F1E1C text) |
 
@@ -77,7 +77,7 @@ Dark is a deep teal-black, not grey, so the brand survives; surfaces step up in 
 | dark: ink on surface | 12.01 | AAA |
 | dark: teal on paper | 8.21 | AAA |
 | dark: muted on paper | 7.91 | AAA |
-| dark: red on paper | 6.16 | AA |
+| dark: red #FF8F85 on paper / surface / green-tint / red-tint / tint | 7.79 / 6.38 / 5.68 / 6.95 / 5.50 | AA |
 | dark: green on paper | 9.99 | AAA |
 | dark: paper on marigold | 9.23 | AAA |
 
@@ -329,3 +329,11 @@ Captured 22 screenshots (`docs/screens/gallery/`, 4 viewports, en/hi/mr, light/d
 - At peak time five full-height urgent rows pushed the table below the fold; only the newest three urgent flags are pinned, with "Show all N urgent flags".
 - 360 px: the header wrapped onto two lines; the theme switch and user name move into the drawer, the offline pill shortens to "Offline", the rule id breaks instead of overflowing and the Open button no longer stretches to the row height.
 - **Removed decoration:** the filled background on the sound toggle.
+
+### Review 5: hardening (axe, offline, viewports)
+- axe found dark-mode red text at 4.35-4.5:1 on tinted surfaces: dark `red` is now #FF8F85 (5.5:1 or better everywhere; table in 3.3 updated).
+- axe found marigold-ink (#0F1E1C in dark) used as text and icon colour off a marigold fill ("vitals needed", "Provisional", warning icon): those now use ink text with a marigold dot, and the icon uses marigold in dark.
+- The sound toggle's accessible name did not contain its visible text; it now does.
+- The kiosk header overflowed at 360 px and by 16 px at 800 px in Marathi with "Listen again" showing: below 640 px the header actions are icon-only with their names as labels, and the row wraps.
+- The forward slide (translateX 48 px) briefly widened the page; the kiosk root clips horizontal overflow.
+- Result: zero serious or critical axe findings on the kiosk (every input type, body map, review, doctor choice, slip), staff board, dosage check (blocked and ok with ruler), summary and audit log, in light and dark.
