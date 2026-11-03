@@ -15,6 +15,8 @@ from records import store
 
 st.markdown("""<style>
 div.stButton > button { min-height: 4.2rem; font-size: 1.35rem; white-space: normal; }
+div.block-container { padding-top: 2.5rem; }
+h1 { font-size: 2rem !important; padding: 0 0 .25rem 0 !important; }
 div[data-testid="stCheckbox"] label p { font-size: 1.3rem; }
 </style>""", unsafe_allow_html=True)
 
@@ -109,13 +111,18 @@ if view is None:                                   # path complete -> review scr
 
 node = g.node(view)
 done, total = sess.progress()
-st.progress(min(done / max(total, 1), 1.0), text=f"{t('progress', lang)} {done + 1 if view not in sess.answers else done} / ~{total}")
 cur = sess.answers.get(view)
 is_consent = node.section == "consent"
+q_col = st.container()
+if node.type == "body_map":   # map on the left, question and buttons on the right: Next stays on screen on a 768 px tablet
+    map_col, q_col = st.columns([5, 6])
+with q_col:
+    st.progress(min(done / max(total, 1), 1.0), text=f"{t('progress', lang)} {done + 1 if view not in sess.answers else done} / ~{total}")
 if is_consent:   # the consent paragraph is long: normal-weight text, not a page-sized header
     st.markdown(f"<p style='font-size:1.35rem;line-height:1.5'>{html.escape(node.text.get(lang))}</p>", unsafe_allow_html=True)
 else:
-    st.header(node.text.get(lang))
+    with q_col:
+        st.header(node.text.get(lang))
 
 if node.type in ("single_choice", "yes_no_unsure"):
     for o in node.options:
@@ -147,7 +154,7 @@ elif node.type == "scale_0_10":
             _set(view, i)
             st.rerun()
 elif node.type == "body_map":
-    ans = body_map_input(node, lang, cur)
+    ans = body_map_input(node, lang, cur, map_col, q_col)
     if ans is not None:
         _set(view, ans)
         st.rerun()
