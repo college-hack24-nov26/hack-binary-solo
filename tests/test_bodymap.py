@@ -11,7 +11,7 @@ from intake.engine import validate_answer, validate_graph
 from intake.models import TRANSLATION_STATUS, load_graph
 from intake.redflags import load_rules
 from intake.summary import apply_doctor_edits, body_diagram_svgs, build_summary, render_text
-from intake.synthetic import run_bank
+from intake.synthetic import BANK, run_bank
 
 G, RULES = load_graph(), load_rules()
 CAT = bm.catalog()
@@ -295,6 +295,10 @@ def test_removing_a_selection_recomputes_flags_and_keeps_path_valid():
     assert s.red_flags == [] and s.pending == "cpx_skin"                       # right chest asks the skin follow-up instead
     s.answer("cpx_skin", "no")
     assert s.pending == "cp_course"       # a changed branch re-asks what came after it (recompute_path drops answers off the old path)
+    while s.pending:                      # re-answer the rest: the intake still completes, flags stay clear, and apart from the
+        s.answer(s.pending, BANK[s.pending])   # region follow-ups the path is exactly what it was before the untap
+    assert s.complete and s.red_flags == []
+    assert [n for n in s.path if not n.startswith("cpx_")] == [n for n in path if not n.startswith("cpx_")]
     s.answer("cp_site", make_answer(["chest_left"], "list"))                   # tap it again, from the list
     assert [t.ruleId for t in s.red_flags] == ["RF_CHEST_PAIN_RADIATION_SWEATING"]
     s.answer("body_map_radiation", make_answer([], "map", "none"))

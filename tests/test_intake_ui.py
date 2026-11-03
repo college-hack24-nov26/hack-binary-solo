@@ -172,3 +172,13 @@ def test_demo_mode_is_idempotent_one_record_on_the_staff_board():
     assert [r.token for r in store.list_records()] == [DEMO_TOKEN] and store.load(DEMO_TOKEN).status == "in_progress"
     staff = page("staff", "staff").run()
     assert len(staff.expander) == 1
+
+
+def test_language_label_switches_on_the_same_run():
+    at = page("patient").run()
+    at.radio[0].set_value("hi").run()
+    assert at.radio[0].label == "भाषा"
+    at.radio[0].set_value("mr").run()
+    assert at.radio[0].label == "भाषा" and at.radio[0].value == "mr"
+    at.radio[0].set_value("en").run()
+    assert at.radio[0].label == "Language"

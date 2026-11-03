@@ -68,7 +68,8 @@ def _go_back(view):
 
 # ---- language toggle (always visible)
 labels = {"en": "English", "hi": "हिन्दी", "mr": "मराठी"}
-lang = st.radio(t("language", ss.get("lang", "en")), list(labels), format_func=labels.get, horizontal=True,
+# the widget key is already updated on the run that switches language, so the label follows it immediately
+lang = st.radio(t("language", ss.get("lang_radio", ss.get("lang", "en"))), list(labels), format_func=labels.get, horizontal=True,
                 index=list(labels).index(ss.get("lang", "en")), key="lang_radio")
 ss.lang = sess.language = lang
 st.title(t("title", lang))
