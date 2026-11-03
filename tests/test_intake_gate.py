@@ -8,7 +8,7 @@ from streamlit.testing.v1 import AppTest
 from intake.bodymap import make_answer
 from intake.models import load_graph
 from intake.redflags import load_rules
-from intake.synthetic import run_bank
+from intake.synthetic import PATIENTS, run_bank
 from intake.ui.gate import can_edit
 from ocr import auth
 from records import store
@@ -87,7 +87,9 @@ def test_patient_kiosk_needs_no_login():
 
 
 def test_doctor_red_flag_line_uses_readable_answers_and_diagram_renders():
+    store.save(run_bank(load_graph(), load_rules(), PATIENTS["adult_chest_pain"], token="PT-GATEBB").finish())
     at = login(page("doctor").run(), "dr")
+    at.selectbox[0].set_value("PT-GATEBB").run()
     flag = at.error[0].value
     assert "Triggered by:" in flag and "{'regions'" not in flag and "Site: Chest, centre" in flag
     assert at.expander[0].label.startswith("Body diagram") and not at.exception
