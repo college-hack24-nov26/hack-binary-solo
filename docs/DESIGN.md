@@ -323,3 +323,9 @@ Captured 22 screenshots (`docs/screens/gallery/`, 4 viewports, en/hi/mr, light/d
 - The floor line was a thin bar; it now runs edge to edge across the slip, and under the slip a full-width "You are here > > > Room 12" strip in the room's colour (text colour chosen for AA on that colour; the yellow line gets an ink edge). This is the kiosk's signature moment.
 - Checked: one primary action per screen (Continue or the tiles themselves; Not sure and Skip are secondary in their own row under a dashed rule); Marathi consent text wraps without clipping at line height 1.5; landscape puts the question left and answers right.
 - **Removed decoration:** the second dashed rule that separated the slip's wait line.
+
+### Review 4: staff desk, 1440x900 light/dark and 360x740
+- The sound toggle was a filled teal button in the header, competing with each page's primary action; pressed toggles are now tinted with a teal edge (kiosk A+ / contrast toggles too).
+- At peak time five full-height urgent rows pushed the table below the fold; only the newest three urgent flags are pinned, with "Show all N urgent flags".
+- 360 px: the header wrapped onto two lines; the theme switch and user name move into the drawer, the offline pill shortens to "Offline", the rule id breaks instead of overflowing and the Open button no longer stretches to the row height.
+- **Removed decoration:** the filled background on the sound toggle.

@@ -8,7 +8,7 @@ export function RedFlagRow({ flag, token, attention, compact, action }: { flag: 
   return (
     <div
       className={cn(
-        "flex gap-3 rounded-panel border border-l-4 px-4 py-3",
+        "flex flex-wrap gap-3 rounded-panel border border-l-4 px-4 py-3 sm:flex-nowrap",
         urgent ? "border-red/50 border-l-red bg-red-tint" : "border-on-marigold/30 border-l-marigold bg-marigold-tint",
         attention && "animate-attention",
       )}
@@ -21,7 +21,7 @@ export function RedFlagRow({ flag, token, attention, compact, action }: { flag: 
           {token && <span className="font-semibold tabular">{token}</span>}
           <span className="font-semibold">{flag.staffMessage}</span>
         </p>
-        <p className="text-xs text-muted">
+        <p className="text-xs break-all text-muted sm:break-normal">
           {flag.draft ? <span className="font-semibold">{flag.label}</span> : flag.label}. Rule {flag.ruleId}
         </p>
         {!compact && flag.triggeredBy.length > 0 && (
@@ -34,7 +34,7 @@ export function RedFlagRow({ flag, token, attention, compact, action }: { flag: 
           </ul>
         )}
       </div>
-      {action}
+      {action && <div className="ml-9 sm:ml-0 sm:self-center">{action}</div>}
     </div>
   );
 }

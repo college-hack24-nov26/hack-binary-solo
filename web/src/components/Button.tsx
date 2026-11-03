@@ -116,7 +116,7 @@ export function ToggleButton({ pressed, onPressedChange, icon: Icon, children, s
       type="button"
       aria-pressed={pressed}
       onClick={() => onPressedChange(!pressed)}
-      className={cn(buttonClass(pressed ? "primary" : "secondary", size), className)}
+      className={cn(buttonClass("secondary", size), pressed && "border-teal bg-tint text-teal", className)}
       {...rest}
     >
       {Icon && <Icon size={ICON[size]} aria-hidden strokeWidth={2.25} />}

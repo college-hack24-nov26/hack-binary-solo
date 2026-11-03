@@ -177,6 +177,12 @@ export function DashboardShell({ area, title, nav, me, headerExtra, children }: 
             <nav className="flex-1 overflow-y-auto px-2 py-2">
               <NavList items={nav} collapsed={false} onNavigate={() => setDrawer(false)} />
             </nav>
+            <div className="flex items-center justify-between border-t border-line p-3 text-sm">
+              <span>
+                <span className="font-semibold">{me.username}</span> <span className="text-muted">{me.role}</span>
+              </span>
+              <ThemeSwitch />
+            </div>
           </div>
         </div>
       )}
@@ -188,9 +194,11 @@ export function DashboardShell({ area, title, nav, me, headerExtra, children }: 
           </span>
           <div className="min-w-0 flex-1">{headerExtra}</div>
           <OfflineBadge />
-          <ThemeSwitch />
-          <div className="flex items-center gap-1 rounded-full border border-line bg-surface py-0.5 pl-3 pr-0.5">
-            <span className="text-xs">
+          <span className="hidden sm:inline-flex">
+            <ThemeSwitch />
+          </span>
+          <div className="flex items-center gap-1 rounded-full border border-line bg-surface py-0.5 pl-0.5 sm:pl-3 pr-0.5">
+            <span className="hidden text-xs sm:inline">
               <span className="font-semibold">{me.username}</span> <span className="text-muted">{me.role}</span>
             </span>
             <IconButton icon={LogOut} label="Sign out" size="sm" onClick={signOut} />
