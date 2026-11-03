@@ -1,0 +1,1536 @@
+{
+ "_note": "Original artwork: plain polygons, viewBox 0 0 200 424. 'right'/'left' ALWAYS mean the patient's own side: on the front view the patient's right is on the viewer's left; on the back view it is on the viewer's right.",
+ "viewBox": [
+  200,
+  424
+ ],
+ "sideLabels": {
+  "right": {
+   "en": "Patient's right",
+   "hi": "मरीज़ का दायाँ",
+   "mr": "रुग्णाचा उजवा"
+  },
+  "left": {
+   "en": "Patient's left",
+   "hi": "मरीज़ का बायाँ",
+   "mr": "रुग्णाचा डावा"
+  }
+ },
+ "viewLabels": {
+  "front": {
+   "en": "Front",
+   "hi": "सामने",
+   "mr": "समोर"
+  },
+  "back": {
+   "en": "Back",
+   "hi": "पीछे",
+   "mr": "मागे"
+  }
+ },
+ "translationStatus": "machine-drafted, needs native review",
+ "regions": [
+  {
+   "id": "head_front",
+   "view": "front",
+   "side": "center",
+   "en": "Head and face",
+   "hi": "सिर और चेहरा",
+   "mr": "डोके व चेहरा",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     78,
+     8
+    ],
+    [
+     88,
+     2
+    ],
+    [
+     112,
+     2
+    ],
+    [
+     122,
+     8
+    ],
+    [
+     124,
+     32
+    ],
+    [
+     76,
+     32
+    ]
+   ]
+  },
+  {
+   "id": "jaw_front",
+   "view": "front",
+   "side": "center",
+   "en": "Jaw",
+   "hi": "जबड़ा",
+   "mr": "जबडा",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     76,
+     32
+    ],
+    [
+     124,
+     32
+    ],
+    [
+     118,
+     50
+    ],
+    [
+     100,
+     56
+    ],
+    [
+     82,
+     50
+    ]
+   ]
+  },
+  {
+   "id": "neck_front",
+   "view": "front",
+   "side": "center",
+   "en": "Neck (front)",
+   "hi": "गर्दन (आगे)",
+   "mr": "मान (पुढील)",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     88,
+     57
+    ],
+    [
+     112,
+     57
+    ],
+    [
+     112,
+     70
+    ],
+    [
+     88,
+     70
+    ]
+   ]
+  },
+  {
+   "id": "shoulder_right",
+   "view": "front",
+   "side": "right",
+   "en": "Shoulder, patient's right",
+   "hi": "कंधा, मरीज़ की दाईं ओर",
+   "mr": "खांदा, रुग्णाची उजवी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     88,
+     70
+    ],
+    [
+     60,
+     72
+    ],
+    [
+     42,
+     82
+    ],
+    [
+     42,
+     100
+    ],
+    [
+     88,
+     100
+    ]
+   ]
+  },
+  {
+   "id": "shoulder_left",
+   "view": "front",
+   "side": "left",
+   "en": "Shoulder, patient's left",
+   "hi": "कंधा, मरीज़ की बाईं ओर",
+   "mr": "खांदा, रुग्णाची डावी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     112,
+     70
+    ],
+    [
+     140,
+     72
+    ],
+    [
+     158,
+     82
+    ],
+    [
+     158,
+     100
+    ],
+    [
+     112,
+     100
+    ]
+   ]
+  },
+  {
+   "id": "chest_right",
+   "view": "front",
+   "side": "right",
+   "en": "Chest, patient's right",
+   "hi": "छाती, मरीज़ की दाईं ओर",
+   "mr": "छाती, रुग्णाची उजवी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     66,
+     100
+    ],
+    [
+     88,
+     100
+    ],
+    [
+     88,
+     150
+    ],
+    [
+     66,
+     150
+    ]
+   ]
+  },
+  {
+   "id": "chest_left",
+   "view": "front",
+   "side": "left",
+   "en": "Chest, patient's left",
+   "hi": "छाती, मरीज़ की बाईं ओर",
+   "mr": "छाती, रुग्णाची डावी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     134,
+     100
+    ],
+    [
+     112,
+     100
+    ],
+    [
+     112,
+     150
+    ],
+    [
+     134,
+     150
+    ]
+   ]
+  },
+  {
+   "id": "chest_center",
+   "view": "front",
+   "side": "center",
+   "en": "Chest, centre",
+   "hi": "छाती, बीच में",
+   "mr": "छाती, मध्यभागी",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     88,
+     100
+    ],
+    [
+     112,
+     100
+    ],
+    [
+     112,
+     150
+    ],
+    [
+     88,
+     150
+    ]
+   ]
+  },
+  {
+   "id": "upper_abdomen_right",
+   "view": "front",
+   "side": "right",
+   "en": "Upper belly, patient's right",
+   "hi": "पेट का ऊपरी भाग, मरीज़ की दाईं ओर",
+   "mr": "पोटाचा वरचा भाग, रुग्णाची उजवी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     68,
+     150
+    ],
+    [
+     88,
+     150
+    ],
+    [
+     88,
+     195
+    ],
+    [
+     68,
+     195
+    ]
+   ]
+  },
+  {
+   "id": "upper_abdomen_left",
+   "view": "front",
+   "side": "left",
+   "en": "Upper belly, patient's left",
+   "hi": "पेट का ऊपरी भाग, मरीज़ की बाईं ओर",
+   "mr": "पोटाचा वरचा भाग, रुग्णाची डावी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     132,
+     150
+    ],
+    [
+     112,
+     150
+    ],
+    [
+     112,
+     195
+    ],
+    [
+     132,
+     195
+    ]
+   ]
+  },
+  {
+   "id": "upper_abdomen_center",
+   "view": "front",
+   "side": "center",
+   "en": "Upper belly, centre",
+   "hi": "पेट का ऊपरी भाग, बीच में",
+   "mr": "पोटाचा वरचा भाग, मध्यभागी",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     88,
+     150
+    ],
+    [
+     112,
+     150
+    ],
+    [
+     112,
+     195
+    ],
+    [
+     88,
+     195
+    ]
+   ]
+  },
+  {
+   "id": "lower_abdomen_right",
+   "view": "front",
+   "side": "right",
+   "en": "Lower belly, patient's right",
+   "hi": "पेट का निचला भाग, मरीज़ की दाईं ओर",
+   "mr": "पोटाचा खालचा भाग, रुग्णाची उजवी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     68,
+     195
+    ],
+    [
+     88,
+     195
+    ],
+    [
+     88,
+     240
+    ],
+    [
+     68,
+     240
+    ]
+   ]
+  },
+  {
+   "id": "lower_abdomen_left",
+   "view": "front",
+   "side": "left",
+   "en": "Lower belly, patient's left",
+   "hi": "पेट का निचला भाग, मरीज़ की बाईं ओर",
+   "mr": "पोटाचा खालचा भाग, रुग्णाची डावी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     132,
+     195
+    ],
+    [
+     112,
+     195
+    ],
+    [
+     112,
+     240
+    ],
+    [
+     132,
+     240
+    ]
+   ]
+  },
+  {
+   "id": "lower_abdomen_center",
+   "view": "front",
+   "side": "center",
+   "en": "Lower belly, centre",
+   "hi": "पेट का निचला भाग, बीच में",
+   "mr": "पोटाचा खालचा भाग, मध्यभागी",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     88,
+     195
+    ],
+    [
+     112,
+     195
+    ],
+    [
+     112,
+     240
+    ],
+    [
+     88,
+     240
+    ]
+   ]
+  },
+  {
+   "id": "pelvic_area",
+   "view": "front",
+   "side": "center",
+   "en": "Pelvic area",
+   "hi": "कमर के नीचे का भाग (श्रोणि क्षेत्र)",
+   "mr": "ओटीपोटाचा भाग",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     68,
+     240
+    ],
+    [
+     132,
+     240
+    ],
+    [
+     132,
+     262
+    ],
+    [
+     100,
+     282
+    ],
+    [
+     68,
+     262
+    ]
+   ]
+  },
+  {
+   "id": "upper_arm_right",
+   "view": "front",
+   "side": "right",
+   "en": "Upper arm, patient's right",
+   "hi": "ऊपरी बाँह, मरीज़ की दाईं ओर",
+   "mr": "दंड (वरचा हात), रुग्णाची उजवी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     42,
+     100
+    ],
+    [
+     62,
+     100
+    ],
+    [
+     60,
+     165
+    ],
+    [
+     40,
+     165
+    ]
+   ]
+  },
+  {
+   "id": "upper_arm_left",
+   "view": "front",
+   "side": "left",
+   "en": "Upper arm, patient's left",
+   "hi": "ऊपरी बाँह, मरीज़ की बाईं ओर",
+   "mr": "दंड (वरचा हात), रुग्णाची डावी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     158,
+     100
+    ],
+    [
+     138,
+     100
+    ],
+    [
+     140,
+     165
+    ],
+    [
+     160,
+     165
+    ]
+   ]
+  },
+  {
+   "id": "forearm_right",
+   "view": "front",
+   "side": "right",
+   "en": "Forearm, patient's right",
+   "hi": "अग्रबाहु (कोहनी से कलाई तक), मरीज़ की दाईं ओर",
+   "mr": "कोपरापासून मनगटापर्यंतचा हात, रुग्णाची उजवी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     40,
+     168
+    ],
+    [
+     60,
+     168
+    ],
+    [
+     56,
+     230
+    ],
+    [
+     36,
+     230
+    ]
+   ]
+  },
+  {
+   "id": "forearm_left",
+   "view": "front",
+   "side": "left",
+   "en": "Forearm, patient's left",
+   "hi": "अग्रबाहु (कोहनी से कलाई तक), मरीज़ की बाईं ओर",
+   "mr": "कोपरापासून मनगटापर्यंतचा हात, रुग्णाची डावी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     160,
+     168
+    ],
+    [
+     140,
+     168
+    ],
+    [
+     144,
+     230
+    ],
+    [
+     164,
+     230
+    ]
+   ]
+  },
+  {
+   "id": "hand_right",
+   "view": "front",
+   "side": "right",
+   "en": "Hand, patient's right",
+   "hi": "हथेली और उँगलियाँ, मरीज़ की दाईं ओर",
+   "mr": "पंजा, रुग्णाची उजवी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     36,
+     233
+    ],
+    [
+     56,
+     233
+    ],
+    [
+     54,
+     262
+    ],
+    [
+     34,
+     262
+    ]
+   ]
+  },
+  {
+   "id": "hand_left",
+   "view": "front",
+   "side": "left",
+   "en": "Hand, patient's left",
+   "hi": "हथेली और उँगलियाँ, मरीज़ की बाईं ओर",
+   "mr": "पंजा, रुग्णाची डावी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     164,
+     233
+    ],
+    [
+     144,
+     233
+    ],
+    [
+     146,
+     262
+    ],
+    [
+     166,
+     262
+    ]
+   ]
+  },
+  {
+   "id": "thigh_right",
+   "view": "front",
+   "side": "right",
+   "en": "Thigh, patient's right",
+   "hi": "जाँघ, मरीज़ की दाईं ओर",
+   "mr": "मांडी, रुग्णाची उजवी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     68,
+     262
+    ],
+    [
+     100,
+     282
+    ],
+    [
+     99,
+     345
+    ],
+    [
+     70,
+     345
+    ]
+   ]
+  },
+  {
+   "id": "thigh_left",
+   "view": "front",
+   "side": "left",
+   "en": "Thigh, patient's left",
+   "hi": "जाँघ, मरीज़ की बाईं ओर",
+   "mr": "मांडी, रुग्णाची डावी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     132,
+     262
+    ],
+    [
+     100,
+     282
+    ],
+    [
+     101,
+     345
+    ],
+    [
+     130,
+     345
+    ]
+   ]
+  },
+  {
+   "id": "knee_right",
+   "view": "front",
+   "side": "right",
+   "en": "Knee, patient's right",
+   "hi": "घुटना, मरीज़ की दाईं ओर",
+   "mr": "गुडघा, रुग्णाची उजवी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     70,
+     348
+    ],
+    [
+     99,
+     348
+    ],
+    [
+     98,
+     366
+    ],
+    [
+     71,
+     366
+    ]
+   ]
+  },
+  {
+   "id": "knee_left",
+   "view": "front",
+   "side": "left",
+   "en": "Knee, patient's left",
+   "hi": "घुटना, मरीज़ की बाईं ओर",
+   "mr": "गुडघा, रुग्णाची डावी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     130,
+     348
+    ],
+    [
+     101,
+     348
+    ],
+    [
+     102,
+     366
+    ],
+    [
+     129,
+     366
+    ]
+   ]
+  },
+  {
+   "id": "shin_right",
+   "view": "front",
+   "side": "right",
+   "en": "Shin (front of lower leg), patient's right",
+   "hi": "टाँग का अगला निचला भाग, मरीज़ की दाईं ओर",
+   "mr": "पायाचा पुढील खालचा भाग, रुग्णाची उजवी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     71,
+     369
+    ],
+    [
+     98,
+     369
+    ],
+    [
+     96,
+     400
+    ],
+    [
+     73,
+     400
+    ]
+   ]
+  },
+  {
+   "id": "shin_left",
+   "view": "front",
+   "side": "left",
+   "en": "Shin (front of lower leg), patient's left",
+   "hi": "टाँग का अगला निचला भाग, मरीज़ की बाईं ओर",
+   "mr": "पायाचा पुढील खालचा भाग, रुग्णाची डावी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     129,
+     369
+    ],
+    [
+     102,
+     369
+    ],
+    [
+     104,
+     400
+    ],
+    [
+     127,
+     400
+    ]
+   ]
+  },
+  {
+   "id": "foot_right",
+   "view": "front",
+   "side": "right",
+   "en": "Foot, patient's right",
+   "hi": "पैर का पंजा, मरीज़ की दाईं ओर",
+   "mr": "पाऊल, रुग्णाची उजवी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     72,
+     403
+    ],
+    [
+     96,
+     403
+    ],
+    [
+     96,
+     418
+    ],
+    [
+     64,
+     418
+    ]
+   ]
+  },
+  {
+   "id": "foot_left",
+   "view": "front",
+   "side": "left",
+   "en": "Foot, patient's left",
+   "hi": "पैर का पंजा, मरीज़ की बाईं ओर",
+   "mr": "पाऊल, रुग्णाची डावी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     128,
+     403
+    ],
+    [
+     104,
+     403
+    ],
+    [
+     104,
+     418
+    ],
+    [
+     136,
+     418
+    ]
+   ]
+  },
+  {
+   "id": "head_back",
+   "view": "back",
+   "side": "center",
+   "en": "Back of head",
+   "hi": "सिर का पिछला भाग",
+   "mr": "डोक्याचा मागील भाग",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     78,
+     8
+    ],
+    [
+     88,
+     2
+    ],
+    [
+     112,
+     2
+    ],
+    [
+     122,
+     8
+    ],
+    [
+     124,
+     50
+    ],
+    [
+     100,
+     56
+    ],
+    [
+     76,
+     50
+    ]
+   ]
+  },
+  {
+   "id": "neck_back",
+   "view": "back",
+   "side": "center",
+   "en": "Neck (back)",
+   "hi": "गर्दन (पीछे)",
+   "mr": "मान (मागील)",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     88,
+     57
+    ],
+    [
+     112,
+     57
+    ],
+    [
+     112,
+     70
+    ],
+    [
+     88,
+     70
+    ]
+   ]
+  },
+  {
+   "id": "shoulder_back_left",
+   "view": "back",
+   "side": "left",
+   "en": "Shoulder (back), patient's left",
+   "hi": "कंधा (पीछे), मरीज़ की बाईं ओर",
+   "mr": "खांदा (मागील), रुग्णाची डावी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     88,
+     70
+    ],
+    [
+     60,
+     72
+    ],
+    [
+     42,
+     82
+    ],
+    [
+     42,
+     100
+    ],
+    [
+     88,
+     100
+    ]
+   ]
+  },
+  {
+   "id": "shoulder_back_right",
+   "view": "back",
+   "side": "right",
+   "en": "Shoulder (back), patient's right",
+   "hi": "कंधा (पीछे), मरीज़ की दाईं ओर",
+   "mr": "खांदा (मागील), रुग्णाची उजवी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     112,
+     70
+    ],
+    [
+     140,
+     72
+    ],
+    [
+     158,
+     82
+    ],
+    [
+     158,
+     100
+    ],
+    [
+     112,
+     100
+    ]
+   ]
+  },
+  {
+   "id": "upper_back_left",
+   "view": "back",
+   "side": "left",
+   "en": "Upper back, patient's left",
+   "hi": "पीठ का ऊपरी भाग, मरीज़ की बाईं ओर",
+   "mr": "पाठीचा वरचा भाग, रुग्णाची डावी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     66,
+     100
+    ],
+    [
+     100,
+     100
+    ],
+    [
+     100,
+     150
+    ],
+    [
+     66,
+     150
+    ]
+   ]
+  },
+  {
+   "id": "upper_back_right",
+   "view": "back",
+   "side": "right",
+   "en": "Upper back, patient's right",
+   "hi": "पीठ का ऊपरी भाग, मरीज़ की दाईं ओर",
+   "mr": "पाठीचा वरचा भाग, रुग्णाची उजवी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     134,
+     100
+    ],
+    [
+     100,
+     100
+    ],
+    [
+     100,
+     150
+    ],
+    [
+     134,
+     150
+    ]
+   ]
+  },
+  {
+   "id": "mid_back",
+   "view": "back",
+   "side": "center",
+   "en": "Middle back",
+   "hi": "पीठ का बीच का भाग",
+   "mr": "पाठीचा मधला भाग",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     68,
+     150
+    ],
+    [
+     132,
+     150
+    ],
+    [
+     132,
+     195
+    ],
+    [
+     68,
+     195
+    ]
+   ]
+  },
+  {
+   "id": "lower_back_left",
+   "view": "back",
+   "side": "left",
+   "en": "Lower back, patient's left",
+   "hi": "पीठ का निचला भाग, मरीज़ की बाईं ओर",
+   "mr": "पाठीचा खालचा भाग, रुग्णाची डावी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     68,
+     195
+    ],
+    [
+     100,
+     195
+    ],
+    [
+     100,
+     240
+    ],
+    [
+     68,
+     240
+    ]
+   ]
+  },
+  {
+   "id": "lower_back_right",
+   "view": "back",
+   "side": "right",
+   "en": "Lower back, patient's right",
+   "hi": "पीठ का निचला भाग, मरीज़ की दाईं ओर",
+   "mr": "पाठीचा खालचा भाग, रुग्णाची उजवी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     132,
+     195
+    ],
+    [
+     100,
+     195
+    ],
+    [
+     100,
+     240
+    ],
+    [
+     132,
+     240
+    ]
+   ]
+  },
+  {
+   "id": "buttock_left",
+   "view": "back",
+   "side": "left",
+   "en": "Buttock, patient's left",
+   "hi": "नितंब, मरीज़ की बाईं ओर",
+   "mr": "नितंब, रुग्णाची डावी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     68,
+     240
+    ],
+    [
+     100,
+     240
+    ],
+    [
+     100,
+     276
+    ],
+    [
+     68,
+     270
+    ]
+   ]
+  },
+  {
+   "id": "buttock_right",
+   "view": "back",
+   "side": "right",
+   "en": "Buttock, patient's right",
+   "hi": "नितंब, मरीज़ की दाईं ओर",
+   "mr": "नितंब, रुग्णाची उजवी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     132,
+     240
+    ],
+    [
+     100,
+     240
+    ],
+    [
+     100,
+     276
+    ],
+    [
+     132,
+     270
+    ]
+   ]
+  },
+  {
+   "id": "upper_arm_back_left",
+   "view": "back",
+   "side": "left",
+   "en": "Upper arm (back), patient's left",
+   "hi": "ऊपरी बाँह (पीछे), मरीज़ की बाईं ओर",
+   "mr": "दंड (वरचा हात) (मागील), रुग्णाची डावी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     42,
+     100
+    ],
+    [
+     62,
+     100
+    ],
+    [
+     60,
+     165
+    ],
+    [
+     40,
+     165
+    ]
+   ]
+  },
+  {
+   "id": "upper_arm_back_right",
+   "view": "back",
+   "side": "right",
+   "en": "Upper arm (back), patient's right",
+   "hi": "ऊपरी बाँह (पीछे), मरीज़ की दाईं ओर",
+   "mr": "दंड (वरचा हात) (मागील), रुग्णाची उजवी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     158,
+     100
+    ],
+    [
+     138,
+     100
+    ],
+    [
+     140,
+     165
+    ],
+    [
+     160,
+     165
+    ]
+   ]
+  },
+  {
+   "id": "forearm_back_left",
+   "view": "back",
+   "side": "left",
+   "en": "Forearm (back), patient's left",
+   "hi": "अग्रबाहु (कोहनी से कलाई तक) (पीछे), मरीज़ की बाईं ओर",
+   "mr": "कोपरापासून मनगटापर्यंतचा हात (मागील), रुग्णाची डावी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     40,
+     168
+    ],
+    [
+     60,
+     168
+    ],
+    [
+     56,
+     230
+    ],
+    [
+     36,
+     230
+    ]
+   ]
+  },
+  {
+   "id": "forearm_back_right",
+   "view": "back",
+   "side": "right",
+   "en": "Forearm (back), patient's right",
+   "hi": "अग्रबाहु (कोहनी से कलाई तक) (पीछे), मरीज़ की दाईं ओर",
+   "mr": "कोपरापासून मनगटापर्यंतचा हात (मागील), रुग्णाची उजवी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     160,
+     168
+    ],
+    [
+     140,
+     168
+    ],
+    [
+     144,
+     230
+    ],
+    [
+     164,
+     230
+    ]
+   ]
+  },
+  {
+   "id": "hand_back_left",
+   "view": "back",
+   "side": "left",
+   "en": "Hand (back), patient's left",
+   "hi": "हथेली और उँगलियाँ (पीछे), मरीज़ की बाईं ओर",
+   "mr": "पंजा (मागील), रुग्णाची डावी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     36,
+     233
+    ],
+    [
+     56,
+     233
+    ],
+    [
+     54,
+     262
+    ],
+    [
+     34,
+     262
+    ]
+   ]
+  },
+  {
+   "id": "hand_back_right",
+   "view": "back",
+   "side": "right",
+   "en": "Hand (back), patient's right",
+   "hi": "हथेली और उँगलियाँ (पीछे), मरीज़ की दाईं ओर",
+   "mr": "पंजा (मागील), रुग्णाची उजवी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     164,
+     233
+    ],
+    [
+     144,
+     233
+    ],
+    [
+     146,
+     262
+    ],
+    [
+     166,
+     262
+    ]
+   ]
+  },
+  {
+   "id": "thigh_back_left",
+   "view": "back",
+   "side": "left",
+   "en": "Thigh (back), patient's left",
+   "hi": "जाँघ (पीछे), मरीज़ की बाईं ओर",
+   "mr": "मांडी (मागील), रुग्णाची डावी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     68,
+     279
+    ],
+    [
+     100,
+     279
+    ],
+    [
+     99,
+     345
+    ],
+    [
+     70,
+     345
+    ]
+   ]
+  },
+  {
+   "id": "thigh_back_right",
+   "view": "back",
+   "side": "right",
+   "en": "Thigh (back), patient's right",
+   "hi": "जाँघ (पीछे), मरीज़ की दाईं ओर",
+   "mr": "मांडी (मागील), रुग्णाची उजवी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     132,
+     279
+    ],
+    [
+     100,
+     279
+    ],
+    [
+     101,
+     345
+    ],
+    [
+     130,
+     345
+    ]
+   ]
+  },
+  {
+   "id": "knee_back_left",
+   "view": "back",
+   "side": "left",
+   "en": "Knee (back), patient's left",
+   "hi": "घुटना (पीछे), मरीज़ की बाईं ओर",
+   "mr": "गुडघा (मागील), रुग्णाची डावी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     70,
+     348
+    ],
+    [
+     99,
+     348
+    ],
+    [
+     98,
+     366
+    ],
+    [
+     71,
+     366
+    ]
+   ]
+  },
+  {
+   "id": "knee_back_right",
+   "view": "back",
+   "side": "right",
+   "en": "Knee (back), patient's right",
+   "hi": "घुटना (पीछे), मरीज़ की दाईं ओर",
+   "mr": "गुडघा (मागील), रुग्णाची उजवी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     130,
+     348
+    ],
+    [
+     101,
+     348
+    ],
+    [
+     102,
+     366
+    ],
+    [
+     129,
+     366
+    ]
+   ]
+  },
+  {
+   "id": "calf_left",
+   "view": "back",
+   "side": "left",
+   "en": "Calf, patient's left",
+   "hi": "पिंडली, मरीज़ की बाईं ओर",
+   "mr": "पोटरी, रुग्णाची डावी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     71,
+     369
+    ],
+    [
+     98,
+     369
+    ],
+    [
+     96,
+     400
+    ],
+    [
+     73,
+     400
+    ]
+   ]
+  },
+  {
+   "id": "calf_right",
+   "view": "back",
+   "side": "right",
+   "en": "Calf, patient's right",
+   "hi": "पिंडली, मरीज़ की दाईं ओर",
+   "mr": "पोटरी, रुग्णाची उजवी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     129,
+     369
+    ],
+    [
+     102,
+     369
+    ],
+    [
+     104,
+     400
+    ],
+    [
+     127,
+     400
+    ]
+   ]
+  },
+  {
+   "id": "foot_back_left",
+   "view": "back",
+   "side": "left",
+   "en": "Foot (back), patient's left",
+   "hi": "पैर का पंजा (पीछे), मरीज़ की बाईं ओर",
+   "mr": "पाऊल (मागील), रुग्णाची डावी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     72,
+     403
+    ],
+    [
+     96,
+     403
+    ],
+    [
+     96,
+     418
+    ],
+    [
+     64,
+     418
+    ]
+   ]
+  },
+  {
+   "id": "foot_back_right",
+   "view": "back",
+   "side": "right",
+   "en": "Foot (back), patient's right",
+   "hi": "पैर का पंजा (पीछे), मरीज़ की दाईं ओर",
+   "mr": "पाऊल (मागील), रुग्णाची उजवी बाजू",
+   "translationStatus": "machine-drafted, needs native review",
+   "polygon": [
+    [
+     128,
+     403
+    ],
+    [
+     104,
+     403
+    ],
+    [
+     104,
+     418
+    ],
+    [
+     136,
+     418
+    ]
+   ]
+  }
+ ]
+}

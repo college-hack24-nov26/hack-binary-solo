@@ -7,3 +7,5 @@ __pycache__/
 tmp/
 fixtures/*.png
 fixtures/*.expected.json
+data/users.json
+data_local/

@@ -2,12 +2,13 @@
 Doctor-in-the-loop: nothing reaches the timeline until the doctor clicks Confirm."""
 import copy
 import io
+import time
 
 import pandas as pd
 import streamlit as st
 from PIL import Image
 
-from ocr import ollama_client, service, session
+from ocr import auth, ollama_client, service, session
 from ocr.config import load_settings
 from ocr.timeline import edited_fields, to_timeline_entry
 
@@ -19,6 +20,12 @@ session.sweep(S.tmp_dir, S.session_ttl_s)  # timeout: expire stale images on eve
 ss = st.session_state
 ss.setdefault("timeline", [])
 ss.setdefault("review", None)  # {sessionId, original, latencyS}
+ss.setdefault("auth", None)    # {username, role, last_seen}
+
+
+@st.cache_resource
+def authenticator(users_file: str):  # one per process so lockout counters survive reruns
+    return auth.Authenticator(S.users_file, S.max_login_failures, S.lockout_s)
 
 MED_COLS = ["nameAsWritten", "strength", "form", "route", "frequencyAsWritten", "durationAsWritten", "notes"]
 LAB_COLS = ["test", "value", "unit", "referenceRange", "flag"]
@@ -31,14 +38,47 @@ def clear_review(delete_image=True):
     ss.pop("uploader_key", None)
 
 
+def logout(msg=None):
+    clear_review()           # image and extracted draft are dropped with the login
+    ss.auth = None
+    ss.timeline = []         # timeline is per-login in this MVP (no persistence yet)
+    if msg:
+        ss.login_notice = msg
+
+
+# ---- authentication gate: nothing below runs without a valid, non-idle login ----
+if ss.auth and auth.idle_expired(ss.auth["last_seen"], S.auth_idle_s):
+    logout("Logged out after inactivity. Any unconfirmed scan was discarded.")
+if not ss.auth:
+    st.title("Sign in")
+    if notice := ss.pop("login_notice", None):
+        st.info(notice)
+    if not auth.has_users(S.users_file):
+        st.error("No users exist yet. Create one: `.venv/bin/python scripts/create_user.py <username> <doctor|staff>`")
+        st.stop()
+    with st.form("login"):
+        u = st.text_input("Username")
+        p = st.text_input("Password", type="password")
+        if st.form_submit_button("Sign in", type="primary"):
+            user, msg = authenticator(str(S.users_file)).login(u, p)
+            if user:
+                ss.auth = {**user, "last_seen": time.time()}
+                st.rerun()
+            st.error(msg)
+    st.stop()
+ss.auth["last_seen"] = time.time()
+role = ss.auth["role"]
+
+
 def hl(row):  # highlight rows needing review
     return ["background-color: #fff3cd; color: #000" if row["⚠ review"] else "" for _ in row]
 
 
 with st.sidebar:
     st.header("Session")
-    role = st.selectbox("Signed-in role (demo)", ["doctor", "staff", "patient"],
-                        help="Real deployment: role comes from the hospital JWT. Only doctor/staff may run OCR.")
+    st.write(f"Signed in: **{ss.auth['username']}** ({role})")
+    if st.button("Sign out"):
+        logout(); st.rerun()
     h = service.health(S)
     st.write(f"Ollama: {'🟢 up' if h['ollamaUp'] else '🔴 down'}")
     st.write(f"Model `{S.model}`: {'🟢 present' if h['modelPresent'] else '🔴 missing'}")
@@ -133,8 +173,10 @@ else:
             st.caption(f"Edited by you: {len(edits)} field(s)")
 
         c1, c2 = st.columns(2)
-        if c1.button("✅ Confirm and add to timeline", type="primary"):
-            ss.timeline.append(to_timeline_entry(edited, edits))
+        if role != "doctor":
+            c1.caption("Only a doctor can confirm. Ask the doctor to review this screen.")
+        if c1.button("✅ Confirm and add to timeline", type="primary", disabled=role != "doctor"):
+            ss.timeline.append(to_timeline_entry(edited, edits, ss.auth["username"]))
             clear_review(); st.rerun()
         if c2.button("Cancel (discard)"):
             clear_review(); st.rerun()

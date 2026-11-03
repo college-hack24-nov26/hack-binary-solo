@@ -18,7 +18,7 @@ def edited_fields(original: dict, edited: dict) -> list[str]:
     return out
 
 
-def to_timeline_entry(edited: dict, edits: list[str]) -> dict:
+def to_timeline_entry(edited: dict, edits: list[str], confirmed_by: str | None = None) -> dict:
     items = edited["medications"] if edited["documentType"] == "prescription" else edited["labResults"]
     if edited["documentType"] not in ("prescription", "lab_report"):
         items = edited["medications"] + edited["labResults"]
@@ -30,4 +30,5 @@ def to_timeline_entry(edited: dict, edits: list[str]) -> dict:
         "source": "ocr",
         "editedByDoctor": bool(edits),
         "editedFields": edits,
+        "confirmedBy": confirmed_by,
     }

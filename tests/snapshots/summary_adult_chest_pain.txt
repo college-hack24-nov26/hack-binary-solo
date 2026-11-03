@@ -1,0 +1,44 @@
+INTAKE SUMMARY  PT-SNAPAA
+AI drafts, the doctor decides. Draft red-flag rules are unverified.
+
+RED FLAGS
+  URGENT: Chest pain reported with sweating, or centre/left chest pain spreading to an arm, shoulder, jaw or neck. [rule RF_CHEST_PAIN_RADIATION_SWEATING; Draft rule, source check pending] Triggered by: chief_complaint=chest_pain; cp_assoc=['sweating', 'nausea']; cp_site={'regions': ['chest_center'], 'view': 'front', 'inputMode': 'map'}; body_map_radiation={'regions': ['jaw_front', 'upper_arm_left'], 'view': 'front', 'inputMode': 'map'}
+
+DOSING INPUTS
+  Age (years): 54
+  Weight (kg): 72
+  Sex: Male
+  Pregnancy: Not applicable
+  Kidney disease: No
+  Liver disease: No
+  !! Diabetes: MISSING (patient not sure)
+  Hypertension: Yes
+  Asthma: No
+
+COMPLAINT AND SOCRATES
+  Main complaint: Chest pain
+  Site: Chest, centre (via map)
+  Onset: Suddenly (within minutes)
+  Character: Pressure, squeezing or heaviness
+  Radiation: Jaw; Upper arm, patient's left
+  Associated symptoms: Also has: Sweating, Nausea or vomiting; Danger signs (last 24 h): None of these
+  Time course: Constant
+  Exacerbating / relieving: Worse with: Walking or effort; Better with: Rest
+  Severity: 8/10
+
+HISTORY
+  Cardiac risk history: Heart problem before, Smokes or chews tobacco
+  Happened before: No
+
+ALLERGIES
+  Drug allergies: penicillins, other: peanuts
+
+CURRENT MEDICINES
+  Current medicines: metformin; aspirin
+
+OLD RECORDS (OCR TIMELINE)
+  Entries: No scanned records attached.
+
+MEASURED
+  Intake duration: 0 min 30 s
+  Fields captured: 24

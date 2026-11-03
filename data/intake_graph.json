@@ -1,0 +1,2849 @@
+{
+ "version": "0.1-draft",
+ "start": "consent",
+ "nodes": [
+  {
+   "id": "consent",
+   "type": "single_choice",
+   "section": "consent",
+   "text": {
+    "en": "Before we start: this tablet will ask you some questions about your health. Your answers stay on this hospital computer and are shown only to the hospital staff and the doctor. We do not record your voice. You can skip any question. If you are answering for someone else, answer for the patient. Do you agree to answer?",
+    "hi": "शुरू करने से पहले: यह टैबलेट आपसे आपकी सेहत के बारे में कुछ सवाल पूछेगा। आपके जवाब इसी अस्पताल के कंप्यूटर में रहेंगे और केवल अस्पताल के स्टाफ और डॉक्टर को दिखेंगे। हम आपकी आवाज़ रिकॉर्ड नहीं करते। आप कोई भी सवाल छोड़ सकते हैं। यदि आप किसी और की ओर से जवाब दे रहे हैं, तो मरीज़ के बारे में जवाब दें। क्या आप जवाब देने के लिए सहमत हैं?",
+    "mr": "सुरुवात करण्यापूर्वी: हा टॅबलेट तुम्हाला तुमच्या आरोग्याबद्दल काही प्रश्न विचारेल. तुमची उत्तरे याच रुग्णालयाच्या संगणकावर राहतील आणि फक्त रुग्णालयाचे कर्मचारी व डॉक्टर यांनाच दिसतील. आम्ही तुमचा आवाज रेकॉर्ड करत नाही. तुम्ही कोणताही प्रश्न वगळू शकता. तुम्ही दुसऱ्या व्यक्तीसाठी उत्तर देत असाल, तर रुग्णाबद्दल उत्तर द्या. तुम्ही उत्तरे देण्यास सहमत आहात का?"
+   },
+   "options": [
+    {
+     "id": "agree",
+     "en": "I agree",
+     "hi": "मैं सहमत हूँ",
+     "mr": "मी सहमत आहे"
+    },
+    {
+     "id": "decline",
+     "en": "I do not agree",
+     "hi": "मैं सहमत नहीं हूँ",
+     "mr": "मी सहमत नाही"
+    }
+   ],
+   "next": {
+    "rules": [
+     {
+      "if": {
+       "equals": [
+        "consent",
+        "agree"
+       ]
+      },
+      "goto": "age_years"
+     }
+    ],
+    "default": "END"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review"
+  },
+  {
+   "id": "age_years",
+   "type": "number",
+   "section": "basics",
+   "text": {
+    "en": "Patient's age in years (enter 0 if under 1 year)",
+    "hi": "मरीज़ की उम्र वर्षों में (1 साल से कम हो तो 0 लिखें)",
+    "mr": "रुग्णाचे वय वर्षांत (१ वर्षापेक्षा कमी असल्यास 0 लिहा)"
+   },
+   "options": [],
+   "next": {
+    "rules": [
+     {
+      "if": {
+       "lte": [
+        "age_years",
+        0
+       ]
+      },
+      "goto": "age_months"
+     }
+    ],
+    "default": "sex"
+   },
+   "redFlagRefs": [
+    "RF_INFANT_FEVER_UNDER_3_MONTHS"
+   ],
+   "translationStatus": "machine-drafted, needs native review",
+   "min": 0,
+   "max": 120
+  },
+  {
+   "id": "age_months",
+   "type": "number",
+   "section": "basics",
+   "text": {
+    "en": "Age in months (0 to 11)",
+    "hi": "उम्र महीनों में (0 से 11)",
+    "mr": "वय महिन्यांत (0 ते 11)"
+   },
+   "options": [],
+   "next": {
+    "rules": [],
+    "default": "sex"
+   },
+   "redFlagRefs": [
+    "RF_INFANT_FEVER_UNDER_3_MONTHS"
+   ],
+   "translationStatus": "machine-drafted, needs native review",
+   "min": 0,
+   "max": 11
+  },
+  {
+   "id": "sex",
+   "type": "single_choice",
+   "section": "basics",
+   "text": {
+    "en": "What is the patient's sex?",
+    "hi": "मरीज़ का लिंग क्या है?",
+    "mr": "रुग्णाचे लिंग काय आहे?"
+   },
+   "options": [
+    {
+     "id": "female",
+     "en": "Female",
+     "hi": "महिला",
+     "mr": "स्त्री"
+    },
+    {
+     "id": "male",
+     "en": "Male",
+     "hi": "पुरुष",
+     "mr": "पुरुष"
+    },
+    {
+     "id": "other",
+     "en": "Other",
+     "hi": "अन्य",
+     "mr": "इतर"
+    }
+   ],
+   "next": {
+    "rules": [
+     {
+      "if": {
+       "all": [
+        {
+         "not": {
+          "equals": [
+           "sex",
+           "male"
+          ]
+         }
+        },
+        {
+         "not": {
+          "any": [
+           {
+            "lte": [
+             "age_years",
+             11
+            ]
+           },
+           {
+            "gte": [
+             "age_years",
+             56
+            ]
+           }
+          ]
+         }
+        }
+       ]
+      },
+      "goto": "pregnancy"
+     }
+    ],
+    "default": "weight_kg"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review"
+  },
+  {
+   "id": "pregnancy",
+   "type": "yes_no_unsure",
+   "section": "basics",
+   "text": {
+    "en": "Is the patient pregnant?",
+    "hi": "क्या मरीज़ गर्भवती है?",
+    "mr": "रुग्ण गर्भवती आहे का?"
+   },
+   "options": [
+    {
+     "id": "yes",
+     "en": "Yes",
+     "hi": "हाँ",
+     "mr": "होय"
+    },
+    {
+     "id": "no",
+     "en": "No",
+     "hi": "नहीं",
+     "mr": "नाही"
+    },
+    {
+     "id": "unsure",
+     "en": "Not sure",
+     "hi": "पक्का नहीं",
+     "mr": "खात्री नाही"
+    }
+   ],
+   "next": {
+    "rules": [
+     {
+      "if": {
+       "equals": [
+        "pregnancy",
+        "yes"
+       ]
+      },
+      "goto": "preg_bleeding"
+     }
+    ],
+    "default": "weight_kg"
+   },
+   "redFlagRefs": [
+    "RF_PREGNANCY_BLEEDING"
+   ],
+   "translationStatus": "machine-drafted, needs native review"
+  },
+  {
+   "id": "preg_bleeding",
+   "type": "yes_no_unsure",
+   "section": "basics",
+   "text": {
+    "en": "Is there any vaginal bleeding now?",
+    "hi": "क्या अभी योनि से रक्तस्राव हो रहा है?",
+    "mr": "सध्या योनीमार्गातून रक्तस्राव होत आहे का?"
+   },
+   "options": [
+    {
+     "id": "yes",
+     "en": "Yes",
+     "hi": "हाँ",
+     "mr": "होय"
+    },
+    {
+     "id": "no",
+     "en": "No",
+     "hi": "नहीं",
+     "mr": "नाही"
+    },
+    {
+     "id": "unsure",
+     "en": "Not sure",
+     "hi": "पक्का नहीं",
+     "mr": "खात्री नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "weight_kg"
+   },
+   "redFlagRefs": [
+    "RF_PREGNANCY_BLEEDING"
+   ],
+   "translationStatus": "machine-drafted, needs native review"
+  },
+  {
+   "id": "weight_kg",
+   "type": "number",
+   "section": "basics",
+   "text": {
+    "en": "Weight in kg (a best guess is fine)",
+    "hi": "वज़न किलो में (अंदाज़ा भी चलेगा)",
+    "mr": "वजन किलोमध्ये (अंदाज चालेल)"
+   },
+   "options": [],
+   "next": {
+    "rules": [],
+    "default": "allergies"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "min": 1,
+   "max": 300
+  },
+  {
+   "id": "allergies",
+   "type": "multi_choice",
+   "section": "basics",
+   "text": {
+    "en": "Is the patient allergic to any of these types of medicine?",
+    "hi": "क्या मरीज़ को इनमें से किसी तरह की दवा से एलर्जी है?",
+    "mr": "रुग्णाला यापैकी कोणत्याही प्रकारच्या औषधाची अ‍ॅलर्जी आहे का?"
+   },
+   "options": [
+    {
+     "id": "penicillins",
+     "en": "Penicillins (for example amoxicillin)",
+     "hi": "पेनिसिलिन (जैसे एमोक्सिसिलिन)",
+     "mr": "पेनिसिलिन (उदा. अ‍ॅमॉक्सिसिलिन)"
+    },
+    {
+     "id": "sulfa",
+     "en": "Sulfa medicines (for example cotrimoxazole)",
+     "hi": "सल्फा दवाएँ (जैसे कोट्रिमोक्साज़ोल)",
+     "mr": "सल्फा औषधे (उदा. कोट्रिमोक्साझोल)"
+    },
+    {
+     "id": "nsaids",
+     "en": "Pain or fever tablets such as ibuprofen, diclofenac, aspirin",
+     "hi": "दर्द या बुखार की गोलियाँ जैसे आइबुप्रोफेन, डाइक्लोफेनाक, एस्पिरिन",
+     "mr": "वेदना किंवा तापाच्या गोळ्या जसे आयबुप्रोफेन, डायक्लोफेनॅक, अ‍ॅस्पिरिन"
+    },
+    {
+     "id": "none",
+     "en": "No known medicine allergy",
+     "hi": "दवा से कोई एलर्जी नहीं पता",
+     "mr": "औषधाची कोणतीही अ‍ॅलर्जी माहीत नाही"
+    }
+   ],
+   "next": {
+    "rules": [
+     {
+      "if": {
+       "equals": [
+        "allergies",
+        "none"
+       ]
+      },
+      "goto": "meds_any"
+     }
+    ],
+    "default": "allergy_other"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review"
+  },
+  {
+   "id": "allergy_other",
+   "type": "free_text",
+   "section": "basics",
+   "text": {
+    "en": "Any other allergy (medicine or food)? Write it here.",
+    "hi": "कोई और एलर्जी (दवा या खाना)? यहाँ लिखें।",
+    "mr": "इतर काही अ‍ॅलर्जी (औषध किंवा अन्न)? येथे लिहा."
+   },
+   "options": [],
+   "next": {
+    "rules": [],
+    "default": "meds_any"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review"
+  },
+  {
+   "id": "meds_any",
+   "type": "yes_no_unsure",
+   "section": "basics",
+   "text": {
+    "en": "Is the patient taking any medicines now?",
+    "hi": "क्या मरीज़ अभी कोई दवा ले रहा/रही है?",
+    "mr": "रुग्ण सध्या कोणती औषधे घेत आहे का?"
+   },
+   "options": [
+    {
+     "id": "yes",
+     "en": "Yes",
+     "hi": "हाँ",
+     "mr": "होय"
+    },
+    {
+     "id": "no",
+     "en": "No",
+     "hi": "नहीं",
+     "mr": "नाही"
+    },
+    {
+     "id": "unsure",
+     "en": "Not sure",
+     "hi": "पक्का नहीं",
+     "mr": "खात्री नाही"
+    }
+   ],
+   "next": {
+    "rules": [
+     {
+      "if": {
+       "equals": [
+        "meds_any",
+        "yes"
+       ]
+      },
+      "goto": "meds_list"
+     }
+    ],
+    "default": "kidney"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review"
+  },
+  {
+   "id": "meds_list",
+   "type": "free_text",
+   "section": "basics",
+   "text": {
+    "en": "Write the names of the medicines (tablets, syrups, injections, ayurvedic, etc.)",
+    "hi": "दवाओं के नाम लिखें (गोलियाँ, सिरप, इंजेक्शन, आयुर्वेदिक आदि)",
+    "mr": "औषधांची नावे लिहा (गोळ्या, सिरप, इंजेक्शन, आयुर्वेदिक इ.)"
+   },
+   "options": [],
+   "next": {
+    "rules": [],
+    "default": "kidney"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review"
+  },
+  {
+   "id": "kidney",
+   "type": "yes_no_unsure",
+   "section": "basics",
+   "text": {
+    "en": "Has a doctor ever told the patient they have kidney disease?",
+    "hi": "क्या डॉक्टर ने कभी बताया है कि मरीज़ को किडनी की बीमारी है?",
+    "mr": "डॉक्टरांनी कधी सांगितले आहे का की रुग्णाला किडनीचा आजार आहे?"
+   },
+   "options": [
+    {
+     "id": "yes",
+     "en": "Yes",
+     "hi": "हाँ",
+     "mr": "होय"
+    },
+    {
+     "id": "no",
+     "en": "No",
+     "hi": "नहीं",
+     "mr": "नाही"
+    },
+    {
+     "id": "unsure",
+     "en": "Not sure",
+     "hi": "पक्का नहीं",
+     "mr": "खात्री नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "liver"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review"
+  },
+  {
+   "id": "liver",
+   "type": "yes_no_unsure",
+   "section": "basics",
+   "text": {
+    "en": "Has a doctor ever told the patient they have liver disease?",
+    "hi": "क्या डॉक्टर ने कभी बताया है कि मरीज़ को लिवर (यकृत) की बीमारी है?",
+    "mr": "डॉक्टरांनी कधी सांगितले आहे का की रुग्णाला यकृताचा (लिव्हर) आजार आहे?"
+   },
+   "options": [
+    {
+     "id": "yes",
+     "en": "Yes",
+     "hi": "हाँ",
+     "mr": "होय"
+    },
+    {
+     "id": "no",
+     "en": "No",
+     "hi": "नहीं",
+     "mr": "नाही"
+    },
+    {
+     "id": "unsure",
+     "en": "Not sure",
+     "hi": "पक्का नहीं",
+     "mr": "खात्री नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "diabetes"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review"
+  },
+  {
+   "id": "diabetes",
+   "type": "yes_no_unsure",
+   "section": "basics",
+   "text": {
+    "en": "Has a doctor ever told the patient they have diabetes (high sugar)?",
+    "hi": "क्या डॉक्टर ने कभी बताया है कि मरीज़ को मधुमेह (शुगर) है?",
+    "mr": "डॉक्टरांनी कधी सांगितले आहे का की रुग्णाला मधुमेह (शुगर) आहे?"
+   },
+   "options": [
+    {
+     "id": "yes",
+     "en": "Yes",
+     "hi": "हाँ",
+     "mr": "होय"
+    },
+    {
+     "id": "no",
+     "en": "No",
+     "hi": "नहीं",
+     "mr": "नाही"
+    },
+    {
+     "id": "unsure",
+     "en": "Not sure",
+     "hi": "पक्का नहीं",
+     "mr": "खात्री नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "hypertension"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review"
+  },
+  {
+   "id": "hypertension",
+   "type": "yes_no_unsure",
+   "section": "basics",
+   "text": {
+    "en": "Has a doctor ever told the patient they have high blood pressure?",
+    "hi": "क्या डॉक्टर ने कभी बताया है कि मरीज़ को उच्च रक्तचाप (बीपी) है?",
+    "mr": "डॉक्टरांनी कधी सांगितले आहे का की रुग्णाला उच्च रक्तदाब (बीपी) आहे?"
+   },
+   "options": [
+    {
+     "id": "yes",
+     "en": "Yes",
+     "hi": "हाँ",
+     "mr": "होय"
+    },
+    {
+     "id": "no",
+     "en": "No",
+     "hi": "नहीं",
+     "mr": "नाही"
+    },
+    {
+     "id": "unsure",
+     "en": "Not sure",
+     "hi": "पक्का नहीं",
+     "mr": "खात्री नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "asthma"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review"
+  },
+  {
+   "id": "asthma",
+   "type": "yes_no_unsure",
+   "section": "basics",
+   "text": {
+    "en": "Has a doctor ever told the patient they have asthma?",
+    "hi": "क्या डॉक्टर ने कभी बताया है कि मरीज़ को दमा (अस्थमा) है?",
+    "mr": "डॉक्टरांनी कधी सांगितले आहे का की रुग्णाला दमा (अस्थमा) आहे?"
+   },
+   "options": [
+    {
+     "id": "yes",
+     "en": "Yes",
+     "hi": "हाँ",
+     "mr": "होय"
+    },
+    {
+     "id": "no",
+     "en": "No",
+     "hi": "नहीं",
+     "mr": "नाही"
+    },
+    {
+     "id": "unsure",
+     "en": "Not sure",
+     "hi": "पक्का नहीं",
+     "mr": "खात्री नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "chief_complaint"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review"
+  },
+  {
+   "id": "chief_complaint",
+   "type": "single_choice",
+   "section": "complaint",
+   "text": {
+    "en": "What is the main problem today?",
+    "hi": "आज मुख्य समस्या क्या है?",
+    "mr": "आज मुख्य त्रास कोणता आहे?"
+   },
+   "options": [
+    {
+     "id": "fever",
+     "en": "Fever",
+     "hi": "बुखार",
+     "mr": "ताप"
+    },
+    {
+     "id": "cough_breath",
+     "en": "Cough or difficulty breathing",
+     "hi": "खांसी या साँस लेने में तकलीफ़",
+     "mr": "खोकला किंवा श्वास घेण्यास त्रास"
+    },
+    {
+     "id": "abdominal_pain",
+     "en": "Stomach or belly pain",
+     "hi": "पेट दर्द",
+     "mr": "पोटदुखी"
+    },
+    {
+     "id": "headache",
+     "en": "Headache",
+     "hi": "सिरदर्द",
+     "mr": "डोकेदुखी"
+    },
+    {
+     "id": "chest_pain",
+     "en": "Chest pain",
+     "hi": "सीने में दर्द",
+     "mr": "छातीत दुखणे"
+    },
+    {
+     "id": "other",
+     "en": "Something else",
+     "hi": "कुछ और",
+     "mr": "आणखी काही"
+    }
+   ],
+   "next": {
+    "rules": [
+     {
+      "if": {
+       "equals": [
+        "chief_complaint",
+        "fever"
+       ]
+      },
+      "goto": "fev_site"
+     },
+     {
+      "if": {
+       "equals": [
+        "chief_complaint",
+        "cough_breath"
+       ]
+      },
+      "goto": "cb_main"
+     },
+     {
+      "if": {
+       "equals": [
+        "chief_complaint",
+        "abdominal_pain"
+       ]
+      },
+      "goto": "ab_site"
+     },
+     {
+      "if": {
+       "equals": [
+        "chief_complaint",
+        "headache"
+       ]
+      },
+      "goto": "hd_site"
+     },
+     {
+      "if": {
+       "equals": [
+        "chief_complaint",
+        "chest_pain"
+       ]
+      },
+      "goto": "cp_site"
+     }
+    ],
+    "default": "other_text"
+   },
+   "redFlagRefs": [
+    "RF_CHEST_PAIN_RADIATION_SWEATING",
+    "RF_FEVER_NECK_STIFFNESS",
+    "RF_INFANT_FEVER_UNDER_3_MONTHS"
+   ],
+   "translationStatus": "machine-drafted, needs native review"
+  },
+  {
+   "id": "other_text",
+   "type": "free_text",
+   "section": "module",
+   "text": {
+    "en": "Please describe the problem in a few words.",
+    "hi": "कृपया समस्या कुछ शब्दों में बताएँ।",
+    "mr": "कृपया त्रास थोडक्यात सांगा."
+   },
+   "options": [],
+   "next": {
+    "rules": [],
+    "default": "danger_signs"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "character",
+   "shortLabel": "Description"
+  },
+  {
+   "id": "fev_site",
+   "type": "body_map",
+   "section": "module",
+   "text": {
+    "en": "Is there a part of the body that hurts or feels unwell with the fever?",
+    "hi": "क्या बुखार के साथ शरीर के किसी हिस्से में दर्द या तकलीफ़ है?",
+    "mr": "तापासोबत शरीराच्या एखाद्या भागात दुखते किंवा त्रास होतो का?"
+   },
+   "options": [
+    {
+     "id": "unsure",
+     "en": "I'm not sure",
+     "hi": "मुझे पक्का नहीं पता",
+     "mr": "मला खात्री नाही"
+    },
+    {
+     "id": "tell_doctor",
+     "en": "I'd prefer to tell the doctor",
+     "hi": "मैं डॉक्टर को खुद बताना चाहूँगा/चाहूँगी",
+     "mr": "मी डॉक्टरांना स्वतः सांगेन"
+    },
+    {
+     "id": "none",
+     "en": "No particular place",
+     "hi": "कोई खास जगह नहीं",
+     "mr": "विशिष्ट जागा नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "fev_onset"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "site",
+   "maxSelections": 3,
+   "shortLabel": "Site"
+  },
+  {
+   "id": "cb_site",
+   "type": "body_map",
+   "section": "module",
+   "text": {
+    "en": "Where do you feel the cough or breathing trouble?",
+    "hi": "खांसी या साँस की तकलीफ़ शरीर में कहाँ महसूस होती है?",
+    "mr": "खोकला किंवा श्वासाचा त्रास शरीरात कुठे जाणवतो?"
+   },
+   "options": [
+    {
+     "id": "unsure",
+     "en": "I'm not sure",
+     "hi": "मुझे पक्का नहीं पता",
+     "mr": "मला खात्री नाही"
+    },
+    {
+     "id": "tell_doctor",
+     "en": "I'd prefer to tell the doctor",
+     "hi": "मैं डॉक्टर को खुद बताना चाहूँगा/चाहूँगी",
+     "mr": "मी डॉक्टरांना स्वतः सांगेन"
+    },
+    {
+     "id": "none",
+     "en": "No particular place",
+     "hi": "कोई खास जगह नहीं",
+     "mr": "विशिष्ट जागा नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "cb_onset"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "site",
+   "maxSelections": 2,
+   "shortLabel": "Site"
+  },
+  {
+   "id": "body_map_radiation",
+   "type": "body_map",
+   "section": "module",
+   "text": {
+    "en": "Does the pain spread anywhere?",
+    "hi": "क्या दर्द कहीं और फैलता है?",
+    "mr": "वेदना कुठे पसरते का?"
+   },
+   "options": [
+    {
+     "id": "unsure",
+     "en": "I'm not sure",
+     "hi": "मुझे पक्का नहीं पता",
+     "mr": "मला खात्री नाही"
+    },
+    {
+     "id": "tell_doctor",
+     "en": "I'd prefer to tell the doctor",
+     "hi": "मैं डॉक्टर को खुद बताना चाहूँगा/चाहूँगी",
+     "mr": "मी डॉक्टरांना स्वतः सांगेन"
+    },
+    {
+     "id": "none",
+     "en": "It does not spread",
+     "hi": "यह कहीं नहीं फैलता",
+     "mr": "ते कुठेही पसरत नाही"
+    }
+   ],
+   "next": {
+    "rules": [
+     {
+      "if": {
+       "equals": [
+        "chief_complaint",
+        "abdominal_pain"
+       ]
+      },
+      "goto": "ab_assoc"
+     }
+    ],
+    "default": "cp_assoc"
+   },
+   "redFlagRefs": [
+    "RF_CHEST_PAIN_RADIATION_SWEATING"
+   ],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "radiation",
+   "maxSelections": 4,
+   "shortLabel": "Spreads to"
+  },
+  {
+   "id": "fev_onset",
+   "type": "single_choice",
+   "section": "module",
+   "text": {
+    "en": "When did the fever start?",
+    "hi": "बुखार कब शुरू हुआ?",
+    "mr": "ताप कधी सुरू झाला?"
+   },
+   "options": [
+    {
+     "id": "today",
+     "en": "Today",
+     "hi": "आज",
+     "mr": "आज"
+    },
+    {
+     "id": "d1_3",
+     "en": "1 to 3 days ago",
+     "hi": "1 से 3 दिन पहले",
+     "mr": "1 ते 3 दिवसांपूर्वी"
+    },
+    {
+     "id": "d4_7",
+     "en": "4 to 7 days ago",
+     "hi": "4 से 7 दिन पहले",
+     "mr": "4 ते 7 दिवसांपूर्वी"
+    },
+    {
+     "id": "over_week",
+     "en": "More than a week ago",
+     "hi": "एक हफ़्ते से ज़्यादा पहले",
+     "mr": "एका आठवड्यापेक्षा जास्त पूर्वी"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "fev_course"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "onset",
+   "shortLabel": "Onset"
+  },
+  {
+   "id": "fev_course",
+   "type": "single_choice",
+   "section": "module",
+   "text": {
+    "en": "How has the fever been?",
+    "hi": "बुखार कैसा रहा है?",
+    "mr": "ताप कसा आहे?"
+   },
+   "options": [
+    {
+     "id": "constant",
+     "en": "Present all the time",
+     "hi": "हर समय रहता है",
+     "mr": "सतत असतो"
+    },
+    {
+     "id": "comes_goes",
+     "en": "Comes and goes",
+     "hi": "आता है और चला जाता है",
+     "mr": "येतो आणि जातो"
+    },
+    {
+     "id": "worsening",
+     "en": "Getting worse",
+     "hi": "बढ़ रहा है",
+     "mr": "वाढत आहे"
+    },
+    {
+     "id": "improving",
+     "en": "Getting better",
+     "hi": "कम हो रहा है",
+     "mr": "कमी होत आहे"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "fev_temp"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "time_course",
+   "shortLabel": "Course"
+  },
+  {
+   "id": "fev_temp",
+   "type": "single_choice",
+   "section": "module",
+   "text": {
+    "en": "Has the temperature been measured? What was it?",
+    "hi": "क्या तापमान नापा गया? कितना था?",
+    "mr": "तापमान मोजले आहे का? किती होते?"
+   },
+   "options": [
+    {
+     "id": "not_measured",
+     "en": "Not measured",
+     "hi": "नापा नहीं गया",
+     "mr": "मोजले नाही"
+    },
+    {
+     "id": "below_100",
+     "en": "Below 100 °F (37.8 °C)",
+     "hi": "100 °F (37.8 °C) से कम",
+     "mr": "100 °F (37.8 °C) पेक्षा कमी"
+    },
+    {
+     "id": "f100_102",
+     "en": "100 to 102 °F",
+     "hi": "100 से 102 °F",
+     "mr": "100 ते 102 °F"
+    },
+    {
+     "id": "above_102",
+     "en": "Above 102 °F (38.9 °C)",
+     "hi": "102 °F (38.9 °C) से ज़्यादा",
+     "mr": "102 °F (38.9 °C) पेक्षा जास्त"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "fev_assoc"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "character",
+   "shortLabel": "Temperature measured"
+  },
+  {
+   "id": "fev_assoc",
+   "type": "multi_choice",
+   "section": "module",
+   "text": {
+    "en": "Do you have any of these along with the fever?",
+    "hi": "बुखार के साथ क्या इनमें से कुछ है?",
+    "mr": "तापासोबत यापैकी काही आहे का?"
+   },
+   "options": [
+    {
+     "id": "chills",
+     "en": "Shivering or chills",
+     "hi": "कंपकंपी या ठंड लगना",
+     "mr": "थंडी वाजणे किंवा हुडहुडी"
+    },
+    {
+     "id": "sore_throat",
+     "en": "Sore throat",
+     "hi": "गले में खराश",
+     "mr": "घसा दुखणे"
+    },
+    {
+     "id": "cough",
+     "en": "Cough",
+     "hi": "खांसी",
+     "mr": "खोकला"
+    },
+    {
+     "id": "headache",
+     "en": "Headache",
+     "hi": "सिरदर्द",
+     "mr": "डोकेदुखी"
+    },
+    {
+     "id": "vomiting",
+     "en": "Vomiting",
+     "hi": "उल्टी",
+     "mr": "उलट्या"
+    },
+    {
+     "id": "diarrhoea",
+     "en": "Loose motions",
+     "hi": "दस्त",
+     "mr": "जुलाब"
+    },
+    {
+     "id": "rash",
+     "en": "Skin rash",
+     "hi": "त्वचा पर चकत्ते",
+     "mr": "अंगावर पुरळ"
+    },
+    {
+     "id": "burning_urine",
+     "en": "Burning while passing urine",
+     "hi": "पेशाब में जलन",
+     "mr": "लघवीत जळजळ"
+    },
+    {
+     "id": "neck_stiffness",
+     "en": "Stiff neck (hard to bend the neck forward)",
+     "hi": "गर्दन अकड़ना (गर्दन आगे झुकाने में कठिनाई)",
+     "mr": "मान ताठ होणे (मान पुढे वाकवणे कठीण)"
+    },
+    {
+     "id": "none",
+     "en": "None of these",
+     "hi": "इनमें से कोई नहीं",
+     "mr": "यापैकी काहीही नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "fev_relieve"
+   },
+   "redFlagRefs": [
+    "RF_FEVER_NECK_STIFFNESS"
+   ],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "associated",
+   "shortLabel": "With fever"
+  },
+  {
+   "id": "fev_relieve",
+   "type": "single_choice",
+   "section": "module",
+   "text": {
+    "en": "Has anything made the fever or discomfort better?",
+    "hi": "क्या किसी चीज़ से बुखार या तकलीफ़ में आराम मिला?",
+    "mr": "कशाने ताप किंवा त्रास कमी झाला का?"
+   },
+   "options": [
+    {
+     "id": "not_tried",
+     "en": "Nothing tried yet",
+     "hi": "अभी कुछ नहीं आज़माया",
+     "mr": "अजून काही करून पाहिले नाही"
+    },
+    {
+     "id": "helped",
+     "en": "A medicine helped",
+     "hi": "दवा से आराम मिला",
+     "mr": "औषधाने आराम मिळाला"
+    },
+    {
+     "id": "not_helped",
+     "en": "A medicine did not help",
+     "hi": "दवा से आराम नहीं मिला",
+     "mr": "औषधाने आराम मिळाला नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "fev_severity"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "exacerbating_relieving",
+   "shortLabel": "Relief tried"
+  },
+  {
+   "id": "fev_severity",
+   "type": "scale_0_10",
+   "section": "module",
+   "text": {
+    "en": "How unwell do you feel? 0 = fine, 10 = worst",
+    "hi": "आप कितना बीमार महसूस कर रहे हैं? 0 = ठीक, 10 = सबसे बुरा",
+    "mr": "तुम्हाला किती आजारी वाटत आहे? 0 = ठीक, 10 = सर्वात वाईट"
+   },
+   "options": [],
+   "next": {
+    "rules": [],
+    "default": "danger_signs"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "severity",
+   "shortLabel": "Severity"
+  },
+  {
+   "id": "cb_main",
+   "type": "single_choice",
+   "section": "module",
+   "text": {
+    "en": "What is the problem?",
+    "hi": "समस्या क्या है?",
+    "mr": "त्रास कोणता आहे?"
+   },
+   "options": [
+    {
+     "id": "cough_only",
+     "en": "Cough only",
+     "hi": "सिर्फ़ खांसी",
+     "mr": "फक्त खोकला"
+    },
+    {
+     "id": "breathless_only",
+     "en": "Difficulty breathing only",
+     "hi": "सिर्फ़ साँस लेने में तकलीफ़",
+     "mr": "फक्त श्वास घेण्यास त्रास"
+    },
+    {
+     "id": "both",
+     "en": "Both",
+     "hi": "दोनों",
+     "mr": "दोन्ही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "cb_site"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "character",
+   "shortLabel": "Problem"
+  },
+  {
+   "id": "cb_onset",
+   "type": "single_choice",
+   "section": "module",
+   "text": {
+    "en": "How long has it been going on?",
+    "hi": "यह कब से हो रहा है?",
+    "mr": "हे केव्हापासून होत आहे?"
+   },
+   "options": [
+    {
+     "id": "sudden",
+     "en": "Started suddenly (within hours)",
+     "hi": "अचानक शुरू हुआ (कुछ घंटों में)",
+     "mr": "अचानक सुरू झाले (काही तासांत)"
+    },
+    {
+     "id": "days",
+     "en": "A few days",
+     "hi": "कुछ दिनों से",
+     "mr": "काही दिवसांपासून"
+    },
+    {
+     "id": "weeks",
+     "en": "A few weeks",
+     "hi": "कुछ हफ़्तों से",
+     "mr": "काही आठवड्यांपासून"
+    },
+    {
+     "id": "months",
+     "en": "Months or longer",
+     "hi": "महीनों से",
+     "mr": "महिन्यांपासून"
+    }
+   ],
+   "next": {
+    "rules": [
+     {
+      "if": {
+       "equals": [
+        "cb_main",
+        "cough_only"
+       ]
+      },
+      "goto": "cb_sputum"
+     }
+    ],
+    "default": "cb_rest"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "onset",
+   "shortLabel": "Onset"
+  },
+  {
+   "id": "cb_rest",
+   "type": "yes_no_unsure",
+   "section": "module",
+   "text": {
+    "en": "Do you feel short of breath even when sitting or resting?",
+    "hi": "क्या बैठे या आराम करते समय भी साँस फूलती है?",
+    "mr": "बसले असताना किंवा आराम करतानाही दम लागतो का?"
+   },
+   "options": [
+    {
+     "id": "yes",
+     "en": "Yes",
+     "hi": "हाँ",
+     "mr": "होय"
+    },
+    {
+     "id": "no",
+     "en": "No",
+     "hi": "नहीं",
+     "mr": "नाही"
+    },
+    {
+     "id": "unsure",
+     "en": "Not sure",
+     "hi": "पक्का नहीं",
+     "mr": "खात्री नाही"
+    }
+   ],
+   "next": {
+    "rules": [
+     {
+      "if": {
+       "equals": [
+        "cb_main",
+        "breathless_only"
+       ]
+      },
+      "goto": "cb_assoc"
+     }
+    ],
+    "default": "cb_sputum"
+   },
+   "redFlagRefs": [
+    "RF_BREATHLESS_AT_REST"
+   ],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "character",
+   "shortLabel": "Breathless at rest"
+  },
+  {
+   "id": "cb_sputum",
+   "type": "single_choice",
+   "section": "module",
+   "text": {
+    "en": "What comes up with the cough?",
+    "hi": "खांसी के साथ क्या निकलता है?",
+    "mr": "खोकल्यासोबत काय बाहेर येते?"
+   },
+   "options": [
+    {
+     "id": "dry",
+     "en": "Nothing (dry cough)",
+     "hi": "कुछ नहीं (सूखी खांसी)",
+     "mr": "काही नाही (कोरडा खोकला)"
+    },
+    {
+     "id": "clear",
+     "en": "Clear or white phlegm",
+     "hi": "साफ़ या सफ़ेद बलगम",
+     "mr": "स्वच्छ किंवा पांढरा कफ"
+    },
+    {
+     "id": "coloured",
+     "en": "Yellow or green phlegm",
+     "hi": "पीला या हरा बलगम",
+     "mr": "पिवळा किंवा हिरवा कफ"
+    },
+    {
+     "id": "blood",
+     "en": "Phlegm with blood",
+     "hi": "खून मिला बलगम",
+     "mr": "रक्त मिसळलेला कफ"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "cb_assoc"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "character",
+   "shortLabel": "Sputum"
+  },
+  {
+   "id": "cb_assoc",
+   "type": "multi_choice",
+   "section": "module",
+   "text": {
+    "en": "Do you have any of these as well?",
+    "hi": "क्या इनमें से कुछ और भी है?",
+    "mr": "यापैकी आणखी काही आहे का?"
+   },
+   "options": [
+    {
+     "id": "fever",
+     "en": "Fever",
+     "hi": "बुखार",
+     "mr": "ताप"
+    },
+    {
+     "id": "chest_pain",
+     "en": "Chest pain",
+     "hi": "सीने में दर्द",
+     "mr": "छातीत दुखणे"
+    },
+    {
+     "id": "wheeze",
+     "en": "Whistling sound when breathing",
+     "hi": "साँस लेते समय सीटी जैसी आवाज़",
+     "mr": "श्वास घेताना शिट्टीसारखा आवाज"
+    },
+    {
+     "id": "night_sweats",
+     "en": "Night sweats",
+     "hi": "रात में पसीना",
+     "mr": "रात्री घाम येणे"
+    },
+    {
+     "id": "weight_loss",
+     "en": "Weight loss without trying",
+     "hi": "बिना कोशिश वज़न घटना",
+     "mr": "प्रयत्न न करता वजन कमी होणे"
+    },
+    {
+     "id": "leg_swelling",
+     "en": "Swollen legs",
+     "hi": "पैरों में सूजन",
+     "mr": "पायांना सूज"
+    },
+    {
+     "id": "none",
+     "en": "None of these",
+     "hi": "इनमें से कोई नहीं",
+     "mr": "यापैकी काहीही नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "cb_pattern"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "associated",
+   "shortLabel": "Also has"
+  },
+  {
+   "id": "cb_pattern",
+   "type": "single_choice",
+   "section": "module",
+   "text": {
+    "en": "When is it worst?",
+    "hi": "यह कब सबसे ज़्यादा होता है?",
+    "mr": "हे केव्हा सर्वाधिक असते?"
+   },
+   "options": [
+    {
+     "id": "all_day",
+     "en": "All day",
+     "hi": "पूरे दिन",
+     "mr": "दिवसभर"
+    },
+    {
+     "id": "night",
+     "en": "At night or early morning",
+     "hi": "रात में या सुबह जल्दी",
+     "mr": "रात्री किंवा पहाटे"
+    },
+    {
+     "id": "exertion",
+     "en": "When walking or climbing stairs",
+     "hi": "चलने या सीढ़ी चढ़ने पर",
+     "mr": "चालताना किंवा जिना चढताना"
+    },
+    {
+     "id": "triggers",
+     "en": "After dust, smoke or cold air",
+     "hi": "धूल, धुएँ या ठंडी हवा के बाद",
+     "mr": "धूळ, धूर किंवा थंड हवेनंतर"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "cb_severity"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "time_course",
+   "shortLabel": "Worst when"
+  },
+  {
+   "id": "cb_severity",
+   "type": "scale_0_10",
+   "section": "module",
+   "text": {
+    "en": "How much does it trouble you? 0 = not at all, 10 = the worst",
+    "hi": "यह आपको कितना परेशान कर रहा है? 0 = बिल्कुल नहीं, 10 = सबसे ज़्यादा",
+    "mr": "याचा तुम्हाला किती त्रास होत आहे? 0 = अजिबात नाही, 10 = सर्वाधिक"
+   },
+   "options": [],
+   "next": {
+    "rules": [],
+    "default": "cb_relieve"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "severity",
+   "shortLabel": "Severity"
+  },
+  {
+   "id": "cb_relieve",
+   "type": "single_choice",
+   "section": "module",
+   "text": {
+    "en": "What helps?",
+    "hi": "किससे आराम मिलता है?",
+    "mr": "कशाने आराम मिळतो?"
+   },
+   "options": [
+    {
+     "id": "inhaler",
+     "en": "Inhaler or nebuliser",
+     "hi": "इनहेलर या नेबुलाइज़र",
+     "mr": "इन्हेलर किंवा नेब्युलायझर"
+    },
+    {
+     "id": "rest",
+     "en": "Resting",
+     "hi": "आराम करना",
+     "mr": "आराम करणे"
+    },
+    {
+     "id": "sitting_up",
+     "en": "Sitting upright",
+     "hi": "सीधा बैठना",
+     "mr": "ताठ बसणे"
+    },
+    {
+     "id": "nothing",
+     "en": "Nothing helps so far",
+     "hi": "अब तक कुछ आराम नहीं देता",
+     "mr": "आतापर्यंत काहीही आराम देत नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "danger_signs"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "exacerbating_relieving",
+   "shortLabel": "Better with"
+  },
+  {
+   "id": "ab_site",
+   "type": "body_map",
+   "section": "module",
+   "text": {
+    "en": "Where is the pain mostly?",
+    "hi": "दर्द ज़्यादातर कहाँ है?",
+    "mr": "वेदना मुख्यतः कुठे आहे?"
+   },
+   "options": [
+    {
+     "id": "unsure",
+     "en": "I'm not sure",
+     "hi": "मुझे पक्का नहीं पता",
+     "mr": "मला खात्री नाही"
+    },
+    {
+     "id": "tell_doctor",
+     "en": "I'd prefer to tell the doctor",
+     "hi": "मैं डॉक्टर को खुद बताना चाहूँगा/चाहूँगी",
+     "mr": "मी डॉक्टरांना स्वतः सांगेन"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "ab_onset"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "site",
+   "maxSelections": 3,
+   "shortLabel": "Site"
+  },
+  {
+   "id": "ab_onset",
+   "type": "single_choice",
+   "section": "module",
+   "text": {
+    "en": "How did it start?",
+    "hi": "यह कैसे शुरू हुआ?",
+    "mr": "हे कसे सुरू झाले?"
+   },
+   "options": [
+    {
+     "id": "sudden",
+     "en": "Suddenly (within hours)",
+     "hi": "अचानक (कुछ घंटों में)",
+     "mr": "अचानक (काही तासांत)"
+    },
+    {
+     "id": "days",
+     "en": "Over a few days",
+     "hi": "कुछ दिनों में",
+     "mr": "काही दिवसांत"
+    },
+    {
+     "id": "weeks",
+     "en": "Over a few weeks",
+     "hi": "कुछ हफ़्तों में",
+     "mr": "काही आठवड्यांत"
+    },
+    {
+     "id": "months",
+     "en": "Months or longer",
+     "hi": "महीनों से",
+     "mr": "महिन्यांपासून"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "ab_character"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "onset",
+   "shortLabel": "Onset"
+  },
+  {
+   "id": "ab_character",
+   "type": "single_choice",
+   "section": "module",
+   "text": {
+    "en": "What does the pain feel like?",
+    "hi": "दर्द कैसा महसूस होता है?",
+    "mr": "वेदना कशी वाटते?"
+   },
+   "options": [
+    {
+     "id": "cramping",
+     "en": "Cramping, comes in waves",
+     "hi": "ऐंठन, लहरों में आता है",
+     "mr": "मुरडा, लाटांमध्ये येतो"
+    },
+    {
+     "id": "burning",
+     "en": "Burning",
+     "hi": "जलन",
+     "mr": "जळजळ"
+    },
+    {
+     "id": "sharp",
+     "en": "Sharp or stabbing",
+     "hi": "तेज़ चुभने वाला",
+     "mr": "तीक्ष्ण, टोचल्यासारखे"
+    },
+    {
+     "id": "dull",
+     "en": "Dull ache",
+     "hi": "हल्का धीमा दर्द",
+     "mr": "मंद दुखणे"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "body_map_radiation"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "character",
+   "shortLabel": "Character"
+  },
+  {
+   "id": "ab_assoc",
+   "type": "multi_choice",
+   "section": "module",
+   "text": {
+    "en": "Do you have any of these as well?",
+    "hi": "क्या इनमें से कुछ और भी है?",
+    "mr": "यापैकी आणखी काही आहे का?"
+   },
+   "options": [
+    {
+     "id": "nausea",
+     "en": "Feeling sick (nausea)",
+     "hi": "मतली",
+     "mr": "मळमळ"
+    },
+    {
+     "id": "vomiting",
+     "en": "Vomiting",
+     "hi": "उल्टी",
+     "mr": "उलट्या"
+    },
+    {
+     "id": "diarrhoea",
+     "en": "Loose motions",
+     "hi": "दस्त",
+     "mr": "जुलाब"
+    },
+    {
+     "id": "constipation",
+     "en": "Not passing stools",
+     "hi": "मल नहीं हो रहा",
+     "mr": "शौचास होत नाही"
+    },
+    {
+     "id": "fever",
+     "en": "Fever",
+     "hi": "बुखार",
+     "mr": "ताप"
+    },
+    {
+     "id": "burning_urine",
+     "en": "Burning while passing urine",
+     "hi": "पेशाब में जलन",
+     "mr": "लघवीत जळजळ"
+    },
+    {
+     "id": "bloating",
+     "en": "Swollen belly or gas",
+     "hi": "पेट फूलना या गैस",
+     "mr": "पोट फुगणे किंवा गॅस"
+    },
+    {
+     "id": "none",
+     "en": "None of these",
+     "hi": "इनमें से कोई नहीं",
+     "mr": "यापैकी काहीही नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "ab_pattern"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "associated",
+   "shortLabel": "Also has"
+  },
+  {
+   "id": "ab_pattern",
+   "type": "single_choice",
+   "section": "module",
+   "text": {
+    "en": "How does the pain behave over the day?",
+    "hi": "दिन भर दर्द कैसा रहता है?",
+    "mr": "दिवसभर वेदना कशी असते?"
+   },
+   "options": [
+    {
+     "id": "constant",
+     "en": "Constant",
+     "hi": "लगातार",
+     "mr": "सतत"
+    },
+    {
+     "id": "waves",
+     "en": "Comes and goes",
+     "hi": "आता-जाता रहता है",
+     "mr": "येते आणि जाते"
+    },
+    {
+     "id": "after_meals",
+     "en": "Worse after eating",
+     "hi": "खाने के बाद बढ़ता है",
+     "mr": "जेवणानंतर वाढते"
+    },
+    {
+     "id": "empty",
+     "en": "Worse on an empty stomach",
+     "hi": "खाली पेट बढ़ता है",
+     "mr": "रिकाम्या पोटी वाढते"
+    },
+    {
+     "id": "night",
+     "en": "Worse at night",
+     "hi": "रात में बढ़ता है",
+     "mr": "रात्री वाढते"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "ab_severity"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "time_course",
+   "shortLabel": "Pattern"
+  },
+  {
+   "id": "ab_severity",
+   "type": "scale_0_10",
+   "section": "module",
+   "text": {
+    "en": "How bad is the pain? 0 = no pain, 10 = worst pain",
+    "hi": "दर्द कितना तेज़ है? 0 = दर्द नहीं, 10 = सबसे तेज़ दर्द",
+    "mr": "वेदना किती तीव्र आहे? 0 = वेदना नाही, 10 = सर्वाधिक वेदना"
+   },
+   "options": [],
+   "next": {
+    "rules": [],
+    "default": "ab_relieve"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "severity",
+   "shortLabel": "Severity"
+  },
+  {
+   "id": "ab_relieve",
+   "type": "single_choice",
+   "section": "module",
+   "text": {
+    "en": "What makes the pain better?",
+    "hi": "किससे दर्द कम होता है?",
+    "mr": "कशाने वेदना कमी होते?"
+   },
+   "options": [
+    {
+     "id": "nothing",
+     "en": "Nothing helps",
+     "hi": "कुछ आराम नहीं देता",
+     "mr": "काहीही आराम देत नाही"
+    },
+    {
+     "id": "food",
+     "en": "Eating or drinking milk",
+     "hi": "खाने या दूध पीने से",
+     "mr": "खाल्ल्याने किंवा दूध प्यायल्याने"
+    },
+    {
+     "id": "position",
+     "en": "Lying curled up or changing position",
+     "hi": "सिकुड़कर लेटने या स्थिति बदलने से",
+     "mr": "गुडघे पोटाशी घेऊन झोपल्याने किंवा स्थिती बदलल्याने"
+    },
+    {
+     "id": "stool_gas",
+     "en": "Passing stool or gas",
+     "hi": "मल या गैस निकलने से",
+     "mr": "शौच किंवा वायू सरल्याने"
+    },
+    {
+     "id": "medicine",
+     "en": "A medicine",
+     "hi": "किसी दवा से",
+     "mr": "एखाद्या औषधाने"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "danger_signs"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "exacerbating_relieving",
+   "shortLabel": "Better with"
+  },
+  {
+   "id": "hd_site",
+   "type": "body_map",
+   "section": "module",
+   "text": {
+    "en": "Where is the headache?",
+    "hi": "सिरदर्द कहाँ है?",
+    "mr": "डोकेदुखी कुठे आहे?"
+   },
+   "options": [
+    {
+     "id": "unsure",
+     "en": "I'm not sure",
+     "hi": "मुझे पक्का नहीं पता",
+     "mr": "मला खात्री नाही"
+    },
+    {
+     "id": "tell_doctor",
+     "en": "I'd prefer to tell the doctor",
+     "hi": "मैं डॉक्टर को खुद बताना चाहूँगा/चाहूँगी",
+     "mr": "मी डॉक्टरांना स्वतः सांगेन"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "hd_onset"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "site",
+   "maxSelections": 2,
+   "shortLabel": "Site"
+  },
+  {
+   "id": "hd_onset",
+   "type": "single_choice",
+   "section": "module",
+   "text": {
+    "en": "How did it start?",
+    "hi": "यह कैसे शुरू हुआ?",
+    "mr": "हे कसे सुरू झाले?"
+   },
+   "options": [
+    {
+     "id": "sudden",
+     "en": "Suddenly, at full strength within minutes",
+     "hi": "अचानक, कुछ ही मिनटों में पूरी तेज़ी से",
+     "mr": "अचानक, काही मिनिटांत पूर्ण तीव्रतेने"
+    },
+    {
+     "id": "hours",
+     "en": "Over a few hours",
+     "hi": "कुछ घंटों में",
+     "mr": "काही तासांत"
+    },
+    {
+     "id": "days",
+     "en": "Over a few days",
+     "hi": "कुछ दिनों में",
+     "mr": "काही दिवसांत"
+    },
+    {
+     "id": "weeks",
+     "en": "Weeks or longer",
+     "hi": "हफ़्तों से या ज़्यादा",
+     "mr": "आठवड्यांपासून किंवा जास्त"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "hd_character"
+   },
+   "redFlagRefs": [
+    "RF_SUDDEN_SEVERE_HEADACHE"
+   ],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "onset",
+   "shortLabel": "Onset"
+  },
+  {
+   "id": "hd_character",
+   "type": "single_choice",
+   "section": "module",
+   "text": {
+    "en": "What does the headache feel like?",
+    "hi": "सिरदर्द कैसा महसूस होता है?",
+    "mr": "डोकेदुखी कशी वाटते?"
+   },
+   "options": [
+    {
+     "id": "throbbing",
+     "en": "Throbbing or pulsing",
+     "hi": "धड़कता हुआ",
+     "mr": "ठणकणारी"
+    },
+    {
+     "id": "pressure",
+     "en": "Tight band or pressure",
+     "hi": "कसकर बँधा हुआ या दबाव",
+     "mr": "आवळल्यासारखी किंवा दाब"
+    },
+    {
+     "id": "sharp",
+     "en": "Sharp or stabbing",
+     "hi": "तेज़ चुभने वाला",
+     "mr": "तीक्ष्ण, टोचल्यासारखी"
+    },
+    {
+     "id": "dull",
+     "en": "Dull ache",
+     "hi": "हल्का धीमा दर्द",
+     "mr": "मंद दुखणे"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "hd_worst"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "character",
+   "shortLabel": "Character"
+  },
+  {
+   "id": "hd_worst",
+   "type": "yes_no_unsure",
+   "section": "module",
+   "text": {
+    "en": "Is this the worst headache you have ever had?",
+    "hi": "क्या यह अब तक का आपका सबसे बुरा सिरदर्द है?",
+    "mr": "ही आतापर्यंतची तुमची सर्वात वाईट डोकेदुखी आहे का?"
+   },
+   "options": [
+    {
+     "id": "yes",
+     "en": "Yes",
+     "hi": "हाँ",
+     "mr": "होय"
+    },
+    {
+     "id": "no",
+     "en": "No",
+     "hi": "नहीं",
+     "mr": "नाही"
+    },
+    {
+     "id": "unsure",
+     "en": "Not sure",
+     "hi": "पक्का नहीं",
+     "mr": "खात्री नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "hd_assoc"
+   },
+   "redFlagRefs": [
+    "RF_SUDDEN_SEVERE_HEADACHE"
+   ],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "character",
+   "shortLabel": "Worst ever"
+  },
+  {
+   "id": "hd_assoc",
+   "type": "multi_choice",
+   "section": "module",
+   "text": {
+    "en": "Do you have any of these as well?",
+    "hi": "क्या इनमें से कुछ और भी है?",
+    "mr": "यापैकी आणखी काही आहे का?"
+   },
+   "options": [
+    {
+     "id": "nausea",
+     "en": "Nausea or vomiting",
+     "hi": "मतली या उल्टी",
+     "mr": "मळमळ किंवा उलट्या"
+    },
+    {
+     "id": "light",
+     "en": "Bothered by light",
+     "hi": "रोशनी से परेशानी",
+     "mr": "प्रकाशाचा त्रास"
+    },
+    {
+     "id": "neck_stiffness",
+     "en": "Stiff neck (hard to bend the neck forward)",
+     "hi": "गर्दन अकड़ना (गर्दन आगे झुकाने में कठिनाई)",
+     "mr": "मान ताठ होणे (मान पुढे वाकवणे कठीण)"
+    },
+    {
+     "id": "fever",
+     "en": "Fever",
+     "hi": "बुखार",
+     "mr": "ताप"
+    },
+    {
+     "id": "vision",
+     "en": "Blurred or double vision",
+     "hi": "धुंधला या दोहरा दिखना",
+     "mr": "अंधुक किंवा दुहेरी दिसणे"
+    },
+    {
+     "id": "none",
+     "en": "None of these",
+     "hi": "इनमें से कोई नहीं",
+     "mr": "यापैकी काहीही नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "hd_course"
+   },
+   "redFlagRefs": [
+    "RF_FEVER_NECK_STIFFNESS"
+   ],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "associated",
+   "shortLabel": "Also has"
+  },
+  {
+   "id": "hd_course",
+   "type": "single_choice",
+   "section": "module",
+   "text": {
+    "en": "How does it behave over time?",
+    "hi": "समय के साथ यह कैसा रहता है?",
+    "mr": "वेळेनुसार ते कसे असते?"
+   },
+   "options": [
+    {
+     "id": "constant",
+     "en": "Constant",
+     "hi": "लगातार",
+     "mr": "सतत"
+    },
+    {
+     "id": "episodes",
+     "en": "Comes in episodes",
+     "hi": "रुक-रुक कर आता है",
+     "mr": "थांबून थांबून येते"
+    },
+    {
+     "id": "morning",
+     "en": "Worse in the morning",
+     "hi": "सुबह बढ़ता है",
+     "mr": "सकाळी वाढते"
+    },
+    {
+     "id": "evening",
+     "en": "Worse by evening",
+     "hi": "शाम तक बढ़ता है",
+     "mr": "संध्याकाळपर्यंत वाढते"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "hd_severity"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "time_course",
+   "shortLabel": "Pattern"
+  },
+  {
+   "id": "hd_severity",
+   "type": "scale_0_10",
+   "section": "module",
+   "text": {
+    "en": "How bad is the headache? 0 = no pain, 10 = worst pain",
+    "hi": "सिरदर्द कितना तेज़ है? 0 = दर्द नहीं, 10 = सबसे तेज़ दर्द",
+    "mr": "डोकेदुखी किती तीव्र आहे? 0 = वेदना नाही, 10 = सर्वाधिक वेदना"
+   },
+   "options": [],
+   "next": {
+    "rules": [],
+    "default": "hd_trigger"
+   },
+   "redFlagRefs": [
+    "RF_SUDDEN_SEVERE_HEADACHE"
+   ],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "severity",
+   "shortLabel": "Severity"
+  },
+  {
+   "id": "hd_trigger",
+   "type": "single_choice",
+   "section": "module",
+   "text": {
+    "en": "What makes it worse?",
+    "hi": "किससे यह बढ़ता है?",
+    "mr": "कशाने ते वाढते?"
+   },
+   "options": [
+    {
+     "id": "light_noise",
+     "en": "Light or noise",
+     "hi": "रोशनी या शोर",
+     "mr": "प्रकाश किंवा आवाज"
+    },
+    {
+     "id": "stress",
+     "en": "Stress or lack of sleep",
+     "hi": "तनाव या नींद की कमी",
+     "mr": "ताण किंवा झोपेचा अभाव"
+    },
+    {
+     "id": "strain",
+     "en": "Bending, coughing or straining",
+     "hi": "झुकने, खांसने या ज़ोर लगाने से",
+     "mr": "वाकल्याने, खोकल्याने किंवा जोर लावल्याने"
+    },
+    {
+     "id": "activity",
+     "en": "Physical activity",
+     "hi": "शारीरिक मेहनत से",
+     "mr": "शारीरिक श्रमाने"
+    },
+    {
+     "id": "none",
+     "en": "Nothing in particular",
+     "hi": "कुछ खास नहीं",
+     "mr": "विशेष काही नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "hd_relieve"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "exacerbating_relieving",
+   "shortLabel": "Worse with"
+  },
+  {
+   "id": "hd_relieve",
+   "type": "single_choice",
+   "section": "module",
+   "text": {
+    "en": "What makes it better?",
+    "hi": "किससे यह कम होता है?",
+    "mr": "कशाने ते कमी होते?"
+   },
+   "options": [
+    {
+     "id": "dark_room",
+     "en": "Rest in a quiet, dark room",
+     "hi": "शांत, अँधेरे कमरे में आराम",
+     "mr": "शांत, अंधाऱ्या खोलीत आराम"
+    },
+    {
+     "id": "medicine",
+     "en": "A medicine",
+     "hi": "किसी दवा से",
+     "mr": "एखाद्या औषधाने"
+    },
+    {
+     "id": "nothing",
+     "en": "Nothing helps",
+     "hi": "कुछ आराम नहीं देता",
+     "mr": "काहीही आराम देत नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "danger_signs"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "exacerbating_relieving",
+   "shortLabel": "Better with"
+  },
+  {
+   "id": "cp_site",
+   "type": "body_map",
+   "section": "module",
+   "text": {
+    "en": "Where is the pain?",
+    "hi": "दर्द कहाँ है?",
+    "mr": "वेदना कुठे आहे?"
+   },
+   "options": [
+    {
+     "id": "unsure",
+     "en": "I'm not sure",
+     "hi": "मुझे पक्का नहीं पता",
+     "mr": "मला खात्री नाही"
+    },
+    {
+     "id": "tell_doctor",
+     "en": "I'd prefer to tell the doctor",
+     "hi": "मैं डॉक्टर को खुद बताना चाहूँगा/चाहूँगी",
+     "mr": "मी डॉक्टरांना स्वतः सांगेन"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "cp_onset"
+   },
+   "redFlagRefs": [
+    "RF_CHEST_PAIN_RADIATION_SWEATING"
+   ],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "site",
+   "maxSelections": 3,
+   "shortLabel": "Site"
+  },
+  {
+   "id": "cp_onset",
+   "type": "single_choice",
+   "section": "module",
+   "text": {
+    "en": "How did it start?",
+    "hi": "यह कैसे शुरू हुआ?",
+    "mr": "हे कसे सुरू झाले?"
+   },
+   "options": [
+    {
+     "id": "sudden",
+     "en": "Suddenly (within minutes)",
+     "hi": "अचानक (कुछ मिनटों में)",
+     "mr": "अचानक (काही मिनिटांत)"
+    },
+    {
+     "id": "hours",
+     "en": "Over a few hours",
+     "hi": "कुछ घंटों में",
+     "mr": "काही तासांत"
+    },
+    {
+     "id": "days",
+     "en": "Over a few days",
+     "hi": "कुछ दिनों में",
+     "mr": "काही दिवसांत"
+    },
+    {
+     "id": "weeks",
+     "en": "Weeks or longer",
+     "hi": "हफ़्तों से या ज़्यादा",
+     "mr": "आठवड्यांपासून किंवा जास्त"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "cp_char"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "onset",
+   "shortLabel": "Onset"
+  },
+  {
+   "id": "cp_char",
+   "type": "single_choice",
+   "section": "module",
+   "text": {
+    "en": "What does the pain feel like?",
+    "hi": "दर्द कैसा महसूस होता है?",
+    "mr": "वेदना कशी वाटते?"
+   },
+   "options": [
+    {
+     "id": "pressure",
+     "en": "Pressure, squeezing or heaviness",
+     "hi": "दबाव, जकड़न या भारीपन",
+     "mr": "दाब, आवळल्यासारखे किंवा जडपणा"
+    },
+    {
+     "id": "sharp",
+     "en": "Sharp or stabbing",
+     "hi": "तेज़ चुभने वाला",
+     "mr": "तीक्ष्ण, टोचल्यासारखे"
+    },
+    {
+     "id": "burning",
+     "en": "Burning",
+     "hi": "जलन",
+     "mr": "जळजळ"
+    },
+    {
+     "id": "dull",
+     "en": "Dull ache",
+     "hi": "हल्का धीमा दर्द",
+     "mr": "मंद दुखणे"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "body_map_radiation"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "character",
+   "shortLabel": "Character"
+  },
+  {
+   "id": "cp_assoc",
+   "type": "multi_choice",
+   "section": "module",
+   "text": {
+    "en": "Do you have any of these as well?",
+    "hi": "क्या इनमें से कुछ और भी है?",
+    "mr": "यापैकी आणखी काही आहे का?"
+   },
+   "options": [
+    {
+     "id": "sweating",
+     "en": "Sweating",
+     "hi": "पसीना आना",
+     "mr": "घाम येणे"
+    },
+    {
+     "id": "breathless",
+     "en": "Short of breath",
+     "hi": "साँस फूलना",
+     "mr": "दम लागणे"
+    },
+    {
+     "id": "nausea",
+     "en": "Nausea or vomiting",
+     "hi": "मतली या उल्टी",
+     "mr": "मळमळ किंवा उलट्या"
+    },
+    {
+     "id": "dizzy",
+     "en": "Dizziness or fainting",
+     "hi": "चक्कर या बेहोशी",
+     "mr": "चक्कर किंवा बेशुद्धी"
+    },
+    {
+     "id": "palpitations",
+     "en": "Racing or irregular heartbeat",
+     "hi": "तेज़ या अनियमित धड़कन",
+     "mr": "जलद किंवा अनियमित धडधड"
+    },
+    {
+     "id": "cough",
+     "en": "Cough",
+     "hi": "खांसी",
+     "mr": "खोकला"
+    },
+    {
+     "id": "fever",
+     "en": "Fever",
+     "hi": "बुखार",
+     "mr": "ताप"
+    },
+    {
+     "id": "none",
+     "en": "None of these",
+     "hi": "इनमें से कोई नहीं",
+     "mr": "यापैकी काहीही नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "cp_course"
+   },
+   "redFlagRefs": [
+    "RF_CHEST_PAIN_RADIATION_SWEATING"
+   ],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "associated",
+   "shortLabel": "Also has"
+  },
+  {
+   "id": "cp_course",
+   "type": "single_choice",
+   "section": "module",
+   "text": {
+    "en": "How does the pain behave over time?",
+    "hi": "समय के साथ दर्द कैसा रहता है?",
+    "mr": "वेळेनुसार वेदना कशी असते?"
+   },
+   "options": [
+    {
+     "id": "constant",
+     "en": "Constant",
+     "hi": "लगातार",
+     "mr": "सतत"
+    },
+    {
+     "id": "episodes",
+     "en": "Comes and goes",
+     "hi": "आता-जाता रहता है",
+     "mr": "येते आणि जाते"
+    },
+    {
+     "id": "minutes",
+     "en": "Lasts a few minutes at a time",
+     "hi": "एक बार में कुछ मिनट रहता है",
+     "mr": "एकावेळी काही मिनिटे राहते"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "cp_exac"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "time_course",
+   "shortLabel": "Pattern"
+  },
+  {
+   "id": "cp_exac",
+   "type": "single_choice",
+   "section": "module",
+   "text": {
+    "en": "What makes the pain worse?",
+    "hi": "किससे दर्द बढ़ता है?",
+    "mr": "कशाने वेदना वाढते?"
+   },
+   "options": [
+    {
+     "id": "exertion",
+     "en": "Walking or effort",
+     "hi": "चलने या मेहनत से",
+     "mr": "चालणे किंवा श्रमाने"
+    },
+    {
+     "id": "breath",
+     "en": "Deep breathing",
+     "hi": "गहरी साँस से",
+     "mr": "दीर्घ श्वासाने"
+    },
+    {
+     "id": "movement",
+     "en": "Moving, or pressing on the chest",
+     "hi": "हिलने या छाती दबाने से",
+     "mr": "हालचाल किंवा छातीवर दाबल्याने"
+    },
+    {
+     "id": "meals",
+     "en": "After meals or when lying down",
+     "hi": "खाने के बाद या लेटने पर",
+     "mr": "जेवणानंतर किंवा झोपल्यावर"
+    },
+    {
+     "id": "none",
+     "en": "Nothing in particular",
+     "hi": "कुछ खास नहीं",
+     "mr": "विशेष काही नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "cp_relieve"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "exacerbating_relieving",
+   "shortLabel": "Worse with"
+  },
+  {
+   "id": "cp_relieve",
+   "type": "single_choice",
+   "section": "module",
+   "text": {
+    "en": "What makes the pain better?",
+    "hi": "किससे दर्द कम होता है?",
+    "mr": "कशाने वेदना कमी होते?"
+   },
+   "options": [
+    {
+     "id": "rest",
+     "en": "Rest",
+     "hi": "आराम",
+     "mr": "आराम"
+    },
+    {
+     "id": "medicine",
+     "en": "A medicine",
+     "hi": "किसी दवा से",
+     "mr": "एखाद्या औषधाने"
+    },
+    {
+     "id": "nothing",
+     "en": "Nothing helps",
+     "hi": "कुछ आराम नहीं देता",
+     "mr": "काहीही आराम देत नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "cp_severity"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "exacerbating_relieving",
+   "shortLabel": "Better with"
+  },
+  {
+   "id": "cp_severity",
+   "type": "scale_0_10",
+   "section": "module",
+   "text": {
+    "en": "How bad is the pain? 0 = no pain, 10 = worst pain",
+    "hi": "दर्द कितना तेज़ है? 0 = दर्द नहीं, 10 = सबसे तेज़ दर्द",
+    "mr": "वेदना किती तीव्र आहे? 0 = वेदना नाही, 10 = सर्वाधिक वेदना"
+   },
+   "options": [],
+   "next": {
+    "rules": [],
+    "default": "danger_signs"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "severity",
+   "shortLabel": "Severity"
+  },
+  {
+   "id": "danger_signs",
+   "type": "multi_choice",
+   "section": "module",
+   "text": {
+    "en": "Right now or in the last 24 hours, has the patient had any of these?",
+    "hi": "अभी या पिछले 24 घंटों में, क्या मरीज़ को इनमें से कुछ हुआ है?",
+    "mr": "आत्ता किंवा गेल्या 24 तासांत, रुग्णाला यापैकी काही झाले आहे का?"
+   },
+   "options": [
+    {
+     "id": "confusion",
+     "en": "Confused, not making sense, or unusually drowsy",
+     "hi": "भ्रमित, बेतुकी बातें, या असामान्य रूप से सुस्त",
+     "mr": "गोंधळलेले, विसंगत बोलणे, किंवा असामान्यपणे सुस्त"
+    },
+    {
+     "id": "seizure",
+     "en": "A fit, seizure or convulsions",
+     "hi": "दौरा या झटके",
+     "mr": "फिट किंवा झटके"
+    },
+    {
+     "id": "weakness",
+     "en": "Sudden weakness or numbness on one side of the body",
+     "hi": "शरीर के एक तरफ़ अचानक कमज़ोरी या सुन्नपन",
+     "mr": "शरीराच्या एका बाजूला अचानक अशक्तपणा किंवा बधिरता"
+    },
+    {
+     "id": "speech",
+     "en": "Sudden difficulty speaking or understanding",
+     "hi": "अचानक बोलने या समझने में कठिनाई",
+     "mr": "अचानक बोलण्यात किंवा समजण्यात अडचण"
+    },
+    {
+     "id": "vomit_blood",
+     "en": "Vomiting blood",
+     "hi": "खून की उल्टी",
+     "mr": "रक्ताच्या उलट्या"
+    },
+    {
+     "id": "black_stool",
+     "en": "Black, tar-like stools",
+     "hi": "काला, तारकोल जैसा मल",
+     "mr": "काळा, डांबरासारखा शौच"
+    },
+    {
+     "id": "none",
+     "en": "None of these",
+     "hi": "इनमें से कोई नहीं",
+     "mr": "यापैकी काहीही नाही"
+    }
+   ],
+   "next": {
+    "rules": [
+     {
+      "if": {
+       "equals": [
+        "chief_complaint",
+        "fever"
+       ]
+      },
+      "goto": "hx_fever"
+     },
+     {
+      "if": {
+       "equals": [
+        "chief_complaint",
+        "cough_breath"
+       ]
+      },
+      "goto": "hx_cough"
+     },
+     {
+      "if": {
+       "equals": [
+        "chief_complaint",
+        "abdominal_pain"
+       ]
+      },
+      "goto": "hx_abdomen"
+     },
+     {
+      "if": {
+       "equals": [
+        "chief_complaint",
+        "headache"
+       ]
+      },
+      "goto": "hx_head"
+     },
+     {
+      "if": {
+       "equals": [
+        "chief_complaint",
+        "chest_pain"
+       ]
+      },
+      "goto": "hx_chest"
+     }
+    ],
+    "default": "hx_similar"
+   },
+   "redFlagRefs": [
+    "RF_VOMITING_BLOOD_OR_BLACK_STOOL",
+    "RF_CONFUSION",
+    "RF_SEIZURE",
+    "RF_SUDDEN_WEAKNESS_OR_SPEECH"
+   ],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "associated",
+   "shortLabel": "Danger signs (last 24 h)"
+  },
+  {
+   "id": "hx_fever",
+   "type": "multi_choice",
+   "section": "history",
+   "text": {
+    "en": "In the past few weeks, has any of this happened?",
+    "hi": "पिछले कुछ हफ़्तों में क्या इनमें से कुछ हुआ है?",
+    "mr": "गेल्या काही आठवड्यांत यापैकी काही झाले आहे का?"
+   },
+   "options": [
+    {
+     "id": "travel",
+     "en": "Travelled recently",
+     "hi": "हाल में यात्रा की",
+     "mr": "अलीकडे प्रवास केला"
+    },
+    {
+     "id": "contact",
+     "en": "Someone at home has a similar illness",
+     "hi": "घर में किसी को ऐसी ही बीमारी है",
+     "mr": "घरात कोणाला असाच आजार आहे"
+    },
+    {
+     "id": "none",
+     "en": "None of these",
+     "hi": "इनमें से कोई नहीं",
+     "mr": "यापैकी काहीही नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "hx_similar"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "shortLabel": "Recent travel / contact"
+  },
+  {
+   "id": "hx_cough",
+   "type": "multi_choice",
+   "section": "history",
+   "text": {
+    "en": "Do any of these apply to the patient?",
+    "hi": "क्या मरीज़ पर इनमें से कोई लागू होता है?",
+    "mr": "रुग्णाला यापैकी काही लागू होते का?"
+   },
+   "options": [
+    {
+     "id": "smoking",
+     "en": "Smokes or chews tobacco",
+     "hi": "धूम्रपान या तंबाकू",
+     "mr": "धूम्रपान किंवा तंबाखू"
+    },
+    {
+     "id": "tb",
+     "en": "Past TB, or lived with someone who has TB",
+     "hi": "पहले TB हुआ, या TB वाले के साथ रहे",
+     "mr": "पूर्वी TB झाला, किंवा TB रुग्णासोबत राहिले"
+    },
+    {
+     "id": "dust_allergy",
+     "en": "Allergy to dust or pollen",
+     "hi": "धूल या परागकण से एलर्जी",
+     "mr": "धूळ किंवा परागकणांची अ‍ॅलर्जी"
+    },
+    {
+     "id": "none",
+     "en": "None of these",
+     "hi": "इनमें से कोई नहीं",
+     "mr": "यापैकी काहीही नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "hx_similar"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "shortLabel": "Relevant history"
+  },
+  {
+   "id": "hx_abdomen",
+   "type": "multi_choice",
+   "section": "history",
+   "text": {
+    "en": "Do any of these apply to the patient?",
+    "hi": "क्या मरीज़ पर इनमें से कोई लागू होता है?",
+    "mr": "रुग्णाला यापैकी काही लागू होते का?"
+   },
+   "options": [
+    {
+     "id": "ulcer",
+     "en": "Past stomach ulcer or acidity problems",
+     "hi": "पहले पेट में अल्सर या एसिडिटी की समस्या",
+     "mr": "पूर्वी पोटात अल्सर किंवा अ‍ॅसिडिटीचा त्रास"
+    },
+    {
+     "id": "stones",
+     "en": "Past gallstones or kidney stones",
+     "hi": "पहले पित्त की पथरी या किडनी की पथरी",
+     "mr": "पूर्वी पित्ताशयात किंवा किडनीत खडे"
+    },
+    {
+     "id": "surgery",
+     "en": "Past surgery on the belly",
+     "hi": "पहले पेट का ऑपरेशन",
+     "mr": "पूर्वी पोटाची शस्त्रक्रिया"
+    },
+    {
+     "id": "alcohol",
+     "en": "Drinks alcohol",
+     "hi": "शराब पीते हैं",
+     "mr": "मद्यपान करतात"
+    },
+    {
+     "id": "none",
+     "en": "None of these",
+     "hi": "इनमें से कोई नहीं",
+     "mr": "यापैकी काहीही नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "hx_similar"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "shortLabel": "Relevant history"
+  },
+  {
+   "id": "hx_head",
+   "type": "multi_choice",
+   "section": "history",
+   "text": {
+    "en": "Do any of these apply to the patient?",
+    "hi": "क्या मरीज़ पर इनमें से कोई लागू होता है?",
+    "mr": "रुग्णाला यापैकी काही लागू होते का?"
+   },
+   "options": [
+    {
+     "id": "injury",
+     "en": "Recent head injury",
+     "hi": "हाल में सिर में चोट",
+     "mr": "अलीकडे डोक्याला दुखापत"
+    },
+    {
+     "id": "eyes",
+     "en": "Eyesight problems or needs glasses",
+     "hi": "नज़र की समस्या या चश्मा",
+     "mr": "दृष्टीचा त्रास किंवा चष्मा"
+    },
+    {
+     "id": "none",
+     "en": "None of these",
+     "hi": "इनमें से कोई नहीं",
+     "mr": "यापैकी काहीही नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "hx_similar"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "shortLabel": "Relevant history"
+  },
+  {
+   "id": "hx_chest",
+   "type": "multi_choice",
+   "section": "history",
+   "text": {
+    "en": "Do any of these apply to the patient?",
+    "hi": "क्या मरीज़ पर इनमें से कोई लागू होता है?",
+    "mr": "रुग्णाला यापैकी काही लागू होते का?"
+   },
+   "options": [
+    {
+     "id": "heart",
+     "en": "Heart problem before",
+     "hi": "पहले दिल की बीमारी",
+     "mr": "पूर्वी हृदयविकार"
+    },
+    {
+     "id": "smoking",
+     "en": "Smokes or chews tobacco",
+     "hi": "धूम्रपान या तंबाकू",
+     "mr": "धूम्रपान किंवा तंबाखू"
+    },
+    {
+     "id": "cholesterol",
+     "en": "High cholesterol",
+     "hi": "उच्च कोलेस्ट्रॉल",
+     "mr": "उच्च कोलेस्टेरॉल"
+    },
+    {
+     "id": "family",
+     "en": "Heart disease in close family",
+     "hi": "परिवार में दिल की बीमारी",
+     "mr": "कुटुंबात हृदयविकार"
+    },
+    {
+     "id": "none",
+     "en": "None of these",
+     "hi": "इनमें से कोई नहीं",
+     "mr": "यापैकी काहीही नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "hx_similar"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "shortLabel": "Cardiac risk history"
+  },
+  {
+   "id": "hx_similar",
+   "type": "yes_no_unsure",
+   "section": "history",
+   "text": {
+    "en": "Has this problem happened before?",
+    "hi": "क्या यह समस्या पहले भी हुई है?",
+    "mr": "ही समस्या यापूर्वी कधी झाली आहे का?"
+   },
+   "options": [
+    {
+     "id": "yes",
+     "en": "Yes",
+     "hi": "हाँ",
+     "mr": "होय"
+    },
+    {
+     "id": "no",
+     "en": "No",
+     "hi": "नहीं",
+     "mr": "नाही"
+    },
+    {
+     "id": "unsure",
+     "en": "Not sure",
+     "hi": "पक्का नहीं",
+     "mr": "खात्री नाही"
+    }
+   ],
+   "next": {
+    "rules": [],
+    "default": "END"
+   },
+   "redFlagRefs": [],
+   "translationStatus": "machine-drafted, needs native review",
+   "socrates": "time_course",
+   "shortLabel": "Happened before"
+  }
+ ]
+}

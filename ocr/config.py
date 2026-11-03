@@ -29,6 +29,10 @@ class Settings:
     tmp_dir: Path
     review_threshold: float
     fallback: str | None
+    users_file: Path
+    auth_idle_s: int
+    max_login_failures: int
+    lockout_s: int
     timeout_s: int = 300
 
 
@@ -44,6 +48,10 @@ def load_settings() -> Settings:
         tmp_dir=(ROOT / e.get("OCR_TMP_DIR", "./tmp/ocr")).resolve(),
         review_threshold=float(e.get("OCR_REVIEW_THRESHOLD", "0.7")),
         fallback=e.get("OCR_FALLBACK") or None,
+        users_file=(ROOT / e.get("OCR_USERS_FILE", "./data/users.json")).resolve(),
+        auth_idle_s=int(e.get("OCR_AUTH_IDLE_S", "900")),
+        max_login_failures=int(e.get("OCR_MAX_LOGIN_FAILURES", "5")),
+        lockout_s=int(e.get("OCR_LOCKOUT_S", "60")),
     )
     host = urlparse(s.ollama_url).hostname
     if host not in _LOCAL_HOSTS:

@@ -1,0 +1,340 @@
+{
+ "_note": "DRAFT rules. No source has been checked; clinician review pending. Fill `source` and set sourceChecked=true only after verifying against the cited document.",
+ "rules": [
+  {
+   "id": "RF_CHEST_PAIN_RADIATION_SWEATING",
+   "condition": {
+    "all": [
+     {
+      "equals": [
+       "chief_complaint",
+       "chest_pain"
+      ]
+     },
+     {
+      "any": [
+       {
+        "equals": [
+         "cp_assoc",
+         "sweating"
+        ]
+       },
+       {
+        "all": [
+         {
+          "regionsAny": [
+           "cp_site",
+           [
+            "chest_left",
+            "chest_center"
+           ]
+          ]
+         },
+         {
+          "regionsAny": [
+           "body_map_radiation",
+           [
+            "jaw_front",
+            "neck_front",
+            "neck_back",
+            "shoulder_right",
+            "shoulder_left",
+            "upper_arm_right",
+            "upper_arm_left",
+            "forearm_right",
+            "forearm_left",
+            "hand_right",
+            "hand_left",
+            "shoulder_back_right",
+            "shoulder_back_left",
+            "upper_arm_back_right",
+            "upper_arm_back_left",
+            "forearm_back_right",
+            "forearm_back_left",
+            "hand_back_right",
+            "hand_back_left"
+           ]
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "severity": "urgent",
+   "staffMessage": "Chest pain reported with sweating, or centre/left chest pain spreading to an arm, shoulder, jaw or neck.",
+   "patientMessage": {
+    "en": "Please tell the staff now.",
+    "hi": "कृपया अभी स्टाफ को बताएँ।",
+    "mr": "कृपया आत्ता कर्मचाऱ्यांना सांगा.",
+    "translationStatus": "machine-drafted, needs native review"
+   },
+   "source": null,
+   "sourceChecked": false,
+   "reviewStatus": "draft - clinician review pending"
+  },
+  {
+   "id": "RF_BREATHLESS_AT_REST",
+   "condition": {
+    "equals": [
+     "cb_rest",
+     "yes"
+    ]
+   },
+   "severity": "urgent",
+   "staffMessage": "Patient reports shortness of breath at rest.",
+   "patientMessage": {
+    "en": "Please tell the staff now.",
+    "hi": "कृपया अभी स्टाफ को बताएँ।",
+    "mr": "कृपया आत्ता कर्मचाऱ्यांना सांगा.",
+    "translationStatus": "machine-drafted, needs native review"
+   },
+   "source": null,
+   "sourceChecked": false,
+   "reviewStatus": "draft - clinician review pending"
+  },
+  {
+   "id": "RF_SUDDEN_SEVERE_HEADACHE",
+   "condition": {
+    "any": [
+     {
+      "equals": [
+       "hd_worst",
+       "yes"
+      ]
+     },
+     {
+      "all": [
+       {
+        "equals": [
+         "hd_onset",
+         "sudden"
+        ]
+       },
+       {
+        "gte": [
+         "hd_severity",
+         8
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "severity": "urgent",
+   "staffMessage": "Headache reported as worst ever, or sudden onset with severity 8 or more out of 10.",
+   "patientMessage": {
+    "en": "Please tell the staff now.",
+    "hi": "कृपया अभी स्टाफ को बताएँ।",
+    "mr": "कृपया आत्ता कर्मचाऱ्यांना सांगा.",
+    "translationStatus": "machine-drafted, needs native review"
+   },
+   "source": null,
+   "sourceChecked": false,
+   "reviewStatus": "draft - clinician review pending"
+  },
+  {
+   "id": "RF_FEVER_NECK_STIFFNESS",
+   "condition": {
+    "any": [
+     {
+      "all": [
+       {
+        "equals": [
+         "chief_complaint",
+         "fever"
+        ]
+       },
+       {
+        "equals": [
+         "fev_assoc",
+         "neck_stiffness"
+        ]
+       }
+      ]
+     },
+     {
+      "all": [
+       {
+        "equals": [
+         "hd_assoc",
+         "neck_stiffness"
+        ]
+       },
+       {
+        "equals": [
+         "hd_assoc",
+         "fever"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "severity": "urgent",
+   "staffMessage": "Fever reported together with a stiff neck.",
+   "patientMessage": {
+    "en": "Please tell the staff now.",
+    "hi": "कृपया अभी स्टाफ को बताएँ।",
+    "mr": "कृपया आत्ता कर्मचाऱ्यांना सांगा.",
+    "translationStatus": "machine-drafted, needs native review"
+   },
+   "source": null,
+   "sourceChecked": false,
+   "reviewStatus": "draft - clinician review pending"
+  },
+  {
+   "id": "RF_VOMITING_BLOOD_OR_BLACK_STOOL",
+   "condition": {
+    "in": [
+     "danger_signs",
+     [
+      "vomit_blood",
+      "black_stool"
+     ]
+    ]
+   },
+   "severity": "urgent",
+   "staffMessage": "Vomiting blood and/or black tar-like stools reported.",
+   "patientMessage": {
+    "en": "Please tell the staff now.",
+    "hi": "कृपया अभी स्टाफ को बताएँ।",
+    "mr": "कृपया आत्ता कर्मचाऱ्यांना सांगा.",
+    "translationStatus": "machine-drafted, needs native review"
+   },
+   "source": null,
+   "sourceChecked": false,
+   "reviewStatus": "draft - clinician review pending"
+  },
+  {
+   "id": "RF_INFANT_FEVER_UNDER_3_MONTHS",
+   "condition": {
+    "all": [
+     {
+      "equals": [
+       "chief_complaint",
+       "fever"
+      ]
+     },
+     {
+      "lte": [
+       "age_years",
+       0
+      ]
+     },
+     {
+      "lte": [
+       "age_months",
+       2
+      ]
+     }
+    ]
+   },
+   "severity": "urgent",
+   "staffMessage": "Fever in an infant under 3 months of age.",
+   "patientMessage": {
+    "en": "Please tell the staff now.",
+    "hi": "कृपया अभी स्टाफ को बताएँ।",
+    "mr": "कृपया आत्ता कर्मचाऱ्यांना सांगा.",
+    "translationStatus": "machine-drafted, needs native review"
+   },
+   "source": null,
+   "sourceChecked": false,
+   "reviewStatus": "draft - clinician review pending"
+  },
+  {
+   "id": "RF_PREGNANCY_BLEEDING",
+   "condition": {
+    "all": [
+     {
+      "equals": [
+       "pregnancy",
+       "yes"
+      ]
+     },
+     {
+      "equals": [
+       "preg_bleeding",
+       "yes"
+      ]
+     }
+    ]
+   },
+   "severity": "urgent",
+   "staffMessage": "Patient reports being pregnant with vaginal bleeding now.",
+   "patientMessage": {
+    "en": "Please tell the staff now.",
+    "hi": "कृपया अभी स्टाफ को बताएँ।",
+    "mr": "कृपया आत्ता कर्मचाऱ्यांना सांगा.",
+    "translationStatus": "machine-drafted, needs native review"
+   },
+   "source": null,
+   "sourceChecked": false,
+   "reviewStatus": "draft - clinician review pending"
+  },
+  {
+   "id": "RF_CONFUSION",
+   "condition": {
+    "equals": [
+     "danger_signs",
+     "confusion"
+    ]
+   },
+   "severity": "urgent",
+   "staffMessage": "Confusion or unusual drowsiness reported.",
+   "patientMessage": {
+    "en": "Please tell the staff now.",
+    "hi": "कृपया अभी स्टाफ को बताएँ।",
+    "mr": "कृपया आत्ता कर्मचाऱ्यांना सांगा.",
+    "translationStatus": "machine-drafted, needs native review"
+   },
+   "source": null,
+   "sourceChecked": false,
+   "reviewStatus": "draft - clinician review pending"
+  },
+  {
+   "id": "RF_SEIZURE",
+   "condition": {
+    "equals": [
+     "danger_signs",
+     "seizure"
+    ]
+   },
+   "severity": "urgent",
+   "staffMessage": "Seizure / fit reported in the last 24 hours.",
+   "patientMessage": {
+    "en": "Please tell the staff now.",
+    "hi": "कृपया अभी स्टाफ को बताएँ।",
+    "mr": "कृपया आत्ता कर्मचाऱ्यांना सांगा.",
+    "translationStatus": "machine-drafted, needs native review"
+   },
+   "source": null,
+   "sourceChecked": false,
+   "reviewStatus": "draft - clinician review pending"
+  },
+  {
+   "id": "RF_SUDDEN_WEAKNESS_OR_SPEECH",
+   "condition": {
+    "in": [
+     "danger_signs",
+     [
+      "weakness",
+      "speech"
+     ]
+    ]
+   },
+   "severity": "urgent",
+   "staffMessage": "Sudden one-sided weakness/numbness or difficulty speaking/understanding reported.",
+   "patientMessage": {
+    "en": "Please tell the staff now.",
+    "hi": "कृपया अभी स्टाफ को बताएँ।",
+    "mr": "कृपया आत्ता कर्मचाऱ्यांना सांगा.",
+    "translationStatus": "machine-drafted, needs native review"
+   },
+   "source": null,
+   "sourceChecked": false,
+   "reviewStatus": "draft - clinician review pending"
+  }
+ ]
+}
