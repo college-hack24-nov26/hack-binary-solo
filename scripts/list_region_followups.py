@@ -14,9 +14,11 @@ for n in g.nodes:
         if r.goto.split("_")[0] in ("cpx", "abx", "hdx"):
             (op, (site, regions)), = r.if_.items()
             rows.append((r.goto, f"{op} {site} in [{', '.join(regions)}]"))
-nodes = {}
-for goto, cond in rows:
-    nodes[goto] = cond
+nodes = dict(rows)
+for n in g.nodes:                       # follow-ups reached only from another follow-up
+    if n.id.split("_")[0] in ("cpx", "abx", "hdx") and n.id not in nodes:
+        prev = next(p.id for p in g.nodes if p.next.default == n.id)
+        nodes[n.id] = f"asked right after {prev}"
 print("| node id | English text | options | condition (asked after the associated-symptoms question) | source | checked |")
 print("|---|---|---|---|---|---|")
 for nid, cond in nodes.items():
