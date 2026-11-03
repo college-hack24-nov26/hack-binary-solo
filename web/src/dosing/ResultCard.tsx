@@ -41,13 +41,13 @@ export function DoseFigure({ r }: { r: DoseResult }) {
   return (
     <div data-testid="dose-figure">
       <p className="text-dose font-bold tabular">{show(r.dose_mg)} mg</p>
-      <p className="text-lg">
+      <p className="text-md">
         = <span className="font-semibold tabular">{qty}</span>
         {freq && <span className="text-muted">, {freq}</span>}
       </p>
       {r.daily_total_mg !== null && (
         <p className="mt-1 text-sm text-muted tabular">
-          Daily total {show(r.daily_total_mg)} mg{r.daily_max_mg !== null ? ` · daily maximum ${show(r.daily_max_mg)} mg` : ""}
+          Daily total {show(r.daily_total_mg)} mg{r.daily_max_mg !== null ? `, daily maximum ${show(r.daily_max_mg)} mg` : ""}
         </p>
       )}
     </div>
@@ -123,7 +123,7 @@ export function ResultCard({ result: r, card, slots = {} }: { result: DoseResult
       {slots.override}
 
       {ok && (
-        <div className="grid gap-6 rounded-panel border border-line bg-surface p-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
+        <div className="flex flex-col gap-5 rounded-panel border border-line bg-surface p-4">
           <div className="flex flex-col gap-2">
             <DoseFigure r={r} />
             {plan && (

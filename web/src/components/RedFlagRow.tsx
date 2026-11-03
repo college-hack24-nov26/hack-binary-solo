@@ -22,7 +22,7 @@ export function RedFlagRow({ flag, token, attention, compact, action }: { flag: 
           <span className="font-semibold">{flag.staffMessage}</span>
         </p>
         <p className="text-xs text-muted">
-          {flag.draft ? <span className="font-semibold">{flag.label}</span> : flag.label} · rule {flag.ruleId}
+          {flag.draft ? <span className="font-semibold">{flag.label}</span> : flag.label}. Rule {flag.ruleId}
         </p>
         {!compact && flag.triggeredBy.length > 0 && (
           <ul className="mt-1 flex flex-wrap gap-x-4 gap-y-0.5 text-sm">

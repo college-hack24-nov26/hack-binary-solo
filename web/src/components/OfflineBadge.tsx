@@ -46,7 +46,7 @@ export function OfflineBadge() {
           <span className={cn("relative inline-flex size-2 rounded-full", level === "warn" ? "bg-on-marigold" : "bg-green")} />
         </span>
         <span>Offline: no internet used</span>
-        {level === "warn" && <span className="hidden font-normal sm:inline">· internet reachable, not used</span>}
+        {level === "warn" && <span className="hidden font-normal sm:inline">(internet reachable, not used)</span>}
         <ChevronDown size={14} aria-hidden />
       </button>
       {open && (

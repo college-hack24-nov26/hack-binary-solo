@@ -304,3 +304,14 @@ Captured 22 screenshots (`docs/screens/gallery/`, 4 viewports, en/hi/mr, light/d
 - Token slip: the date printed Devanagari digits next to Western-digit token and room numbers; dates now use Western digits in every language (`-u-nu-latn`), matching how staff read tokens aloud. The stamp overlapped "Your number"; it now sits beside the token. The perforated edge was invisible white-on-paper; the slip now lies on a tint "counter" and the perforation is larger.
 - Red-flag rows printed "today?:" when the node has no short label; trailing punctuation is respected.
 - Checked: Devanagari conjuncts and matras unclipped in tiles, chips and slip at 1.3-1.5 line height; selected tile shows icon + word; dark theme surfaces step in lightness, red/green lifted.
+
+### Review 2: doctor workstation (Dosage check, summary, audit), light and dark
+- Two competing primary buttons (Run dosage check and Confirm): Run is now primary only until a result exists ("Run dosage check again", secondary after); Confirm turns primary only when the server says it can be confirmed; on a blocked result the override button is the one strong action.
+- The 14 "other drugs this visit" checkboxes pushed the History check below the fold: form, route, other drugs and "show every rule" now sit in one disclosure.
+- The dose block split into two narrow columns and wrapped "250 mg/5 mL"; the dose now sits above a full-width ruler.
+- The result jumped out of view after a run (focus scrolled it under the sticky header); it now scrolls to the result's top with a header margin, instant under reduced motion.
+- "A · B" meta strings removed (daily total line, offline badge, red-flag rule line); History check no longer repeats "Drinks alcohol / Drinks alcohol?".
+- Summary fields looked like a stack of form boxes with resize grips; they are now borderless auto-sizing text that shows a border on hover/focus.
+- Drug name truncated in a two-column row at 1440; drug and indication stack in the left column on wide screens.
+- **Removed decoration:** the teal 2 px frame around the Run section.
+- Dark: surfaces step up in lightness, the DEMO bar keeps white-on-red, the chain seal stays green with text.
