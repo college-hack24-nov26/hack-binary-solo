@@ -48,7 +48,7 @@ export function BodyMap({ catalog, maxSelections, value, lang, busy, onSubmit }:
               role="radio"
               aria-checked={view === v}
               onClick={() => setView(v)}
-              className={cn("min-h-14 min-w-28 rounded-full px-5 text-k-tile font-semibold", view === v ? "bg-teal text-on-teal" : "text-ink")}
+              className={cn("min-h-16 min-w-28 rounded-full px-5 text-k-tile font-semibold", view === v ? "bg-teal text-on-teal" : "text-ink")}
             >
               {catalog.viewLabels[v]?.[lang]}
             </button>

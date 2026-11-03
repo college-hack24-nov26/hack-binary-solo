@@ -219,6 +219,8 @@ Demo (404 unless `DEMO_MODE=1`)
 
 - Records layer quirk (pre-existing, not changed): `PatientRecord.socrates` is a union, so a saved radiation answer loads back as `SiteAnswer` with `view`/`inputMode` = null. Harmless for every reader; the parity test compares records after the same JSON round trip.
 
+- "No dose number unless status is ok" is applied more strictly than the Streamlit card: for needs_input (not only blocked/refused) the UI also hides the titration plan, calculation steps, alternative-rule ranges, and the formulary notes and conflicts on alternative rules (they quote doses such as "up to 2550 mg per day"). Engine warnings, interactions and blocks stay visible in every status: they are safety text the doctor must see.
+
 ## (d) Open questions (yours to decide; work continues with the default)
 1. **Doctor names on the slip.** `data/doctors.json` has realistic synthetic doctor names ("Dr. Asha Kulkarni"). The no-real-names rule is about patients, so I keep them. Default: keep.
 2. **Patient wait estimate.** Without a "seen" status the estimate never shrinks. Default: keep the simple estimate; adding a "Mark seen" doctor action would touch the record schema again. Want it?

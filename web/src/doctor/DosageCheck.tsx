@@ -103,6 +103,13 @@ export function DosageCheck({ token, preset, onConfirmed }: { token: string; pre
     };
   };
 
+  // bring the new result's header into view (after a run, a recompute or an override)
+  const revealResult = () =>
+    window.requestAnimationFrame(() => {
+      resultRef.current?.focus({ preventScroll: true });
+      resultRef.current?.scrollIntoView({ block: "start", behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    });
+
   const evaluate = useMutation({
     mutationFn: (req: EvaluateIn) => post<Evaluation>("/api/dosing/evaluate", req),
     onSuccess: (ev) => {
@@ -110,10 +117,7 @@ export function DosageCheck({ token, preset, onConfirmed }: { token: string; pre
       setAck(false);
       setSaved(null);
       qc.invalidateQueries({ queryKey: ["audit"] });
-      window.requestAnimationFrame(() => {
-        resultRef.current?.focus({ preventScroll: true });
-        resultRef.current?.scrollIntoView({ block: "start", behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-      });
+      revealResult();
     },
   });
 
@@ -186,7 +190,7 @@ export function DosageCheck({ token, preset, onConfirmed }: { token: string; pre
                   </option>
                 ))}
               </SelectField>
-              <div className="sm:col-span-2">
+              <div className="sm:col-span-2 xl:col-span-1">
               <Disclosure summary="Optional: pharmacy form, route, other drugs this visit, every rule">
               <div className="grid gap-3 sm:grid-cols-2">
               <SelectField label="Pharmacy form (optional)" value={form} disabled={!current} onChange={(e) => setForm(e.target.value)} help="Blank: the engine suggests a product.">
@@ -281,6 +285,7 @@ export function DosageCheck({ token, preset, onConfirmed }: { token: string; pre
                         const ev = await post<Evaluation>("/api/dosing/evaluate", buildRequest({ override: o }));
                         setEvaluation(ev);
                         qc.invalidateQueries({ queryKey: ["audit"] });
+                        revealResult();
                       }}
                     />
                   ) : undefined,
@@ -590,7 +595,7 @@ function OverrideForm({ categories, onSubmit }: { categories: Record<string, str
 }
 
 // ---------------------------------------------------------------- alternatives
-function Alternatives({ result, onUse }: { result: DoseResult; onUse: (ruleId: string) => void }) {
+export function Alternatives({ result, onUse }: { result: DoseResult; onUse: (ruleId: string) => void }) {
   const ok = result.status === "ok";
   return (
     <Disclosure summary={`Alternatives side by side (${result.alternatives.length})`} open={result.status === "needs_input"}>
@@ -602,11 +607,12 @@ function Alternatives({ result, onUse }: { result: DoseResult; onUse: (ruleId: s
                 {a.rule_id} {a.suggested && <Pill tone="teal">suggested</Pill>} {a.selected && <Pill tone="green">selected</Pill>}
               </p>
               <p className="text-sm">{a.indication}</p>
-              <p className="text-xs text-muted">
+              <p className="text-xs text-muted" data-testid="alt-meta">
                 {a.data_status}
+                {/* rule notes and conflicts are formulary dosing text: shown only once the result is ok (no dose number otherwise) */}
                 {ok && a.dose_range_mg ? `; range ${a.dose_range_mg[0]} to ${a.dose_range_mg[1]} mg` : ""}
-                {a.note ? `; ${a.note}` : ""}
-                {a.conflict ? `; conflict: ${a.conflict}` : ""}
+                {ok && a.note ? `; ${a.note}` : ""}
+                {ok && a.conflict ? `; conflict: ${a.conflict}` : ""}
               </p>
             </div>
             {!a.selected && (

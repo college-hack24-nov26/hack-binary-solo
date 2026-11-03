@@ -337,3 +337,12 @@ Captured 22 screenshots (`docs/screens/gallery/`, 4 viewports, en/hi/mr, light/d
 - The kiosk header overflowed at 360 px and by 16 px at 800 px in Marathi with "Listen again" showing: below 640 px the header actions are icon-only with their names as labels, and the row wraps.
 - The forward slide (translateX 48 px) briefly widened the page; the kiosk root clips horizontal overflow.
 - Result: zero serious or critical axe findings on the kiosk (every input type, body map, review, doctor choice, slip), staff board, dosage check (blocked and ok with ruler), summary and audit log, in light and dark.
+
+### Review 6: Best UI polish (walked as a Marathi-only patient, a desk clerk at peak, a doctor running the three scenarios)
+- Patient: the red-flag card used a siren icon at body size; a patient should be told calmly, so it is a raised hand at tile size ("Please tell the staff now").
+- Patient: chip remove buttons were 40 px and the front/back toggle 56 px; the whole chip is now the 64 px remove target and the toggle is 64 px.
+- Doctor: after recording an override the new result (and its dose) stayed above the viewport where the form had scrolled it; every run, recompute and override now brings the result header into view.
+- Doctor: on a needs-input result, an alternative rule's formulary note quoted "up to a maximum dose of 2550 mg per day"; notes, conflicts and ranges on alternatives now show only for ok results (unit-tested with the real data).
+- Doctor: at 1280 px the drug field collapsed to a sliver (a two-column span inside a one-column grid); fixed.
+- Summary labels sat on the textarea baseline and drifted below their values; they now align to the top.
+- **Removed decoration:** none needed this pass beyond the siren (replaced, not added).

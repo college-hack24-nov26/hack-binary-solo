@@ -2,6 +2,7 @@ import { render, screen, within } from "@testing-library/react";
 import type { Card } from "../api/client";
 import samples from "../gallery/samples.json";
 import { ResultCard } from "./ResultCard";
+import { Alternatives } from "../doctor/DosageCheck";
 import { DoseRuler } from "./DoseRuler";
 import { asResult, type DoseResult } from "./types";
 
@@ -54,5 +55,18 @@ describe("ResultCard dose display rules", () => {
   it("shows the red Override recorded line after an override", () => {
     render(<ResultCard result={asResult(S.override!.result)} card={S.override!.card} />);
     expect(screen.getByTestId("override-recorded")).toHaveTextContent("Override recorded");
+  });
+});
+
+describe("alternatives", () => {
+  it("hide formulary notes, conflicts and ranges unless the result is ok", () => {
+    const r = asResult(S.needs_input!.result);
+    expect(r.alternatives.some((a) => a.note && /\d+ ?mg/.test(a.note))).toBe(true);     // the real data carries dose numbers in notes
+    const { container, unmount } = render(<Alternatives result={r} onUse={() => undefined} />);
+    expect(container.textContent).not.toMatch(/\d+ ?mg/);
+    unmount();
+    const ok = { ...r, status: "ok" as const };
+    const { container: c2 } = render(<Alternatives result={ok} onUse={() => undefined} />);
+    expect(c2.textContent).toMatch(/\d+ ?mg/);
   });
 });

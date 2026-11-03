@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
-import { ArrowLeft, BellRing, Contrast, Languages, Pencil, Printer, RotateCcw, Siren, Type, Volume2 } from "lucide-react";
+import { ArrowLeft, BellRing, Contrast, Hand, Languages, Pencil, Printer, RotateCcw, Type, Volume2 } from "lucide-react";
 import { ApiError, type DoctorOut, type KioskScreen, type ReviewItem, type TokenSlip as Slip } from "../api/client";
 import { Button, ToggleButton } from "../components/Button";
 import { Tile } from "../components/Tile";
@@ -400,8 +400,8 @@ function QuestionScreen({ s, dir, lang, busy, regions, onConsent, onAnswer, onBo
       aria-labelledby="q-text"
     >
       {s.redFlagMessage && !consent && (
-        <p className="flex items-start gap-3 rounded-tile border-2 border-on-marigold/30 bg-marigold-tint px-5 py-4 text-k-body font-semibold" role="status">
-          <Siren size={28} aria-hidden className="mt-0.5 shrink-0" />
+        <p className="flex items-center gap-4 rounded-tile border-2 border-on-marigold/30 bg-marigold-tint px-5 py-4 text-k-tile font-semibold" role="status">
+          <Hand size={34} aria-hidden className="shrink-0" />
           {s.redFlagMessage}
         </p>
       )}

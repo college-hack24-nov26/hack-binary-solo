@@ -156,8 +156,8 @@ function SummarySection({ pv }: { pv: PatientView }) {
                   <h3 className="border-b border-line px-4 py-2 text-md font-semibold">{sec.title}</h3>
                   <dl className="divide-y divide-line">
                     {sec.fields.map((f) => (
-                      <div key={f.key} className="grid gap-1 px-4 py-1.5 sm:grid-cols-[12rem_minmax(0,1fr)] sm:items-baseline">
-                        <dt className="text-sm font-semibold">
+                      <div key={f.key} className="grid gap-1 px-4 py-1.5 sm:grid-cols-[12rem_minmax(0,1fr)] sm:items-start">
+                        <dt className="text-sm font-semibold sm:pt-1.5">
                           {f.label}
                           {f.edited && <span className="ml-2 rounded-full bg-marigold px-1.5 text-xs text-on-marigold">edited</span>}
                         </dt>

@@ -116,15 +116,14 @@ export function Pill({ tone = "neutral", icon: Icon, children, className }: { to
 }
 
 export function Chip({ children, onRemove, removeLabel }: { children: ReactNode; onRemove?: () => void; removeLabel?: string }) {
+  const cls = "inline-flex min-h-16 items-center gap-3 rounded-full border-2 border-teal bg-tint pl-5 pr-4 text-k-body font-semibold text-teal";
+  if (!onRemove) return <span className={cls}>{children}</span>;
+  // the whole chip is the remove button: a 64 px target on the kiosk
   return (
-    <span className="inline-flex min-h-12 items-center gap-2 rounded-full border border-teal bg-tint pl-4 pr-1 text-k-body font-semibold text-teal">
+    <button type="button" onClick={onRemove} aria-label={removeLabel} className={cn(cls, "hover:bg-surface active:translate-y-px")}>
       {children}
-      {onRemove && (
-        <button type="button" onClick={onRemove} aria-label={removeLabel} className="inline-flex size-10 items-center justify-center rounded-full hover:bg-surface">
-          <X size={22} aria-hidden strokeWidth={2.5} />
-        </button>
-      )}
-    </span>
+      <X size={24} aria-hidden strokeWidth={2.5} />
+    </button>
   );
 }
 
