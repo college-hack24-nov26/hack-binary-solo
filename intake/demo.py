@@ -8,9 +8,10 @@ from .session import IntakeSession
 from .synthetic import PATIENTS, run_bank
 
 DEMO_SCENARIO = "adult_chest_pain"
+DEMO_TOKEN = "PT-DEMO22"   # fixed, so every demo run replaces the same stored record instead of adding a new patient
 
 
-def load_demo(graph: Graph, rules: list[RedFlagRule], language: str = "en", token: Optional[str] = None) -> IntakeSession:
+def load_demo(graph: Graph, rules: list[RedFlagRule], language: str = "en", token: Optional[str] = DEMO_TOKEN) -> IntakeSession:
     """A session that has answered every question on the chest-pain path (consent included) and is ready for review."""
     s = run_bank(graph, rules, PATIENTS[DEMO_SCENARIO], language=language, token=token)
     assert s.complete

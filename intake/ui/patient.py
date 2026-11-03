@@ -57,7 +57,7 @@ def _demo():
     g, r = _data()
     ss.sess, ss.view, ss.stage = load_demo(g, r, language=ss.get("lang", "en")), None, "flow"
     ss.demo = True
-    store.save(ss.sess.to_record(complete=False, prior=store.load(ss.sess.token)))
+    store.save(ss.sess.to_record(complete=False))   # no prior: a repeat demo replaces the record, doctor edits included
 
 
 def _go_back(view):

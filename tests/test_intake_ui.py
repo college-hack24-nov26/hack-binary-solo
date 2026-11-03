@@ -154,3 +154,21 @@ def test_demo_flow_finishes_and_hindi_strings_exist():
 def test_demo_button_not_offered_after_consent():
     at, _ = at_site()
     assert "demo_mode" not in [b.key for b in at.button]
+
+
+def test_demo_mode_is_idempotent_one_record_on_the_staff_board():
+    from intake.demo import DEMO_TOKEN
+    for _ in range(3):                                                   # three clicks, from fresh kiosks
+        at = page("patient").run()
+        at.button(key="demo_mode").click().run()
+        assert not at.exception
+    recs = store.list_records()
+    assert [r.token for r in recs] == [DEMO_TOKEN] and recs[0].status == "in_progress"
+    # a finished demo, then another click: still one record, reset to in_progress
+    next(b for b in at.button if "finish" in b.label.lower()).click().run()
+    assert store.load(DEMO_TOKEN).status == "complete"
+    at = page("patient").run()
+    at.button(key="demo_mode").click().run()
+    assert [r.token for r in store.list_records()] == [DEMO_TOKEN] and store.load(DEMO_TOKEN).status == "in_progress"
+    staff = page("staff", "staff").run()
+    assert len(staff.expander) == 1
