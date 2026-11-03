@@ -10,7 +10,7 @@ from typing import Optional
 
 from records.store import data_dir
 
-EVENTS = ("evaluate", "confirm", "override")
+EVENTS = ("evaluate", "confirm", "override", "history")
 
 
 def log_path(base: Optional[Path] = None) -> Path:
@@ -38,8 +38,7 @@ def write(event: str, *, token: str, doctor_id: str, drug: str, result: dict, in
              "override_reason": override_reason, "inputs": inputs, "provenance": provenance, "result": result,
              "engine_version": result.get("engine_version"), "formulary_version": result.get("formulary_version"),
              **(extra or {}), "prev": _last_hash(p)}
-    body = json.dumps(entry, sort_keys=True, ensure_ascii=False)
-    entry["hash"] = hashlib.sha256(body.encode()).hexdigest()
+    entry["hash"] = _digest(entry)
     with p.open("a", encoding="utf-8") as fh:
         fh.write(json.dumps(entry, sort_keys=True, ensure_ascii=False) + "\n")
         fh.flush()
@@ -56,7 +55,23 @@ def verify(base: Optional[Path] = None) -> bool:
     prev = "0" * 64
     for e in read(base):
         h = e.pop("hash")
-        if e["prev"] != prev or hashlib.sha256(json.dumps(e, sort_keys=True, ensure_ascii=False).encode()).hexdigest() != h:
+        if e["prev"] != prev or _digest(e) != h:
             return False
         prev = h
     return True
+
+
+def _digest(entry: dict) -> str:
+    return hashlib.sha256(json.dumps(entry, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
+
+
+def rewrite(entries: list, base: Optional[Path] = None) -> None:
+    """Replace the whole log with `entries`, recomputing prev/hash. Only for the demo reset script; the app never calls it."""
+    p = log_path(base)
+    prev, lines = "0" * 64, []
+    for e in entries:
+        e = {k: v for k, v in e.items() if k != "hash"}
+        e["prev"] = prev
+        e["hash"] = prev = _digest(e)
+        lines.append(json.dumps(e, sort_keys=True, ensure_ascii=False))
+    p.write_text("".join(l + "\n" for l in lines), encoding="utf-8")

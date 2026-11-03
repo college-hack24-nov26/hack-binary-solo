@@ -8,7 +8,7 @@ from intake.conditions import SKIPPED, is_unsure
 from intake.engine import recompute_path
 from intake.models import Graph, load_graph
 
-from . import meds as medsmod
+from . import meds as medsmod, ocr_meds
 from .context import DERIVED, PATIENT, UNKNOWN, PatientContext
 
 ALLERGY_CLASSES = ("penicillins", "sulfa", "nsaids")
@@ -47,11 +47,40 @@ def set_age(ctx: PatientContext, months: int, window_months: int, prov: str = PA
     ctx.set("age_days_hi", (months + window_months + 1) * DAYS_PER_MONTH, prov)   # true age < this (completed months)
 
 
-def plausibility(age_months: int, weight: float):
-    rows = json.loads(PLAUSIBILITY.read_text(encoding="utf-8"))["rows"]
-    for r in rows:
+GROWTH = Path(__file__).resolve().parent / "data" / "growth_reference.json"
+
+
+def _cited_range(age_months: int, sex):
+    """(lo, hi, table ids) from filled-in cited tables (about -3 SD to +3 SD), or None while the file still says 'needs data'."""
+    tabs = json.loads(GROWTH.read_text(encoding="utf-8"))["tables"]
+    sexes = [sex] if sex in ("male", "female") else ["male", "female"]
+    pri = {"WHO_CGS": 0, "WHO_2007": 1, "IAP_2015": 2, "adult_loose": 3}
+    lows, highs, ids = [], [], []
+    for sx in sexes:
+        best = None
+        for t in tabs:
+            lo_a, hi_a = t["age_range_months"]
+            if t["sex"] in (sx, "any") and lo_a <= age_months <= hi_a and t["rows"]:
+                rank = next(v for k, v in pri.items() if t["id"].startswith(k))
+                rows = [r for r in t["rows"] if r["age_months"] <= age_months]
+                if rows and (best is None or rank < best[0]):
+                    r = max(rows, key=lambda r: r["age_months"])
+                    best = (rank, r["minus3sd_kg"], r["plus3sd_kg"], t["id"])
+        if best is None:
+            return None
+        lows.append(best[1]); highs.append(best[2]); ids.append(best[3])
+    return min(lows), max(highs), ids
+
+
+def plausibility(age_months: int, weight: float, sex=None):
+    """-> None if plausible, else (lo, hi, source). Cited tables first; the labelled draft table only while they are empty."""
+    cited = _cited_range(age_months, sex)
+    if cited:
+        lo, hi, ids = cited
+        return None if lo <= weight <= hi else (lo, hi, "cited: " + ", ".join(ids))
+    for r in json.loads(PLAUSIBILITY.read_text(encoding="utf-8"))["rows"]:
         if age_months <= r["max_age_months"]:
-            return None if r["min_kg"] <= weight <= r["max_kg"] else (r["min_kg"], r["max_kg"])
+            return None if r["min_kg"] <= weight <= r["max_kg"] else (r["min_kg"], r["max_kg"], "DRAFT table, not cited")
     return None
 
 
@@ -104,9 +133,9 @@ def map_quiz(answers: dict, graph: Optional[Graph] = None, red_flags: Optional[l
     w = _real(answers, "weight_kg")
     ctx.set("weight_kg", float(w) if w is not None else None, PATIENT)
     if w is not None and ctx.get("age_months") is not None:
-        bad = plausibility(ctx.get("age_months"), float(w))
+        bad = plausibility(ctx.get("age_months"), float(w), sex)
         if bad:
-            ctx.set("weight_implausible", {"w": float(w), "lo": bad[0], "hi": bad[1]}, DERIVED)
+            ctx.set("weight_implausible", {"w": float(w), "lo": bad[0], "hi": bad[1], "source": bad[2]}, DERIVED)
 
     # -- allergies: 'none' is exclusive; an answered list means every class not ticked is a known 'no'
     al = _real(answers, "allergies")
@@ -164,4 +193,6 @@ def map_quiz(answers: dict, graph: Optional[Graph] = None, red_flags: Optional[l
 def map_record(rec, graph: Optional[Graph] = None) -> PatientContext:
     """From a saved PatientRecord: raw answers plus the red flags the red-flag service already computed (read-only)."""
     flags = [{"ruleId": r.ruleId, "severity": r.severity, "label": r.label} for r in rec.redFlags]
-    return map_quiz(rec.answers, graph, flags)
+    ctx = map_quiz(rec.answers, graph, flags)
+    ocr_meds.apply_to_context(ctx, rec.timeline)         # doctor-confirmed scans only
+    return ctx

@@ -4,7 +4,7 @@ import re
 from dataclasses import dataclass, field
 
 from . import ENGINE_VERSION, calc as calcmod, formulary as fmod, interactions as imod, products as pmod, rules as rmod, safety
-from .config import BANNER, Config
+from .config import BANNER, DEMO_BANNER, OVERRIDE_CATEGORIES, Config
 from .context import CONFIRMED, DERIVED, DOCTOR, PatientContext, TRUSTED, UNKNOWN
 from .formulary import norm_status
 from .mapper import DAYS_PER_MONTH, set_age
@@ -12,8 +12,15 @@ from .messages import msg
 from . import meds as medsmod
 
 STATUS_ORDER = {"VERIFIED": 0, "SECONDARY": 1, "UNVERIFIED": 2}
-TRI_FIELDS = {"lactating", "qt_history", "on_dialysis", "alcohol", "ulcer", "gi_bleed", "heart_disease", "kidney_disease",
+TRI_FIELDS_BASE = {"lactating", "qt_history", "on_dialysis", "alcohol", "ulcer", "gi_bleed", "heart_disease", "kidney_disease",
               "liver_disease", "diabetes", "hypertension", "asthma", "allergy_penicillins", "allergy_sulfa", "allergy_nsaids"}
+TRI_FIELDS = TRI_FIELDS_BASE
+
+
+def is_tri_field(name: str) -> bool:
+    return name in TRI_FIELDS or name.startswith("q_")
+
+
 NUM_FIELDS = {"weight_kg", "height_cm", "scr_mg_dl", "pregnancy_weeks", "pregnancy_trimester", "child_pugh_score"}
 STR_FIELDS = {"sex_for_formula": {"female", "male"}, "pregnant": {"yes", "no", "possible"},
               "child_pugh_class": {"A", "B", "C"}, "g6pd": {"normal", "deficient", "unknown"}}
@@ -33,11 +40,25 @@ class Request:
     route: str | None = None                               # oral | parenteral | rectal
     show_all_rules: bool = False
     override_reason: str | None = None
+    override_category: str | None = None                   # key of config.OVERRIDE_CATEGORIES
     doctor_id: str | None = None
+    history: dict = field(default_factory=dict)            # History-check answers (yes/no/unsure), stored as doctor_confirmed
 
 
-def apply_inputs(ctx: PatientContext, inputs: dict, confirmed: list) -> PatientContext:
+def _set_choice(c: PatientContext, name: str, val, prov: str, note: str = "") -> None:
+    if val not in ("yes", "no", "unsure"):
+        raise ValueError(f"{name} must be yes, no or unsure")
+    if name == "pregnant":
+        val = "possible" if val == "unsure" else val
+    c.set(name, val, prov, note)
+
+
+def apply_inputs(ctx: PatientContext, inputs: dict, confirmed: list, history: dict | None = None) -> PatientContext:
     c = ctx.copy()
+    for name, val in sorted((history or {}).items()):
+        if val in (None, ""):
+            continue
+        _set_choice(c, name, val, CONFIRMED, "History check")
     for name in confirmed:
         v = c.f.get(name)
         if v is not None and v.value is not None and v.prov not in TRUSTED:
@@ -48,13 +69,11 @@ def apply_inputs(ctx: PatientContext, inputs: dict, confirmed: list) -> PatientC
             continue
         old = c.f.get(name)
         note = f"quiz said {old.value!r}" if old is not None and old.value not in (None, val) and old.prov != UNKNOWN else ""
-        if name in TRI_FIELDS:
-            if val not in ("yes", "no"):
-                raise ValueError(f"{name} must be yes or no")
-            c.set(name, val, DOCTOR, note)
+        if is_tri_field(name) or name == "pregnant":
+            _set_choice(c, name, val, DOCTOR, note)
         elif name in NUM_FIELDS:
             c.set(name, float(val), DOCTOR, note)
-        elif name in STR_FIELDS:
+        elif name in STR_FIELDS and name != "pregnant":
             if val not in STR_FIELDS[name]:
                 raise ValueError(f"{name} must be one of {sorted(STR_FIELDS[name])}")
             c.set(name, val, DOCTOR, note)
@@ -216,7 +235,8 @@ def evaluate(req: Request, cfg: Config | None = None, formulary: fmod.Formulary 
            "blocks": [], "needs_input": [], "refused_reasons": [], "interactions": [], "overrides": [],
            "provenance": {}, "sources": [], "data_status": "VERIFIED", "final": False, "pending_confirmations": [],
            "indications": [], "engine_version": ENGINE_VERSION, "formulary_version": f.version, "banner": BANNER,
-           "disclaimer": msg("doctor_decides"), "allow_unverified": cfg.allow_unverified}
+           "disclaimer": msg("doctor_decides"), "allow_unverified": cfg.allow_unverified,
+           "demo": cfg.demo_mode, "acknowledge_items": [], "demo_banner": DEMO_BANNER if cfg.demo_mode else None, "boundary_overlap": []}
 
     drug = f.find_drug(req.drug)
     if drug is None:
@@ -224,7 +244,7 @@ def evaluate(req: Request, cfg: Config | None = None, formulary: fmod.Formulary 
         return res
     res["drug"] = drug["id"]
     res["indications"] = [{"key": i["key"], "labels": i["labels"], "rules": len(i["rules"])} for i in rmod.indications(drug)]
-    ctx = apply_inputs(req.context, req.doctor_inputs, req.confirmed)
+    ctx = apply_inputs(req.context, req.doctor_inputs, req.confirmed, req.history)
     res["provenance"] = ctx.provenance_dict()
     needs: list = []
     warnings: list = []
@@ -301,10 +321,20 @@ def evaluate(req: Request, cfg: Config | None = None, formulary: fmod.Formulary 
     suggested_id = sug.rid if sug else None
     force_pick = bool(cands) and bool(overridden_path)
     sel_id = None
+    edge = [s for s in live if rmod.at_age_edge(s.cand.rule, ctx)]
+    boundary_only = len(live) > 1 and len(edge) == len(live)
+    if boundary_only:            # same patient age sits on a shared boundary: default to the lower-dose rule, doctor may pick either
+        res["boundary_overlap"] = [s.cand.rid for s in live]
+        numeric = [s for s in live if s.calc.kind == "numeric" and s.calc.lo is not None]
+        if len(numeric) == len(live):
+            low = min(numeric, key=lambda s: ((s.calc.daily_hi if s.calc.daily_hi is not None else s.calc.hi), s.cand.index))
+            suggested_id = low.cand.rid
     if req.selected_rule_id and any(s.cand.rid == req.selected_rule_id for s in live):
         sel_id = req.selected_rule_id
     elif len(live) == 1 and not force_pick:
         sel_id = live[0].cand.rid
+    elif boundary_only and suggested_id:
+        sel_id = suggested_id
     view = next((s for s in solved if s.cand.rid == (sel_id or suggested_id)), None)       # drives the safety checks
     if len(live) > 1 or force_pick:
         steps.append(msg("step_selected", n=len(live), rid=suggested_id, why=why))
@@ -326,7 +356,8 @@ def _multi_ambiguous(live) -> bool:
 
 
 def _valid_override(req: Request, cfg: Config) -> bool:
-    return bool(req.override_reason and len(req.override_reason.strip()) >= cfg.override_min_chars and req.doctor_id)
+    return bool(req.override_reason and len(req.override_reason.strip()) >= cfg.override_min_chars and req.doctor_id
+                and req.override_category in OVERRIDE_CATEGORIES)
 
 
 def _finish(res, f, drug, cfg, ctx, req, needs, warnings, steps, blocks, solved, suggested_id, sel_id, chosen=None,
@@ -356,7 +387,7 @@ def _finish(res, f, drug, cfg, ctx, req, needs, warnings, steps, blocks, solved,
         refused += chosen.refused
         if rule.get("conflict"):
             warnings.append({"code": "warn_alt_conflict", "text": msg("warn_alt_conflict", text=rule["conflict"])})
-        if chosen.cand.pop.status == "age_ambiguous":
+        if chosen.cand.pop.status == "age_ambiguous" or chosen.cand.rid in res["boundary_overlap"]:
             warnings.append({"code": "warn_overlap", "text": msg("warn_overlap")})
         if norm_status(rule.get("status")) == "UNVERIFIED":
             warnings.append({"code": "warn_unverified_rule", "text": msg("warn_unverified_rule")})
@@ -411,7 +442,7 @@ def _finish(res, f, drug, cfg, ctx, req, needs, warnings, steps, blocks, solved,
     inter = imod.check(f, drug, ctx, list(visit_ids))
     for it in inter["items"]:
         sev = it["severity"]
-        entry = {k: it[k] for k in ("kind", "severity", "with", "action", "data_status", "sources", "details", "blocking") if k in it}
+        entry = {k: it[k] for k in ("kind", "severity", "with", "action", "data_status", "sources", "details", "blocking", "origins") if k in it}
         entry["text"] = (msg("warn_duplicate", cls=it.get("class", ""), with_=it["with"], action=it["action"]) if it["kind"] == "duplicate"
                          else msg("warn_interaction", sev=sev, with_=it["with"], action=it["action"]))
         res["interactions"].append(entry)
@@ -441,14 +472,17 @@ def _finish(res, f, drug, cfg, ctx, req, needs, warnings, steps, blocks, solved,
     if override and blocks:
         for b in blocks:
             if b.get("overridable"):
-                res["overrides"].append({"block": b["text"], "code": b["code"], "reason": req.override_reason.strip(), "doctor_id": req.doctor_id})
-                warnings.append({"code": "overridden", "text": msg("overridden", doctor=req.doctor_id, reason=req.override_reason.strip(), block=b["text"]),
+                res["overrides"].append({"block": b["text"], "code": b["code"], "reason": req.override_reason.strip(), "doctor_id": req.doctor_id,
+                                         "category": req.override_category, "category_label": OVERRIDE_CATEGORIES[req.override_category]})
+                warnings.append({"code": "overridden", "text": msg("overridden", doctor=req.doctor_id, reason=f"{OVERRIDE_CATEGORIES[req.override_category]}: {req.override_reason.strip()}", block=b["text"]),
                                  "data_status": b.get("data_status", "VERIFIED"), "sources": b.get("sources", [])})
         blocks = [b for b in blocks if not b.get("overridable")]
 
     # -- de-duplicate and finish
     res["blocks"] = _uniq(blocks)
     res["warnings"] = _uniq(warnings)
+    # unanswered free-text contraindications stay warnings, but the doctor must tick "I have checked these" before confirming
+    res["acknowledge_items"] = [w["text"] for w in res["warnings"] if w["code"] == "warn_unchecked_ci"]
     res["needs_input"] = [{"field": a, "why": b} for a, b in _uniq_pairs(needs)]
     res["refused_reasons"] = list(dict.fromkeys(refused))
     for it in res["blocks"] + res["warnings"]:

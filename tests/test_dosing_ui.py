@@ -47,3 +47,15 @@ def test_dosage_page_runs_a_check():
     assert not at.exception
     at.button(key="dc_run_PT-ABCDEF").click().run()
     assert not at.exception and any("Result" in s.value for s in at.subheader)
+
+
+def test_history_check_none_apply_saves_answers_and_override_category_is_offered():
+    at = page("doctor").run()
+    assert any(s.value == "History check" for s in at.subheader)
+    none_btn = [b for b in at.button if b.key and b.key.startswith("dc_hnone_")]
+    if none_btn:
+        none_btn[0].click().run()
+        [b for b in at.button if b.key and b.key.startswith("dc_hsave_")][0].click().run()
+        assert not at.exception
+        assert store.load("PT-ABCDEF").visitHistory
+    assert not any(s.key == "dc_ovc_PT-ABCDEF" for s in at.selectbox)     # the override form lives on a blocked result card

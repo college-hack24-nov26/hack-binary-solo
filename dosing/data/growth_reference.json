@@ -1,0 +1,94 @@
+{
+ "_note": "NEEDS DATA. Structure only, no numbers: the WHO / IAP tables are not in this repository. The engine uses a table only when its rows are filled in; until then it falls back to dosing/data/plausibility.json, which is a labelled DRAFT. The check flags outside roughly -3 SD to +3 SD, never corrects.",
+ "status": "needs data",
+ "row_format": {
+  "age_months": "integer age in months",
+  "minus3sd_kg": "weight at -3 SD for that age and sex (kg)",
+  "plus3sd_kg": "weight at +3 SD (kg)"
+ },
+ "priority": [
+  "WHO_CGS (0-5 y)",
+  "WHO_2007 (5-10 y)",
+  "IAP_2015 (above 10 y)",
+  "adult_loose_limits"
+ ],
+ "tables": [
+  {
+   "id": "WHO_CGS_weight_for_age_boys_0_5y",
+   "standard": "WHO Child Growth Standards 2006 (weight-for-age)",
+   "sex": "male",
+   "age_unit": "months",
+   "age_range_months": [
+    0,
+    60
+   ],
+   "rows": []
+  },
+  {
+   "id": "WHO_2007_weight_for_age_boys_5_10y",
+   "standard": "WHO 2007 growth reference (weight-for-age)",
+   "sex": "male",
+   "age_unit": "months",
+   "age_range_months": [
+    61,
+    120
+   ],
+   "rows": []
+  },
+  {
+   "id": "IAP_2015_weight_for_age_boys_5_18y",
+   "standard": "IAP 2015 growth charts (weight-for-age)",
+   "sex": "male",
+   "age_unit": "months",
+   "age_range_months": [
+    61,
+    216
+   ],
+   "rows": []
+  },
+  {
+   "id": "WHO_CGS_weight_for_age_girls_0_5y",
+   "standard": "WHO Child Growth Standards 2006 (weight-for-age)",
+   "sex": "female",
+   "age_unit": "months",
+   "age_range_months": [
+    0,
+    60
+   ],
+   "rows": []
+  },
+  {
+   "id": "WHO_2007_weight_for_age_girls_5_10y",
+   "standard": "WHO 2007 growth reference (weight-for-age)",
+   "sex": "female",
+   "age_unit": "months",
+   "age_range_months": [
+    61,
+    120
+   ],
+   "rows": []
+  },
+  {
+   "id": "IAP_2015_weight_for_age_girls_5_18y",
+   "standard": "IAP 2015 growth charts (weight-for-age)",
+   "sex": "female",
+   "age_unit": "months",
+   "age_range_months": [
+    61,
+    216
+   ],
+   "rows": []
+  },
+  {
+   "id": "adult_loose_limits_any",
+   "standard": "Loose adult limits (a cited source is still needed)",
+   "sex": "any",
+   "age_unit": "months",
+   "age_range_months": [
+    217,
+    1500
+   ],
+   "rows": []
+  }
+ ]
+}

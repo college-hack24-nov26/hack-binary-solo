@@ -8,11 +8,13 @@ import pandas as pd
 import streamlit as st
 from PIL import Image
 
+from intake.ui import offline_badge
 from ocr import auth, ollama_client, service, session
 from ocr.config import load_settings
 from ocr.timeline import edited_fields, to_timeline_entry
 
 st.set_page_config(page_title="OCR intake review", layout="wide")
+offline_badge.render()
 S = load_settings()
 session.purge_tmp(S.tmp_dir)          # once per process
 session.sweep(S.tmp_dir, S.session_ttl_s)  # timeout: expire stale images on every rerun

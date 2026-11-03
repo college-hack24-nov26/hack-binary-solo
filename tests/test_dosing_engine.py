@@ -139,12 +139,16 @@ def test_override_requires_a_written_reason_and_a_doctor():
     blocked = run("ibuprofen", "pain/fever", quiz(allergies=["nsaids"]))
     assert blocked["status"] == "blocked"
     for reason in (None, "", "ok", "         "):
-        r = run("ibuprofen", "pain/fever", quiz(allergies=["nsaids"]), override_reason=reason, doctor_id="D1")
+        r = run("ibuprofen", "pain/fever", quiz(allergies=["nsaids"]), override_category="no_alternative", override_reason=reason, doctor_id="D1")
         assert r["status"] == "blocked" and not r["overrides"]
-    r = run("ibuprofen", "pain/fever", quiz(allergies=["nsaids"]), override_reason="Tolerated before, specialist advice", doctor_id=None)
+    r = run("ibuprofen", "pain/fever", quiz(allergies=["nsaids"]), override_category="no_alternative", override_reason="Tolerated before, specialist advice", doctor_id=None)
     assert r["status"] == "blocked"                                        # no doctor id
-    r = run("ibuprofen", "pain/fever", quiz(allergies=["nsaids"]), override_reason="Tolerated before, specialist advice", doctor_id="D1")
+    for cat in (None, "", "because"):
+        r = run("ibuprofen", "pain/fever", quiz(allergies=["nsaids"]), override_category=cat, override_reason="Tolerated before, specialist advice", doctor_id="D1")
+        assert r["status"] == "blocked" and not r["overrides"]                 # a reason category is required too
+    r = run("ibuprofen", "pain/fever", quiz(allergies=["nsaids"]), override_category="patient_tolerates", override_reason="Tolerated before, specialist advice", doctor_id="D1")
     assert r["status"] != "blocked" and r["overrides"][0]["reason"].startswith("Tolerated") and has(r["warnings"], "OVERRIDDEN")
+    assert r["overrides"][0]["category"] == "patient_tolerates" and r["overrides"][0]["category_label"] == "Patient already tolerates it"
 
 
 # ---------------------------------------------------------------------------------------------------- telmisartan
@@ -235,11 +239,11 @@ def test_ciprofloxacin_crcl_bands_use_cockcroft_gault_and_apply_the_renal_dose()
 def test_ciprofloxacin_child_with_unlicensed_indication_needs_the_written_override():
     res = run("ciprofloxacin", "Shigella / Aeromonas diarrhoea", quiz(age_y=10, wt=30))
     assert res["status"] == "blocked" and has(res["blocks"], "off-label") and has(res["blocks"], "written override")
-    res = run("ciprofloxacin", "Shigella / Aeromonas diarrhoea", quiz(age_y=10, wt=30), override_reason="Shigella, resistant to alternatives, ID advice",
+    res = run("ciprofloxacin", "Shigella / Aeromonas diarrhoea", quiz(age_y=10, wt=30), override_category="no_alternative", override_reason="Shigella, resistant to alternatives, ID advice",
               doctor_id="D7")
     assert res["status"] == "needs_input" and res["overrides"]               # the doctor must pick a (labelled off-label) rule
     pick = res["alternatives"][0]["rule_id"]
-    res = run("ciprofloxacin", "Shigella / Aeromonas diarrhoea", quiz(age_y=10, wt=30), override_reason="Shigella, resistant to alternatives, ID advice",
+    res = run("ciprofloxacin", "Shigella / Aeromonas diarrhoea", quiz(age_y=10, wt=30), override_category="no_alternative", override_reason="Shigella, resistant to alternatives, ID advice",
               doctor_id="D7", selected_rule_id=pick, doctor_inputs={"qt_history": "no"}, confirmed=["weight_kg"])
     assert res["status"] == "ok" and has(res["warnings"], "OVERRIDDEN")
 
@@ -413,3 +417,49 @@ def test_result_is_json_serialisable_and_has_the_documented_fields():
               "interval_h", "daily_total_mg", "daily_max_mg", "binding_cap", "duration", "calculation_steps", "warnings", "blocks",
               "needs_input", "interactions", "provenance", "sources", "data_status", "engine_version", "formulary_version"):
         assert k in res, k
+
+
+# ---------------------------------------------------------------------------------------------------- heart question (exact formulary wording)
+def _heart_texts(drug_id):
+    return [c["text"] for c in F().drugs[drug_id]["contraindications"] if "heart" in c["text"].lower() and c["status"] == "VERIFIED"]
+
+
+@pytest.mark.parametrize("drug,ind,rid", [("diclofenac", "pain/inflammation", "diclofenac#2"), ("ibuprofen", "pain/fever", "ibuprofen#0")])
+def test_heart_question_uses_formulary_wording_and_yes_blocks_unsure_stays_open(drug, ind, rid):
+    from dosing.safety import qfield
+    texts_ = _heart_texts(drug)
+    assert texts_
+    base = quiz(hx_chest=["heart"], hx_abdomen=["none"])             # broad quiz 'heart problem' alone must not block or warn
+    res = run(drug, ind, base, selected_rule_id=rid, doctor_inputs={"ulcer": "no"})
+    need = [n for n in res["needs_input"] if n["field"] == qfield(texts_[0])]
+    assert need and f'"{texts_[0]}"' in need[0]["why"] and res["status"] == "needs_input"
+    assert not any("heart" in b["text"].lower() for b in res["blocks"])
+    for ans, expect in (("yes", "blocked"), ("unsure", "needs_input"), ("no", None)):
+        r = run(drug, ind, base, selected_rule_id=rid, doctor_inputs={"ulcer": "no", qfield(texts_[0]): ans})
+        if expect:
+            assert r["status"] == expect
+        else:
+            assert not any(n["field"] == qfield(texts_[0]) for n in r["needs_input"])
+        if ans == "yes":
+            assert has(r["blocks"], texts_[0])
+
+
+# ---------------------------------------------------------------------------------------------------- boundary overlaps
+def test_cetirizine_at_the_boundary_returns_both_rules_and_defaults_to_the_lower_dose():
+    rs = [r for r in rules_of("cetirizine") if r["status"] == "VERIFIED" and r["population"].get("max_age_years") == 6
+          or (r["status"] == "VERIFIED" and r["population"].get("min_age_years") == 6)]
+    low, high = sorted(rs, key=lambda r: r["dose_mg"] * r["doses_per_day"])[:2]
+    res = run("cetirizine", "allergy", quiz(age_y=6, wt=20))
+    ids = {a["rule_id"] for a in res["alternatives"]}
+    assert len(ids) == 2 and set(res["boundary_overlap"]) == ids
+    assert res["selected_rule_id"] == res["suggested_rule_id"]
+    assert res["dose_range_mg"] == [low["dose_mg"]] * 2 or res["dose_mg"] is not None
+    sel = next(a for a in res["alternatives"] if a["selected"])
+    assert sel["dose_range_mg"][0] == low["dose_mg"] and has(res["warnings"], "boundary")
+    other = next(a["rule_id"] for a in res["alternatives"] if not a["selected"])
+    res2 = run("cetirizine", "allergy", quiz(age_y=6, wt=20), selected_rule_id=other)
+    assert res2["selected_rule_id"] == other                           # the doctor can still pick the other
+
+
+def test_away_from_a_boundary_only_one_cetirizine_rule_applies():
+    assert len(run("cetirizine", "allergy", quiz(age_y=9, wt=30))["alternatives"]) == 1

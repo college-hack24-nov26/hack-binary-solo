@@ -34,10 +34,10 @@ def test_evaluate_is_logged_with_inputs_provenance_and_doctor():
 
 def test_override_is_logged_with_its_reason():
     r = rec(allergies=["nsaids"])
-    service.evaluate_for_record(r, "ibuprofen", "pain/fever", doctor_id="D2", override_reason="Specialist advised, tolerated before", now=NOW)
+    service.evaluate_for_record(r, "ibuprofen", "pain/fever", doctor_id="D2", override_category="patient_tolerates", override_reason="Specialist advised, tolerated before", now=NOW)
     ev = audit.read()
     assert [x["event"] for x in ev] == ["evaluate", "override"]
-    assert ev[1]["override_reason"].startswith("Specialist") and "NSAID" in ev[1]["overridden_block"]
+    assert ev[1]["override_reason"].startswith("Specialist") and ev[1]["override_category"] == "patient_tolerates" and "NSAID" in ev[1]["overridden_block"]
     assert audit.verify()
 
 
@@ -69,3 +69,19 @@ def test_record_with_dosing_checks_round_trips_through_the_store():
     res = service.evaluate_for_record(r, "paracetamol", "pain/fever", doctor_id="D1", confirmed=["weight_kg"], now=NOW, log=False)
     store.save(service.confirm(r, res, doctor_id="D1", now=NOW))
     assert store.load("PT-ABCDEF").dosingChecks[0].ruleId == "paracetamol#2"
+
+
+def test_unchecked_free_text_contraindications_need_the_acknowledgement_to_confirm():
+    r = rec(age_y=40, wt=70)
+    res = service.evaluate_for_record(r, "amoxicillin_clavulanate", "severe infection", doctor_id="D1", now=NOW, log=False,
+                                      selected_rule_id="amoxicillin_clavulanate#1", form="tablet 500 mg + 125 mg")
+    assert any("cholestatic" in t for t in res["acknowledge_items"])
+    ready = dict(res, status="ok", final=True, needs_input=[], blocks=[])           # isolate the acknowledgement rule
+    assert not service.can_confirm(ready) and service.can_confirm(ready, acknowledged=True)
+    with pytest.raises(ValueError):
+        service.confirm(r, ready, doctor_id="D1", now=NOW)
+    r2 = service.confirm(r, ready, doctor_id="D1", now=NOW, acknowledged=True)
+    assert r2.dosingChecks[0].acknowledgedItems == res["acknowledge_items"]
+    assert audit.read()[-1]["inputs"]["acknowledged_items"] == res["acknowledge_items"]
+    none = service.evaluate_for_record(rec(age_y=5, wt=18), "paracetamol", "pain/fever", doctor_id="D1", confirmed=["weight_kg"], now=NOW, log=False)
+    assert none["acknowledge_items"] == [] and service.can_confirm(none)

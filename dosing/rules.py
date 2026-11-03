@@ -119,6 +119,21 @@ def _age_text(ctx) -> str:
     return f"{m} months" if not w else f"{m // 12} years"
 
 
+def at_age_edge(rule: dict, ctx) -> bool:
+    """True when the patient's completed age equals a stated age bound of the rule (e.g. 6 y against min_age_years 6 or
+    max_age_years 6): the place where neighbouring rules overlap under the completed-age convention."""
+    lo, hi = ctx.age_days()
+    if lo is None:
+        return False
+    for k, n in (rule.get("population") or {}).items():
+        m = _POP_RE.match(k)
+        if m:
+            d = UNIT_DAYS[m.group(2)]
+            if int(lo // d) == n and int((hi - 1e-6) // d) == n:
+                return True
+    return False
+
+
 def route_classes(route_text) -> set:
     if not route_text:
         return {"oral"}                 # convention: a rule without a route is an oral rule

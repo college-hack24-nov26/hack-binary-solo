@@ -6,6 +6,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_FORMULARY = ROOT.parent / "Final_Drugs_data" / "dosesafe_formulary_v2.json"
 BANNER = "Prototype data, not clinically verified"
+DEMO_BANNER = "DEMO - UNVERIFIED DATA"
+OVERRIDE_CATEGORIES = {"benefit_outweighs_risk": "Benefit outweighs risk", "patient_tolerates": "Patient already tolerates it",
+                       "no_alternative": "No alternative available", "other": "Other"}
 
 
 def _flag(name: str, default: bool) -> bool:
@@ -21,12 +24,18 @@ class Config:
     override_min_chars: int = 10          # a written override reason shorter than this is rejected
     adult_min_age_years: int = 18         # convention: rules written for adults carry min_age_years 18
     formulary_path: Path = DEFAULT_FORMULARY
+    demo_mode: bool = False               # DOSING_DEMO_MODE or DEMO_MODE: forces allow_unverified and shows a red DEMO banner on every result
+
+    def __post_init__(self):
+        if self.demo_mode and not self.allow_unverified:
+            object.__setattr__(self, "allow_unverified", True)
 
     @staticmethod
     def from_env() -> "Config":
         f = os.environ.get("DOSING_ABW_FACTOR")
         return Config(
             allow_unverified=_flag("DOSING_ALLOW_UNVERIFIED", False),
+            demo_mode=_flag("DOSING_DEMO_MODE", False) or _flag("DEMO_MODE", False),   # DEMO_MODE also shows "Load demo patient"
             ml_step=float(os.environ.get("DOSING_ML_STEP", "0.5")),
             abw_factor=float(f) if f else None,
             formulary_path=Path(os.environ.get("DOSING_FORMULARY_PATH", DEFAULT_FORMULARY)))

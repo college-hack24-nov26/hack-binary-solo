@@ -6,7 +6,7 @@ import streamlit as st
 
 from intake import llm_summary
 from intake.summary import apply_doctor_edits, body_diagram_svgs, build_summary, duration_text, template_paragraph
-from intake.ui import dosing_panel
+from intake.ui import demo_loader, dosing_panel
 from intake.ui.gate import can_edit, require_login
 from intake.doctors import doctor_for_login, get_doctor, load_doctors
 import pandas as pd
@@ -21,6 +21,7 @@ st.title("Doctor summary")
 if not editable:
     st.info("Read-only: only a doctor can edit and save the summary.")
 st.warning("AI drafts, the doctor decides. Red flags come from DRAFT rules awaiting source check.")
+demo_loader.render(user)
 recs = store.list_records()
 if not recs:
     st.info("No patients yet.")
@@ -29,7 +30,7 @@ DOCTORS = load_doctors()
 me = doctor_for_login(user["username"], DOCTORS)           # the doctor this login is linked to, if any
 mine = lambda r: bool(me) and r.assignedDoctor == me.id
 recs.sort(key=lambda r: (not mine(r), -len(r.redFlags), r.updatedAt))   # my patients first, then by red flags
-token = st.selectbox("Patient token", [r.token for r in recs],
+token = st.selectbox("Patient token", [r.token for r in recs], key="doctor_patient",
                      format_func=lambda t: next(f"{'👤 ' if mine(r) else ''}{r.token} · {r.complaint.label or '-'}{' · 🔴' if r.redFlags else ''}"
                                                 f" · {d.name if (d := get_doctor(r.assignedDoctor, DOCTORS)) else 'no doctor chosen'}"
                                                 for r in recs if r.token == t))
@@ -107,6 +108,18 @@ for e in sorted(rec.timeline, key=lambda e: e.date, reverse=True):
             st.dataframe(df[show], hide_index=True, width="stretch")
         st.caption(f"Confirmed by {getattr(e, 'confirmedBy', None) or 'unknown'} · source: {e.source}"
                    + (f" · edited fields: {', '.join(e.editedFields)}" if e.editedFields else ""))
+
+# -- dosing: History check and overrides recorded by the doctor
+if rec.visitHistory or rec.dosingChecks:
+    st.subheader("Dosing record (doctor)")
+    if rec.visitHistory:
+        st.write("**History check** (doctor-confirmed" + (f" by {rec.visitHistoryBy}" if rec.visitHistoryBy else "") + "): "
+                 + "; ".join(f"{k}: {v}" for k, v in sorted(rec.visitHistory.items())))
+    for c in rec.dosingChecks:
+        line = f"{c.at[:16].replace('T', ' ')} · {c.drug} · {c.indication or '-'} · rule {c.ruleId} · data {c.dataStatus} · by {c.doctorId}"
+        st.write(line)
+        for cat, why in zip(c.overrideCategories, c.overrideReasons):
+            st.write(f"↳ OVERRIDE ({cat.replace('_', ' ')}): {why}")
 
 # -- doctor's own notes
 st.subheader("Doctor's notes (assessment / plan)")

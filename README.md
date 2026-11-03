@@ -74,3 +74,25 @@ Node type `body_map`: tappable front/back outline, multi-select up to `maxSelect
 - **Offline UI:** a tiny local Streamlit component (`intake/ui/bodymap_component/index.html`, no CDN, no packages) only reports the tap position; Python resolves it with point-in-polygon (`hit_test`, with a 4-unit slop for fingers). A checkbox list of the same regions is always available.
 - **Doctor page:** regions in words in the doctor's language (en/hi/mr selector), plus small highlighted diagrams (site red, radiation orange).
 - **Future work (not built):** child/other body-type variants, 3D, any inference from body location.
+
+---
+
+# Demo features (offline proof, demo patients, result card, audit log, scanned medicines)
+
+```bash
+.venv/bin/python scripts/reset_demo_data.py                  # clear demo records and demo audit entries
+DEMO_MODE=1 .venv/bin/streamlit run main_app.py              # "Load demo patient" appears for doctors
+OFFLINE_STRICT=1 DEMO_MODE=1 .venv/bin/streamlit run main_app.py   # any non-localhost connection raises and is logged
+.venv/bin/python scripts/dosing_demo.py                      # the three fixtures as text
+```
+Click-through with timings: `docs/DEMO_SCRIPT.md`. Logic: `docs/DOSING_LOGIC.md` (Update 3).
+
+| Feature | Where |
+|---|---|
+| Offline badge, probe, `OFFLINE_STRICT` guard | `intake/offline.py`, `intake/ui/offline_badge.py`, `tests/test_offline.py` |
+| Demo fixtures, Load demo patient, reset | `fixtures/demo/*.json`, `dosing/demo.py`, `intake/ui/demo_loader.py`, `scripts/reset_demo_data.py` |
+| Result card (four statuses, checklist, override) | `intake/ui/result_card.py` |
+| Audit-log page (doctor only) | `intake/ui/audit_log.py`, `dosing/audit_view.py` |
+| Medicines from confirmed scans | `dosing/ocr_meds.py` |
+
+Env: `OFFLINE_STRICT`, `OFFLINE_PROBE_HOST`, `OFFLINE_PROBE_PORT`, `OFFLINE_PROBE_TIMEOUT_S` (2), `OFFLINE_CHECK_INTERVAL_S` (30), `DEMO_MODE`. Everything is synthetic and **not clinically verified**.

@@ -1,0 +1,14 @@
+{
+  "key": "child_fever",
+  "displayName": "Demo Patient A",
+  "title": "A. Child with fever (4 years, 16 kg): paracetamol",
+  "token": "PT-DEMOA2",
+  "synthetic": true,
+  "answers": {"consent": "agree", "age_years": 4, "sex": "male", "weight_kg": 16, "allergies": ["none"], "meds_any": "no",
+              "kidney": "no", "liver": "no", "diabetes": "no", "hypertension": "no", "asthma": "no", "chief_complaint": "fever",
+              "danger_signs": ["none"]},
+  "check": {"drug": "paracetamol", "indication": "pain/fever", "selected_rule_id": null, "history": "none_apply"},
+  "runs": [
+    {"label": "Weight confirmed by the doctor", "confirmed": ["weight_kg"], "expect_status": "ok"}
+  ]
+}

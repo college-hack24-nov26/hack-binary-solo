@@ -110,6 +110,8 @@ class DosingCheck(BaseModel):
     result: dict = {}                      # the full engine Result at confirmation
     doctorInputs: dict = {}                # what the doctor typed (weight, creatinine, ...), kept apart from the quiz answers
     overrideReasons: list[str] = []
+    overrideCategories: list[str] = []
+    acknowledgedItems: list[str] = []      # unchecked free-text contraindications the doctor ticked 'I have checked these' for
 
 
 class PatientRecord(BaseModel):
@@ -135,4 +137,7 @@ class PatientRecord(BaseModel):
     doctorEdits: dict[str, DoctorEdit] = {}
     editedByDoctor: bool = False
     editedFields: list[str] = Field(default_factory=list)
+    visitHistory: dict[str, str] = {}      # History-check answers (yes/no/unsure), doctor-confirmed, reused for every drug this visit
+    visitHistoryBy: Optional[str] = None
+    visitHistoryAt: Optional[str] = None
     dosingChecks: list[DosingCheck] = []   # confirmed dosage checks (doctor), see dosing/service.py

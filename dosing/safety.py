@@ -1,6 +1,7 @@
 """Contraindications, renal / hepatic / pregnancy / lactation rules and label warnings, evaluated against the
 PatientContext. The formulary holds these as free text; data/safety_map.json maps each text to a predicate (numbers are
 captured from the text itself). Text without a mapping is surfaced as 'doctor to confirm', never dropped."""
+import hashlib
 import json
 import re
 from dataclasses import dataclass, field
@@ -18,6 +19,11 @@ MAP = Path(__file__).resolve().parent / "data" / "safety_map.json"
 @lru_cache(maxsize=1)
 def smap() -> dict:
     return json.loads(MAP.read_text(encoding="utf-8"))
+
+
+def qfield(text: str) -> str:
+    """Context field that holds the doctor's yes/no/unsure answer to a contraindication text."""
+    return "q_" + hashlib.sha1(text.encode("utf-8")).hexdigest()[:8]
 
 
 @dataclass
@@ -48,17 +54,26 @@ def item(f: Formulary, code: str, text: str, entry: dict | None = None, **extra)
 
 # ---------------------------------------------------------------------------------------------------------- predicates
 def _meds_labels(ctx, visit_labels) -> list:
-    return [m.labels + [m.matched_name, m.generic] for m in ctx.meds] + list(visit_labels)
+    return [m.labels + [m.matched_name, m.generic] for m in ctx.all_meds()] + list(visit_labels)
 
 
-def eval_pred(pred: dict, groups: tuple, ctx, drug: dict, visit_labels: list, egfr_fn, form: str | None):
+def eval_pred(pred: dict, groups: tuple, ctx, drug: dict, visit_labels: list, egfr_fn, form: str | None, text: str = ""):
     """-> (state, needs, note). state: true | false | unknown | warn | manual."""
     k = pred["kind"]
     needs: list = []
     if k == "manual":
         return "manual", needs, ""
+    if k == "question":
+        v = ctx.get(qfield(text))
+        if v == "yes":
+            return "true", needs, ""
+        if v == "no":
+            return "false", needs, ""
+        if pred.get("required"):                       # unanswered or 'unsure': never treated as no
+            return "unknown", [(qfield(text), msg("need_question", text=text))], ""
+        return "manual", needs, ""
     if k == "any":
-        states = [eval_pred(p, groups, ctx, drug, visit_labels, egfr_fn, form) for p in pred["of"]]
+        states = [eval_pred(p, groups, ctx, drug, visit_labels, egfr_fn, form, text) for p in pred["of"]]
         for s, n, _ in states:
             needs += n
         if any(s == "true" for s, _, _ in states):
@@ -144,7 +159,7 @@ def _match_ci(text: str):
         m = re.search(e["match"], text, re.I)
         if m:
             return e["pred"], m.groups()
-    return {"kind": "manual"}, ()
+    return {"kind": "question"}, ()
 
 
 # ---------------------------------------------------------------------------------------------------------- renal
@@ -270,7 +285,7 @@ def assess(f: Formulary, drug: dict, ctx, rule: dict, visit_labels: list, cfg, f
         pred, groups = _match_ci(text)
         if pred["kind"] in ("pregnant", "trimester", "weeks_ge") or (pred["kind"] == "any" and any(p["kind"] == "pregnant" for p in pred["of"])):
             has_preg_block = True
-        state, needs, note = eval_pred(pred, groups, ctx, drug, visit_labels, egfr_fn, form)
+        state, needs, note = eval_pred(pred, groups, ctx, drug, visit_labels, egfr_fn, form, text)
         if state == "true":
             out.blocks.append(item(f, "block_ci", msg("block_ci", text=text), entry, overridable=True))
         elif state == "warn":

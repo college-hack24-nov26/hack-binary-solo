@@ -1,12 +1,36 @@
 {
- "_note": "ENGINE SANITY BOUNDS, NOT DOSING DATA. Coarse draft ranges used only to flag a typo-like patient-reported weight. No source; a clinician must replace them with a cited growth reference. The check only warns and never corrects.",
- "status": "UNVERIFIED",
+ "_note": "DRAFT, NOT CITED. Engine sanity bounds used only while dosing/data/growth_reference.json has no data. Not dosing data and not a standard. A clinician must replace them with the cited tables.",
+ "status": "DRAFT",
  "rows": [
-  {"max_age_months": 1,   "min_kg": 1,  "max_kg": 7},
-  {"max_age_months": 12,  "min_kg": 2,  "max_kg": 15},
-  {"max_age_months": 60,  "min_kg": 5,  "max_kg": 30},
-  {"max_age_months": 144, "min_kg": 10, "max_kg": 80},
-  {"max_age_months": 216, "min_kg": 20, "max_kg": 160},
-  {"max_age_months": 1500,"min_kg": 25, "max_kg": 250}
+  {
+   "max_age_months": 1,
+   "min_kg": 1,
+   "max_kg": 7
+  },
+  {
+   "max_age_months": 12,
+   "min_kg": 2,
+   "max_kg": 15
+  },
+  {
+   "max_age_months": 60,
+   "min_kg": 5,
+   "max_kg": 30
+  },
+  {
+   "max_age_months": 144,
+   "min_kg": 10,
+   "max_kg": 80
+  },
+  {
+   "max_age_months": 216,
+   "min_kg": 20,
+   "max_kg": 160
+  },
+  {
+   "max_age_months": 1500,
+   "min_kg": 25,
+   "max_kg": 250
+  }
  ]
 }

@@ -1,5 +1,5 @@
 {
- "_note": "Engine-side mapping from the formulary's free-text safety fields to machine-checkable predicates. Thresholds are captured from the formulary text itself (regex groups); none are typed here. Text with no entry is never dropped: it is shown as 'Not machine-checked, doctor to confirm'. A clinician should review this file.",
+ "_note": "Engine-side mapping from the formulary's free-text safety fields to machine-checkable predicates. Thresholds are captured from the formulary text itself (regex groups); none are typed here. Text with no entry is never dropped: it is shown as 'Not machine-checked, doctor to confirm'. A clinician should review this file. Kind 'question' = a yes/no/unsure item shown in the History check with the formulary's exact text; 'required' ones return needs_input until answered, others stay a 'doctor to confirm' warning until answered.",
  "ci_map": [
   {
    "match": "^Serious penicillin/beta-lactam allergy",
@@ -18,7 +18,7 @@
   {
    "match": "^Past cholestatic jaundice",
    "pred": {
-    "kind": "manual"
+    "kind": "question"
    }
   },
   {
@@ -81,25 +81,20 @@
   {
    "match": "^Severe (renal, hepatic or heart failure|hepatic failure, renal failure or heart failure)",
    "pred": {
-    "kind": "hint",
-    "fields": [
-     "kidney_disease",
-     "liver_disease",
-     "heart_disease"
-    ],
-    "what": "kidney, liver or heart disease"
+    "kind": "question",
+    "required": true
    }
   },
   {
    "match": "^Dehydration",
    "pred": {
-    "kind": "manual"
+    "kind": "question"
    }
   },
   {
    "match": "^Dengue",
    "pred": {
-    "kind": "manual"
+    "kind": "question"
    }
   },
   {
@@ -119,12 +114,8 @@
   {
    "match": "^Established congestive heart failure",
    "pred": {
-    "kind": "ctx_yes",
-    "fields": [
-     "heart_disease"
-    ],
-    "what": "heart disease",
-    "on_true": "warn"
+    "kind": "question",
+    "required": true
    }
   },
   {
@@ -138,7 +129,7 @@
   {
    "match": "^Hypersensitivity to the active substance, hydroxyzine",
    "pred": {
-    "kind": "manual"
+    "kind": "question"
    }
   },
   {
@@ -278,11 +269,6 @@
    "regex": "asthma",
    "field": "asthma",
    "why": "asthma reported"
-  },
-  {
-   "regex": "ischaemic heart disease|heart failure|cardiovascular",
-   "field": "heart_disease",
-   "why": "heart disease reported"
   },
   {
    "regex": "glucose|hypoglyc|glycaem|dysglyc|sulfonylurea|antidiabetic",

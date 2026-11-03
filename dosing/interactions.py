@@ -45,9 +45,10 @@ def drug_labels(f: Formulary, drug: dict) -> list:
 
 def targets(f: Formulary, ctx, visit_ids: list) -> list:
     t = []
-    for m in ctx.meds:
+    for m in ctx.all_meds():
+        origins = [{"source": m.source, "scan_ref": m.scan_ref, "scan_date": m.scan_date}] + list(m.also)
         t.append({"name": m.raw or m.matched_name, "labels": m.labels + [m.matched_name, m.generic], "src": "current_medicine",
-                  "herbal": m.kind == "herbal", "drug_id": m.drug_id})
+                  "herbal": m.kind == "herbal", "drug_id": m.drug_id, "origins": origins})
     for did in visit_ids:
         d = f.drugs[did]
         t.append({"name": d["id"], "labels": drug_labels(f, d), "src": "same_visit", "herbal": False, "drug_id": did})
@@ -56,6 +57,17 @@ def targets(f: Formulary, ctx, visit_ids: list) -> list:
     if ctx.tri("qt_history") == "yes":
         t.append({"name": "QT history (doctor)", "labels": ["qt-prolonging"], "src": "patient_context", "herbal": False, "drug_id": None})
     return t
+
+
+def _with(tg: dict) -> dict:
+    """'with' text and origins for an interaction entry. Medicines read from a confirmed scan carry a 'from scanned prescription (date)' tag."""
+    origins = tg.get("origins") or []
+    scans = [o for o in origins if o["source"] == "ocr_doctor_confirmed"]
+    if not scans:
+        return {"with": f"{tg['name']} ({tg['src'].replace('_', ' ')})", "origins": origins}
+    tag = "; ".join(f"from scanned prescription ({o['scan_date'] or 'date not read'})" for o in scans)
+    others = [o for o in origins if o["source"] != "ocr_doctor_confirmed"]
+    return {"with": f"{tg['name']} ({'patient-reported, ' if others else ''}{tag})", "origins": origins}
 
 
 def _hit(terms: list, tgts: list):
@@ -100,12 +112,12 @@ def check(f: Formulary, drug: dict, ctx, visit_ids: list) -> dict:
         a_hits_drug = medsmod.term_matches(a, labels) or a == drug["id"] or (a.startswith("flag:qt_risk") and drug.get("qt_risk"))
         if a_hits_drug:
             for tg, term in _hit(b_terms, tgts):
-                put((tg["name"], term), {**base, "kind": "drug_drug", "with": f"{tg['name']} ({tg['src'].replace('_', ' ')})",
+                put((tg["name"], term), {**base, "kind": "drug_drug", **_with(tg),
                                           "label": row["action"], "matched": term})
         if any(medsmod.term_matches(t, labels) or (t == "qt-prolonging" and drug.get("qt_risk")) for t in b_terms) \
                 and not a.startswith("flag:"):
             for tg, term in _hit([a], tgts):
-                put((tg["name"], a), {**base, "kind": "drug_drug", "with": f"{tg['name']} ({tg['src'].replace('_', ' ')})",
+                put((tg["name"], a), {**base, "kind": "drug_drug", **_with(tg),
                                        "label": row["action"], "matched": a})
 
     # drug-level free-text interactions: severity not given by the formulary
@@ -113,7 +125,7 @@ def check(f: Formulary, drug: dict, ctx, visit_ids: list) -> dict:
         st = norm_status(e.get("status"))
         for tg, term in _hit(_head(e["text"]), tgts):
             it = {"severity": "unspecified", "action": e["text"], "data_status": st, "sources": f.source_refs(e.get("source"), st),
-                  "details": [e["text"]], "blocking": False, "kind": "drug_drug", "with": f"{tg['name']} ({tg['src'].replace('_', ' ')})",
+                  "details": [e["text"]], "blocking": False, "kind": "drug_drug", **_with(tg),
                   "label": e["text"], "matched": term}
             put((tg["name"], term), it)
 
@@ -131,13 +143,16 @@ def check(f: Formulary, drug: dict, ctx, visit_ids: list) -> dict:
             put(("dup", tg["name"]), {"severity": sev, "action": row["action"] if row else "Duplicate therapy (no severity in the formulary)",
                                       "data_status": st, "sources": f.source_refs(row.get("source") if row else "", st), "details": [],
                                       "blocking": sev in BLOCK_SEVERITIES, "kind": "duplicate",
-                                      "with": f"{tg['name']} ({tg['src'].replace('_', ' ')})", "label": "Duplicate therapy", "class": drug["duplicate_class"]})
+                                      **_with(tg), "label": "Duplicate therapy", "class": drug["duplicate_class"]})
 
     for tg in tgts:
         if tg.get("herbal"):
             warnings.append({"code": "warn_herbal", "text": msg("warn_herbal", tok=tg["name"])})
     for tok in ctx.unparsed_meds:
         warnings.append({"code": "warn_unparsed_med", "text": msg("warn_unparsed_med", tok=tok)})
+    for u in ctx.ocr_unparsed:
+        warnings.append({"code": "warn_unparsed_ocr_med", "text": msg("warn_unparsed_ocr_med", tok=u["token"], date=u["scan_date"] or "not read"),
+                         "scan_ref": u["scan_ref"]})
     if ctx.get("meds_known") != "yes":
         warnings.append({"code": "warn_meds_incomplete", "text": msg("warn_meds_incomplete")})
     return {"items": [items[k] for k in sorted(items, key=lambda k: str(k))], "warnings": warnings,

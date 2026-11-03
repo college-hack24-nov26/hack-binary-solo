@@ -1,0 +1,17 @@
+{
+  "key": "penicillin_allergy",
+  "displayName": "Demo Patient C",
+  "title": "C. Adult with penicillin allergy (34 years, 60 kg): amoxicillin",
+  "token": "PT-DEMOC2",
+  "synthetic": true,
+  "answers": {"consent": "agree", "age_years": 34, "sex": "female", "pregnancy": "no", "weight_kg": 60, "allergies": ["penicillins"],
+              "meds_any": "no", "kidney": "no", "liver": "no", "diabetes": "no", "hypertension": "no", "asthma": "no",
+              "chief_complaint": "cough_breath", "danger_signs": ["none"]},
+  "check": {"drug": "amoxicillin", "indication": "community-acquired pneumonia", "selected_rule_id": "amoxicillin#0", "history": "none_apply"},
+  "runs": [
+    {"label": "No override", "expect_status": "blocked"},
+    {"label": "Reason typed but no category", "override_reason": "Specialist advised it", "expect_status": "blocked"},
+    {"label": "Category and written reason", "override_category": "benefit_outweighs_risk",
+     "override_reason": "Mild reaction only; ID consult done, monitored dose", "expect_status": "ok"}
+  ]
+}

@@ -37,6 +37,10 @@ class MedMatch:
     labels: list
     drug_id: str | None = None
     kind: str = "generic"
+    source: str = "patient_reported"       # patient_reported | doctor_entered | ocr_doctor_confirmed
+    scan_ref: str | None = None            # link back to the confirmed scan, e.g. "timeline[0]"
+    scan_date: str | None = None
+    also: list = field(default_factory=list)   # other origins of the same medicine: [{"source","scan_ref","scan_date"}]
 
 
 @lru_cache(maxsize=1)

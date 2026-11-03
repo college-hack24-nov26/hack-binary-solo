@@ -140,4 +140,5 @@ def build_record(graph: Graph, rules: list[RedFlagRule], answers: dict, *, token
         rec.doctorEdits, rec.editedByDoctor, rec.editedFields = prior.doctorEdits, prior.editedByDoctor, prior.editedFields
         rec.vitals, rec.doctorNotes = prior.vitals, prior.doctorNotes
         rec.dosingChecks = prior.dosingChecks
+        rec.visitHistory, rec.visitHistoryBy, rec.visitHistoryAt = prior.visitHistory, prior.visitHistoryBy, prior.visitHistoryAt
     return rec

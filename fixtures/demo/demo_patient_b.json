@@ -1,0 +1,15 @@
+{
+  "key": "diabetes_kidney",
+  "displayName": "Demo Patient B",
+  "title": "B. Adult with diabetes and kidney disease (58 years, 78 kg): metformin",
+  "token": "PT-DEMOB2",
+  "synthetic": true,
+  "answers": {"consent": "agree", "age_years": 58, "sex": "male", "weight_kg": 78, "allergies": ["none"], "meds_any": "yes",
+              "meds_list": "Glycomet", "kidney": "yes", "liver": "no", "diabetes": "yes", "hypertension": "yes", "asthma": "no",
+              "chief_complaint": "other", "other_text": "Sugar review", "danger_signs": ["none"]},
+  "check": {"drug": "metformin", "indication": "type 2 diabetes", "selected_rule_id": "metformin#0", "history": "none_apply"},
+  "runs": [
+    {"label": "Creatinine missing", "confirmed": ["weight_kg"], "expect_status": "needs_input"},
+    {"label": "Creatinine 1.0 mg/dL entered", "confirmed": ["weight_kg"], "doctor_inputs": {"scr_mg_dl": 1.0}, "expect_status": "ok"}
+  ]
+}
