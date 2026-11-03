@@ -4,7 +4,10 @@ import streamlit as st
 
 from intake.engine import answer_label
 from intake.models import load_graph
+from intake.ui.gate import require_login
 from records import store
+
+require_login()          # staff or doctor
 
 g = load_graph()
 st.title("Staff alerts")

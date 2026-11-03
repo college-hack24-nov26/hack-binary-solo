@@ -6,10 +6,15 @@ import streamlit as st
 
 from intake import llm_summary
 from intake.summary import apply_doctor_edits, body_diagram_svgs, build_summary, duration_text, template_paragraph
+from intake.ui.gate import can_edit, require_login
 from records import store
 from records.schema import TimelineEntry
 
+user = require_login()
+editable = can_edit(user["role"])
 st.title("Doctor summary")
+if not editable:
+    st.info("Read-only: only a doctor can edit and save the summary.")
 st.warning("AI drafts, the doctor decides. Red flags come from DRAFT rules awaiting source check.")
 recs = store.list_records()
 if not recs:
@@ -36,12 +41,12 @@ with st.form(f"edit_{token}"):
                 (st.error if sec.title == "Red flags" else st.write)(f"**{f.label}**: {f.value}")
                 continue
             lbl = f"{'⚠ ' if f.missing else ''}{f.label}{' (edited)' if f.edited else ''}"
-            values[f.key] = st.text_area(lbl, value=f.value, key=f"{token}_{lang}_{f.key}", height=70)
+            values[f.key] = st.text_area(lbl, value=f.value, key=f"{token}_{lang}_{f.key}", height=70, disabled=not editable)
             if f.missing:
                 st.caption("⚠ missing - not captured at intake")
             if f.edited:
                 st.caption(f"Original: {f.original}")
-    if st.form_submit_button("Save edits", type="primary"):
+    if st.form_submit_button("Save edits", type="primary", disabled=not editable):
         rec = apply_doctor_edits(rec, values, datetime.now().astimezone(), lang)
         store.save(rec)
         st.success(f"Saved. Edited fields: {', '.join(rec.editedFields) or 'none'}")
@@ -54,8 +59,8 @@ if svgs:
             col.html(svg)
 
 with st.expander("Attach scanned-record timeline entries (JSON from the OCR page)"):
-    raw = st.text_area("Paste a JSON list of timeline entries", key=f"tl_{token}")
-    if st.button("Attach") and raw.strip():
+    raw = st.text_area("Paste a JSON list of timeline entries", key=f"tl_{token}", disabled=not editable)
+    if st.button("Attach", disabled=not editable) and raw.strip():
         try:
             entries = [TimelineEntry.model_validate(e) for e in json.loads(raw)]
             store.save(rec.model_copy(update={"timeline": rec.timeline + entries}))

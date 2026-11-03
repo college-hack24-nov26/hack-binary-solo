@@ -3,3 +3,4 @@ pillow
 pydantic
 requests
 pytest
+pandas

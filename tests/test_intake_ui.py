@@ -1,4 +1,6 @@
 """Streamlit AppTest smoke: consent gate, one answer, language switch, decline saves nothing."""
+import time
+
 import pytest
 from streamlit.testing.v1 import AppTest
 
@@ -15,8 +17,11 @@ def datadir(tmp_path, monkeypatch):
     return tmp_path
 
 
-def page(name):
-    return AppTest.from_file(str(ROOT / "intake" / "ui" / f"{name}.py"), default_timeout=20)
+def page(name, role=None):
+    at = AppTest.from_file(str(ROOT / "intake" / "ui" / f"{name}.py"), default_timeout=20)
+    if role:  # staff / doctor pages need a login; the kiosk does not
+        at.session_state["auth"] = {"username": f"test_{role}", "role": role, "last_seen": time.time()}
+    return at
 
 
 def test_patient_flow_consent_then_question_and_language():
@@ -39,7 +44,7 @@ def test_decline_saves_nothing():
 
 def test_staff_and_doctor_pages_render_empty():
     for n in ("staff", "doctor"):
-        at = page(n).run()
+        at = page(n, "doctor").run()
         assert not at.exception, n
 
 
@@ -116,7 +121,7 @@ def test_doctor_page_shows_regions_and_diagram(tmp_path):
     r = run_bank(load_graph(), load_rules(), {"chief_complaint": "chest_pain", "cp_site": make_answer(["chest_left"], "list")},
                  token="PT-DOCAAA").finish()
     store.save(r)
-    at = page("doctor").run()
+    at = page("doctor", "doctor").run()
     assert not at.exception
     assert any("Chest, patient's left" in t.value for t in at.text_area)
     at.radio[0].set_value("hi").run()
