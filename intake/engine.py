@@ -158,6 +158,8 @@ def validate_graph(graph: Graph, red_flag_ids: Optional[set[str]] = None) -> lis
             for o in n.options:
                 if not getattr(o, lang).strip():
                     errs.append(f"{n.id}.{o.id}: missing {lang} option text")
+        if n.sourceChecked and not n.source:
+            errs.append(f"{n.id}: sourceChecked is true but there is no source")
         if red_flag_ids is not None:
             for ref in n.redFlagRefs:
                 if ref not in red_flag_ids:
