@@ -1,4 +1,5 @@
 """List every graph node (and red-flag message) whose Hindi/Marathi is still machine-drafted."""
+import json
 import sys
 from pathlib import Path
 
@@ -18,7 +19,15 @@ def main() -> int:
         print(f"rule {r.id}  patientMessage  {r.patientMessage.translationStatus}")
     regions = catalog().regions
     print(f"regions ({len(regions)}) in data/body_regions.json  {catalog().translationStatus}")
-    print(f"\n{len(todo)} of {len(g.nodes)} nodes + {len(rules)} rule messages + {len(regions)} body regions need native review (hi, mr). UI chrome: intake/ui/strings.py")
+    root = Path(__file__).resolve().parent.parent
+    web = json.loads((root / "web" / "src" / "i18n" / "kiosk.json").read_text(encoding="utf-8"))
+    for key in web["strings"]:
+        print(f"web  {key:18s} kiosk UI string  {web['translationStatus']}")
+    docs = json.loads((root / "data" / "doctors.json").read_text(encoding="utf-8"))
+    for d in docs["doctors"]:
+        print(f"doctor {d['id']:12s} specialty, floor, lineName  {docs['translationStatus']}")
+    print(f"\n{len(todo)} of {len(g.nodes)} nodes + {len(rules)} rule messages + {len(regions)} body regions + {len(web['strings'])} web kiosk "
+          f"strings + {len(docs['doctors'])} doctors need native review (hi, mr). UI chrome: intake/ui/strings.py, web/src/i18n/kiosk.json")
     return 0
 
 

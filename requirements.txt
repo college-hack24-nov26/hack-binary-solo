@@ -4,3 +4,7 @@ pydantic
 requests
 pytest
 pandas
+fastapi
+uvicorn
+python-multipart
+httpx

@@ -17,6 +17,10 @@ class Doctor(BaseModel):
     name: str
     specialty: Text
     username: Optional[str] = None   # login that sees this doctor's patients first
+    room: Optional[str] = None        # synthetic room number shown on the token slip
+    floor: Optional[Text] = None
+    lineColor: Optional[str] = None   # hex colour of the painted floor line that leads to the room
+    lineName: Optional[Text] = None   # the colour's name as used in "Follow the <name> line" (mr in the oblique case)
 
     def label(self, lang: str) -> str:
         return f"{self.name} - {self.specialty.get(lang)}"

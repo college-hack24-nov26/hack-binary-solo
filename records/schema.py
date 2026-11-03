@@ -141,3 +141,7 @@ class PatientRecord(BaseModel):
     visitHistoryBy: Optional[str] = None
     visitHistoryAt: Optional[str] = None
     dosingChecks: list[DosingCheck] = []   # confirmed dosage checks (doctor), see dosing/service.py
+    queueNumber: Optional[int] = None      # daily OPD token number, assigned once when the kiosk finishes (api/routers/kiosk.py)
+    queueDate: Optional[str] = None        # YYYY-MM-DD the queue number belongs to
+    finishedAt: Optional[str] = None       # ISO-8601, when the token slip was issued
+    pendingScans: list[dict] = []          # OCR drafts uploaded by staff/doctor, waiting for a doctor to confirm (then moved to timeline)

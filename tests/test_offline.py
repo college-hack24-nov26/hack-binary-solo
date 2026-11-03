@@ -11,8 +11,10 @@ import pytest
 from intake import offline
 
 ROOT = Path(__file__).resolve().parent.parent
-APP_DIRS = ["intake", "ocr", "dosing", "records", "scripts"]
+APP_DIRS = ["intake", "ocr", "dosing", "records", "scripts", "api"]
 APP_FILES = ["app.py", "main_app.py", "intake_app.py"]
+WEB_DIRS = ["web/src", "web/index.html"]        # the React app: no CDN, fonts or icons from outside
+WEB_EXT = {".ts", ".tsx", ".js", ".jsx", ".css", ".html", ".json", ".svg"}
 URL = re.compile(r"""https?://([A-Za-z0-9.\-\[\]:]+)""")
 XML_NAMESPACES = {"www.w3.org"}      # SVG xmlns strings are identifiers, not requests
 
@@ -21,7 +23,14 @@ def app_sources():
     for d in APP_DIRS:
         yield from (ROOT / d).rglob("*.py")
     for f in APP_FILES:
-        yield ROOT / f
+        if (ROOT / f).exists():
+            yield ROOT / f
+    for d in WEB_DIRS:
+        p = ROOT / d
+        if p.is_file():
+            yield p
+        elif p.is_dir():
+            yield from (f for f in p.rglob("*") if f.suffix in WEB_EXT)
 
 
 def test_no_non_localhost_urls_in_app_code():
