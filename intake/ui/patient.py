@@ -9,6 +9,7 @@ from intake.engine import answer_label
 from intake.models import load_graph
 from intake.redflags import load_rules
 from intake.session import IntakeSession
+from intake.ui import common
 from intake.ui.bodymap_input import body_map_input
 from intake.ui.strings import t
 from records import store
@@ -23,17 +24,8 @@ div[data-testid="stCheckbox"] label p { font-size: 1.3rem; }
 ss = st.session_state
 
 
-@st.cache_resource
-def _data():
-    return load_graph(), load_rules()
-
-
-def _new():
-    g, r = _data()
-    lang = ss.get("lang", "en")
-    ss.sess, ss.view, ss.stage = IntakeSession(g, r, language=lang), None, "flow"
-    ss.demo = False
-
+_data = common.data
+_new = common.new_session
 
 if "sess" not in ss:
     _new()

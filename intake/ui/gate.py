@@ -20,6 +20,12 @@ def _authenticator(users_file: str, max_failures: int, lockout_s: int):  # one p
     return auth.Authenticator(Path(users_file), max_failures, lockout_s)
 
 
+def signed_in() -> bool:
+    """True for a login that has not gone idle (used to decide which pages the navigation offers)."""
+    cur = ss.get("auth")
+    return bool(cur) and not auth.idle_expired(cur["last_seen"], load_settings().auth_idle_s)
+
+
 def require_login(allowed: tuple[str, ...] = ("staff", "doctor")) -> dict:
     """Render the sign-in form and st.stop() unless a valid, non-idle login with an allowed role exists.
     Returns {"username", "role", "last_seen"}."""
