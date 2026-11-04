@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Route, Routes, useNavigate, useParams } from "react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { BellRing, ClipboardList, FileScan, FlaskConical, LayoutList, Search, UserRound, Volume2, VolumeX, X } from "lucide-react";
+import { BellRing, ClipboardList, FileScan, FlaskConical, LayoutList, Search, UserRound, Users, Volume2, VolumeX, X } from "lucide-react";
 import { get, post, put, qs, type Board, type BoardRow, type HelpRequest, type Me, type PatientView } from "../api/client";
 import { Button, ToggleButton } from "../components/Button";
 import { DataTable, type Column } from "../components/DataTable";
@@ -14,6 +14,7 @@ import { RequireRole } from "../shell/auth";
 import { DashboardShell, type NavItem } from "../shell/DashboardShell";
 import { ShortcutsOverlay } from "../shell/Shortcuts";
 import { ScanUpload } from "../shared/ScanUpload";
+import { PeoplePage } from "./People";
 import { VitalsForm } from "../shared/VitalsForm";
 
 // ---------------------------------------------------------------- alert sound (generated locally, no file, mutable)
@@ -75,6 +76,7 @@ function Staff() {
   const items: NavItem[] = [
     { to: "/staff", label: "Board", icon: LayoutList, end: true },
     { to: "/staff/patient", label: "Patient", icon: UserRound },
+    { to: "/staff/people", label: "Find by number", icon: Users },
     { to: "/staff/scans", label: "Scans", icon: FileScan },
     { to: "/staff/help", label: "Help requests", icon: BellRing, count: n },
   ];
@@ -101,6 +103,7 @@ function Staff() {
             <Route index element={<BoardPage me={me} demo={!!cfg.data?.demoMode} />} />
             <Route path="patient" element={<PickPatient />} />
             <Route path="p/:token" element={<PatientPanel me={me} />} />
+            <Route path="people" element={<PeoplePage />} />
             <Route path="scans" element={<ScansPage />} />
             <Route path="help" element={<HelpPage items={help.data?.items ?? []} loading={help.isPending} />} />
           </Routes>
@@ -212,11 +215,19 @@ function BoardPage({ me, demo }: { me: Me; demo: boolean }) {
   const addDemo = useMutation({ mutationFn: () => post("/api/demo/kiosk-patient"), onSuccess: () => qc.invalidateQueries({ queryKey: ["board"] }) });
   const columns: Column<BoardRow>[] = [
     { key: "q", header: "No.", cell: (r) => <span className="font-semibold tabular">{r.queueNumber ?? "-"}</span>, sortValue: (r) => r.queueNumber ?? 9999 },
+    { key: "who_id", header: "Patient", sortValue: (r) => r.identityState,
+      cell: (r) => (
+        <span className="flex flex-col">
+          <span className="font-semibold tabular" data-testid="board-masked">{r.identifierMasked ?? "No number"}</span>
+          <span className="text-xs text-muted">{{ new: "New", returning: "Returning", walk_in: "Walk-in, needs desk", anonymous: "Anonymous" }[r.identityState]}</span>
+        </span>
+      ) },
     { key: "token", header: "Token", cell: (r) => <span className="font-semibold tabular">{r.token}</span>, sortValue: (r) => r.token },
     { key: "who", header: "Age, sex", cell: (r) => ageSex(r.ageYears, r.sex) },
     { key: "complaint", header: "Complaint", cell: (r) => r.complaint ?? <span className="text-muted">not given yet</span>, sortValue: (r) => r.complaint ?? "" },
     { key: "flags", header: "Red flags", sortValue: (r) => -r.redFlags.length, cell: (r) => (r.redFlags.length ? <Pill tone="red">{r.redFlags.length} urgent</Pill> : <span className="text-muted">none</span>) },
-    { key: "status", header: "Status", cell: (r) => (r.status === "complete" ? "Token issued" : "On the kiosk"), sortValue: (r) => r.status },
+    { key: "status", header: "Status", cell: (r) => r.statusText, sortValue: (r) => r.status },
+    { key: "papers", header: "Papers", cell: (r) => (r.papersCount ? <span className="tabular" data-testid="board-papers">{r.papersCount}</span> : <span className="text-muted">0</span>), sortValue: (r) => r.papersCount },
     { key: "doctor", header: "Doctor", cell: (r) => docName(r.assignedDoctor), sortValue: (r) => docName(r.assignedDoctor) },
     { key: "vitals", header: "Vitals", cell: (r) => (r.vitalsPresent ? <Pill tone="green">taken</Pill> : <span className="inline-flex items-center gap-1.5 font-semibold"><span className="size-2 rounded-full bg-marigold ring-1 ring-ink/40" aria-hidden />needed</span>), sortValue: (r) => (r.vitalsPresent ? 1 : 0) },
     { key: "scans", header: "Scans", cell: (r) => (r.pendingScans ? <Pill tone="marigold">{r.pendingScans} to confirm</Pill> : "") },
@@ -373,6 +384,7 @@ function PatientPanel({ me }: { me: Me }) {
         <p className="text-md">{ageSex(di.ageYears, di.sex)}</p>
         <p className="text-md font-semibold">{String(pv.complaint.label ?? "Complaint not given yet")}</p>
         <p className="text-sm text-muted">{pv.status === "complete" ? "Token issued" : "Still on the kiosk"}</p>
+        {pv.identifierMasked && <p className="text-sm font-semibold tabular" data-testid="panel-masked">{pv.identifierMasked} <span className="font-normal text-muted">({pv.identityState === "returning" ? "returning" : pv.identityState === "walk_in" ? "walk-in" : "new"}, {pv.papersCount} paper{pv.papersCount === 1 ? "" : "s"})</span></p>}
       </header>
       {pv.redFlags.length > 0 ? (
         <div className="flex flex-col gap-2">{pv.redFlags.map((f) => <RedFlagRow key={f.ruleId} flag={f} />)}</div>

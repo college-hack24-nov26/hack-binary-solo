@@ -58,6 +58,16 @@ export function TokenSlip({ slip, lang, stamped }: { slip: Slip; lang: Lang; sta
           {slip.queueNumber}
         </p>
         <p className="mt-1 text-k-lead font-semibold tabular tracking-normal">{slip.token}</p>
+        {slip.identifierMasked && (
+          <p className="text-k-body text-muted tabular" data-testid="slip-id">
+            {t("slipId", lang)}: {slip.identifierMasked}
+          </p>
+        )}
+        {slip.papersAdded > 0 && (
+          <p className="text-k-body font-semibold tabular" data-testid="slip-papers">
+            {t("slipPapers", lang, { n: slip.papersAdded })}
+          </p>
+        )}
         {stamped && (
           <span className="mt-3 inline-block" data-testid="stamp">
             <span className="animate-stamp inline-flex items-center gap-1 rounded-full border-[3px] border-green px-4 py-1 text-k-body font-bold text-green">

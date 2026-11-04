@@ -307,6 +307,179 @@ export type paths = {
         patch?: never;
         trace?: never;
     };
+    "/api/kiosk/identify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Is this identifier already registered? (exists only, no data) */
+        post: operations["identify_api_kiosk_identify_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/kiosk/register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** New patient: identifier, PIN and consent in one call */
+        post: operations["register_api_kiosk_register_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/kiosk/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Returning patient: identifier and PIN */
+        post: operations["login_api_kiosk_login_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/kiosk/walk-in": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** "I have neither / ask staff": a walk-in record that staff complete at the desk */
+        post: operations["walk_in_api_kiosk_walk_in_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/kiosk/sessions/{token}/bind": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Attach the signed-in patient to this visit */
+        post: operations["bind_api_kiosk_sessions__token__bind_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/kiosk/sessions/{token}/end": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Finish or reset: drop the identity session and unconfirmed scans */
+        post: operations["end_api_kiosk_sessions__token__end_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/kiosk/sessions/{token}/scans": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Scans */
+        get: operations["list_scans_api_kiosk_sessions__token__scans_get"];
+        put?: never;
+        /** Add a photo of a paper; reading starts in the background */
+        post: operations["upload_api_kiosk_sessions__token__scans_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/kiosk/sessions/{token}/scans/{sid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Status, real progress and what was read */
+        get: operations["get_scan_api_kiosk_sessions__token__scans__sid__get"];
+        put?: never;
+        post?: never;
+        /** Remove a paper and its picture */
+        delete: operations["delete_api_kiosk_sessions__token__scans__sid__delete"];
+        options?: never;
+        head?: never;
+        /** The patient corrects the text */
+        patch: operations["correct_api_kiosk_sessions__token__scans__sid__patch"];
+        trace?: never;
+    };
+    "/api/kiosk/sessions/{token}/scans/{sid}/image": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Image */
+        get: operations["image_api_kiosk_sessions__token__scans__sid__image_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/kiosk/sessions/{token}/scans/{sid}/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** "This is right": the paper is kept for the doctor, still marked unverified */
+        post: operations["confirm_api_kiosk_sessions__token__scans__sid__confirm_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/intake/body-regions": {
         parameters: {
             query?: never;
@@ -460,6 +633,74 @@ export type paths = {
         patch?: never;
         trace?: never;
     };
+    "/api/staff/patients": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Find a patient by the visible digits, a visit token, a queue number or the full number */
+        get: operations["lookup_api_staff_patients_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/staff/patients/{pid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Patient */
+        get: operations["get_patient_api_staff_patients__pid__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/staff/patients/{pid}/reset-pin": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Staff verified the person: set a temporary PIN and clear the lock */
+        post: operations["reset_pin_api_staff_patients__pid__reset_pin_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/staff/patients/{pid}/walk-in-complete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Attach a number to a walk-in and give a temporary PIN */
+        post: operations["walk_in_complete_api_staff_patients__pid__walk_in_complete_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/patients/{token}/summary": {
         parameters: {
             query?: never;
@@ -578,6 +819,74 @@ export type paths = {
         };
         /** Scan Image */
         get: operations["scan_image_api_patients__token__scans__sid__image_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/doctor/visits/{token}/scans": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Papers the patient scanned (images and unverified text) */
+        get: operations["scans_api_doctor_visits__token__scans_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/doctor/visits/{token}/scans/{sid}/image": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Scan Image */
+        get: operations["scan_image_api_doctor_visits__token__scans__sid__image_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/doctor/visits/{token}/scans/{sid}/use-as-current-medicines": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Use As Current Medicines */
+        post: operations["use_as_current_medicines_api_doctor_visits__token__scans__sid__use_as_current_medicines_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/doctor/visits/{token}/previous": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Earlier visits of a returning patient */
+        get: operations["previous_api_doctor_visits__token__previous_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -936,6 +1245,24 @@ export type components = {
             vitalsPresent: boolean;
             /** Pendingscans */
             pendingScans: number;
+            /** Identifiermasked */
+            identifierMasked?: string | null;
+            /**
+             * Identitystate
+             * @default anonymous
+             * @enum {string}
+             */
+            identityState: "new" | "returning" | "walk_in" | "anonymous";
+            /**
+             * Paperscount
+             * @default 0
+             */
+            papersCount: number;
+            /**
+             * Statustext
+             * @default
+             */
+            statusText: string;
             /** Minuteswaiting */
             minutesWaiting: number;
             /** Createdat */
@@ -993,6 +1320,11 @@ export type components = {
             /** Regions */
             regions: components["schemas"]["Region"][];
         };
+        /** Body_upload_api_kiosk_sessions__token__scans_post */
+        Body_upload_api_kiosk_sessions__token__scans_post: {
+            /** Image */
+            image: string;
+        };
         /** Body_upload_api_patients__token__scans_post */
         Body_upload_api_patients__token__scans_post: {
             /** Image */
@@ -1046,14 +1378,6 @@ export type components = {
                 [key: string]: unknown;
             }[];
         };
-        /** ConsentIn */
-        ConsentIn: {
-            /**
-             * Choice
-             * @enum {string}
-             */
-            choice: "agree" | "decline";
-        };
         /** ContextField */
         ContextField: {
             /** Name */
@@ -1094,6 +1418,43 @@ export type components = {
             } | null;
             /** Linetextcolor */
             lineTextColor?: string | null;
+        };
+        /** DoctorScanOut */
+        DoctorScanOut: {
+            /** Id */
+            id: string;
+            /** Uploadedat */
+            uploadedAt: string;
+            /** Doctype */
+            docType?: string | null;
+            /** Docdate */
+            docDate?: string | null;
+            /** Medicines */
+            medicines: {
+                [key: string]: unknown;
+            }[];
+            /** Freetext */
+            freeText: string;
+            /** Confirmedbypatient */
+            confirmedByPatient: boolean;
+            /** Hasimage */
+            hasImage: boolean;
+            /** Usedbydoctor */
+            usedByDoctor?: string | null;
+            /**
+             * Label
+             * @default Patient-supplied, unverified text
+             */
+            label: string;
+        };
+        /** DoctorScansOut */
+        DoctorScansOut: {
+            /** Visit */
+            visit: string;
+            /** Patientmasked */
+            patientMasked?: string | null;
+            /** Scans */
+            scans: components["schemas"]["DoctorScanOut"][];
         };
         /** Drug */
         Drug: {
@@ -1292,6 +1653,41 @@ export type components = {
             /** At */
             at?: string | null;
         };
+        /** IdentifyIn */
+        IdentifyIn: {
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "mobile" | "abha";
+            /** Identifier */
+            identifier: string;
+        };
+        /** IdentifyOut */
+        IdentifyOut: {
+            /** Exists */
+            exists: boolean;
+            /** Masked */
+            masked: string;
+        };
+        /** IdentityOut */
+        IdentityOut: {
+            /** Identitytoken */
+            identityToken: string;
+            /** Masked */
+            masked: string;
+            /** Returning */
+            returning: boolean;
+            /**
+             * Walkin
+             * @default false
+             */
+            walkIn: boolean;
+            /** Lastvisit */
+            lastVisit?: string | null;
+            /** Expiresins */
+            expiresInS: number;
+        };
         /** KioskCreated */
         KioskCreated: {
             /** Token */
@@ -1377,13 +1773,6 @@ export type components = {
             reachable: boolean;
             /** Error */
             error?: string | null;
-        };
-        /** LoginIn */
-        LoginIn: {
-            /** Username */
-            username: string;
-            /** Password */
-            password: string;
         };
         /** Me */
         Me: {
@@ -1482,6 +1871,34 @@ export type components = {
             /** Label */
             label?: string | null;
         };
+        /** PatientAdminOut */
+        PatientAdminOut: {
+            /** Id */
+            id: string;
+            /** Identifiertype */
+            identifierType: string;
+            /** Masked */
+            masked: string;
+            /** Needsstaff */
+            needsStaff: boolean;
+            /** Locked */
+            locked: boolean;
+            /** Lockeduntil */
+            lockedUntil?: string | null;
+            /** Createdat */
+            createdAt: string;
+            /** Visitids */
+            visitIds: string[];
+            /** Consents */
+            consents: number;
+            /** Lastconsentversion */
+            lastConsentVersion?: string | null;
+        };
+        /** PatientLookupOut */
+        PatientLookupOut: {
+            /** Patients */
+            patients: components["schemas"]["PatientAdminOut"][];
+        };
         /** PatientView */
         PatientView: {
             /** Token */
@@ -1539,6 +1956,21 @@ export type components = {
              * @default 0
              */
             timelineCount: number;
+            /** Patientid */
+            patientId?: string | null;
+            /** Identifiermasked */
+            identifierMasked?: string | null;
+            /**
+             * Identitystate
+             * @default anonymous
+             * @enum {string}
+             */
+            identityState: "new" | "returning" | "walk_in" | "anonymous";
+            /**
+             * Paperscount
+             * @default 0
+             */
+            papersCount: number;
             /**
              * Role
              * @enum {string}
@@ -1601,6 +2033,22 @@ export type components = {
                 [key: string]: unknown;
             };
         };
+        /** PreviousVisit */
+        PreviousVisit: {
+            /** Token */
+            token: string;
+            /** Date */
+            date: string;
+            /** Complaint */
+            complaint?: string | null;
+            /** Queuenumber */
+            queueNumber?: number | null;
+        };
+        /** PreviousVisitsOut */
+        PreviousVisitsOut: {
+            /** Visits */
+            visits: components["schemas"]["PreviousVisit"][];
+        };
         /** ProbeConfig */
         ProbeConfig: {
             /** Host */
@@ -1656,6 +2104,31 @@ export type components = {
             /** Polygon */
             polygon: number[][];
         };
+        /** RegisterIn */
+        RegisterIn: {
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "mobile" | "abha";
+            /** Identifier */
+            identifier: string;
+            /** Pin */
+            pin: string;
+            consent: components["schemas"]["api__schemas_identity__ConsentIn"];
+        };
+        /** ResetPinOut */
+        ResetPinOut: {
+            /** Id */
+            id: string;
+            /** Pin */
+            pin: string;
+            /**
+             * Note
+             * @default Tell the patient this PIN. They can only use it once to get in; it is not shown again.
+             */
+            note: string;
+        };
         /** Review */
         Review: {
             /** Items */
@@ -1698,6 +2171,89 @@ export type components = {
              * @default []
              */
             diagnosesAsWritten: string[];
+        };
+        /** ScanEditIn */
+        ScanEditIn: {
+            /** Doctype */
+            docType?: ("prescription" | "lab_report" | "other") | null;
+            /** Docdate */
+            docDate?: string | null;
+            /** Medicines */
+            medicines?: {
+                [key: string]: string | null;
+            }[] | null;
+            /** Freetext */
+            freeText?: string | null;
+        };
+        /** ScanField */
+        ScanField: {
+            /** Value */
+            value?: string | null;
+            /** Confidence */
+            confidence?: number | null;
+            /**
+             * Check
+             * @default false
+             */
+            check: boolean;
+        };
+        /** ScanMedicine */
+        ScanMedicine: {
+            name: components["schemas"]["ScanField"];
+            dose: components["schemas"]["ScanField"];
+            frequency: components["schemas"]["ScanField"];
+        };
+        /** ScanOut */
+        ScanOut: {
+            /** Id */
+            id: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "queued" | "preparing" | "reading" | "structuring" | "done" | "failed" | "retake" | "unavailable";
+            /** Stage */
+            stage: string;
+            /** Progress */
+            progress: number;
+            /** Elapseds */
+            elapsedS: number;
+            /** Doctype */
+            docType?: ("prescription" | "lab_report" | "other") | null;
+            docDate?: components["schemas"]["ScanField"] | null;
+            /**
+             * Medicines
+             * @default []
+             */
+            medicines: components["schemas"]["ScanMedicine"][];
+            /**
+             * Freetext
+             * @default
+             */
+            freeText: string;
+            /**
+             * Confirmed
+             * @default false
+             */
+            confirmed: boolean;
+            /**
+             * Hasimage
+             * @default false
+             */
+            hasImage: boolean;
+            /** Message */
+            message?: string | null;
+            /**
+             * Unverified
+             * @default true
+             * @constant
+             */
+            unverified: true;
+        };
+        /** ScansOut */
+        ScansOut: {
+            /** Scans */
+            scans: components["schemas"]["ScanOut"][];
         };
         /** Service */
         Service: {
@@ -1821,6 +2377,13 @@ export type components = {
              * @default estimate
              */
             estimateLabel: string;
+            /**
+             * Papersadded
+             * @default 0
+             */
+            papersAdded: number;
+            /** Identifiermasked */
+            identifierMasked?: string | null;
         };
         /** TriggerLine */
         TriggerLine: {
@@ -1830,6 +2393,13 @@ export type components = {
             label: string;
             /** Answer */
             answer: string;
+        };
+        /** UseMedicinesOut */
+        UseMedicinesOut: {
+            /** Added */
+            added: number;
+            /** Scan */
+            scan: string;
         };
         /** ValidationError */
         ValidationError: {
@@ -1869,6 +2439,72 @@ export type components = {
              * @default
              */
             notes: string;
+        };
+        /** WalkInCompleteIn */
+        WalkInCompleteIn: {
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "mobile" | "abha";
+            /** Identifier */
+            identifier: string;
+        };
+        /** WalkInCompleteOut */
+        WalkInCompleteOut: {
+            patient: components["schemas"]["PatientAdminOut"];
+            /** Pin */
+            pin: string;
+        };
+        /** WalkInIn */
+        WalkInIn: {
+            /**
+             * Language
+             * @enum {string}
+             */
+            language: "en" | "hi" | "mr";
+        };
+        /** ConsentIn */
+        api__schemas__ConsentIn: {
+            /**
+             * Choice
+             * @enum {string}
+             */
+            choice: "agree" | "decline";
+        };
+        /** LoginIn */
+        api__schemas__LoginIn: {
+            /** Username */
+            username: string;
+            /** Password */
+            password: string;
+        };
+        /** ConsentIn */
+        api__schemas_identity__ConsentIn: {
+            /**
+             * Agreed
+             * @constant
+             */
+            agreed: true;
+            /**
+             * Language
+             * @enum {string}
+             */
+            language: "en" | "hi" | "mr";
+            /** Covers */
+            covers?: ("identifier" | "answers" | "scans")[];
+        };
+        /** LoginIn */
+        api__schemas_identity__LoginIn: {
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "mobile" | "abha";
+            /** Identifier */
+            identifier: string;
+            /** Pin */
+            pin: string;
         };
     };
     responses: never;
@@ -1948,7 +2584,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["LoginIn"];
+                "application/json": components["schemas"]["api__schemas__LoginIn"];
             };
         };
         responses: {
@@ -2091,7 +2727,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["ConsentIn"];
+                "application/json": components["schemas"]["api__schemas__ConsentIn"];
             };
         };
         responses: {
@@ -2436,6 +3072,459 @@ export interface operations {
             };
         };
     };
+    identify_api_kiosk_identify_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-kiosk-device"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["IdentifyIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IdentifyOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    register_api_kiosk_register_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-kiosk-device"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RegisterIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IdentityOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    login_api_kiosk_login_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-kiosk-device"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["api__schemas_identity__LoginIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IdentityOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    walk_in_api_kiosk_walk_in_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-kiosk-device"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WalkInIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IdentityOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    bind_api_kiosk_sessions__token__bind_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-kiosk-identity"?: string | null;
+                "x-kiosk-key"?: string | null;
+            };
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["KioskScreen"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    end_api_kiosk_sessions__token__end_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-kiosk-identity"?: string | null;
+                "x-kiosk-key"?: string | null;
+            };
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_scans_api_kiosk_sessions__token__scans_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-kiosk-key"?: string | null;
+                "x-kiosk-identity"?: string | null;
+            };
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScansOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    upload_api_kiosk_sessions__token__scans_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-kiosk-key"?: string | null;
+                "x-kiosk-identity"?: string | null;
+            };
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_upload_api_kiosk_sessions__token__scans_post"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScanOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_scan_api_kiosk_sessions__token__scans__sid__get: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-kiosk-key"?: string | null;
+                "x-kiosk-identity"?: string | null;
+            };
+            path: {
+                token: string;
+                sid: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScanOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_api_kiosk_sessions__token__scans__sid__delete: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-kiosk-key"?: string | null;
+                "x-kiosk-identity"?: string | null;
+            };
+            path: {
+                token: string;
+                sid: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    correct_api_kiosk_sessions__token__scans__sid__patch: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-kiosk-key"?: string | null;
+                "x-kiosk-identity"?: string | null;
+            };
+            path: {
+                token: string;
+                sid: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ScanEditIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScanOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    image_api_kiosk_sessions__token__scans__sid__image_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-kiosk-key"?: string | null;
+                "x-kiosk-identity"?: string | null;
+            };
+            path: {
+                token: string;
+                sid: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    confirm_api_kiosk_sessions__token__scans__sid__confirm_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-kiosk-key"?: string | null;
+                "x-kiosk-identity"?: string | null;
+            };
+            path: {
+                token: string;
+                sid: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScanOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     body_regions_api_intake_body_regions_get: {
         parameters: {
             query?: never;
@@ -2670,6 +3759,134 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    lookup_api_staff_patients_get: {
+        parameters: {
+            query?: {
+                q?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PatientLookupOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_patient_api_staff_patients__pid__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                pid: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PatientAdminOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reset_pin_api_staff_patients__pid__reset_pin_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                pid: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResetPinOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    walk_in_complete_api_staff_patients__pid__walk_in_complete_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                pid: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WalkInCompleteIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WalkInCompleteOut"];
+                };
             };
             /** @description Validation Error */
             422: {
@@ -2935,6 +4152,130 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    scans_api_doctor_visits__token__scans_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DoctorScansOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    scan_image_api_doctor_visits__token__scans__sid__image_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+                sid: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    use_as_current_medicines_api_doctor_visits__token__scans__sid__use_as_current_medicines_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+                sid: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UseMedicinesOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    previous_api_doctor_visits__token__previous_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PreviousVisitsOut"];
+                };
             };
             /** @description Validation Error */
             422: {

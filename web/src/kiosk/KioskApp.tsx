@@ -8,16 +8,19 @@ import { LANG_NAMES, LANGS, t, type Lang } from "../i18n/i18n";
 import { cn } from "../lib/cn";
 import { useBodyRegions, useDoctors } from "../lib/hooks";
 import { BodyMap } from "./BodyMap";
+import { IdentifyFlow, type IdentifyResult } from "./identity/IdentifyFlow";
+import { StepIndicator } from "./identity/StepIndicator";
 import { ChoiceTiles, FreeText, Keypad, MultiTiles, Scale } from "./inputs";
+import { ScanStep } from "./scan/ScanStep";
 import { clearSaved, createSession, kioskClient, loadSaved, save, type Saved } from "./kioskApi";
 import { speak, stopSpeaking, useLocalVoice } from "./speech";
 
-const IDLE_MS = 90_000;
-const COUNTDOWN_S = 30;
+const IDLE_MS = 50_000;          // 50 s quiet, then "Still there?" counts down the last 10 s, then the tablet starts over
+const COUNTDOWN_S = 10;
 const SLIP_RESET_S = 60;
 const UNSURE = "unsure";
 
-type Stage = { kind: "language" } | { kind: "screen"; screen: KioskScreen; dir: "fwd" | "back" } | { kind: "review"; items: ReviewItem[] } | { kind: "doctor" } | { kind: "slip"; slip: Slip | null; error: string | null };
+type Stage = { kind: "language" } | { kind: "identify" } | { kind: "scan" } | { kind: "screen"; screen: KioskScreen; dir: "fwd" | "back" } | { kind: "review"; items: ReviewItem[] } | { kind: "doctor" } | { kind: "slip"; slip: Slip | null; error: string | null };
 
 export default function KioskApp() {
   const [saved, setSaved] = useState<Saved | null>(() => loadSaved());
@@ -29,6 +32,9 @@ export default function KioskApp() {
   const [langOpen, setLangOpen] = useState(false);
   const [help, setHelp] = useState<"sent" | "failed" | null>(null);
   const [idle, setIdle] = useState<number | null>(null);
+  const [prompt, setPrompt] = useState("");
+  const savedRef = useRef<Saved | null>(saved);
+  savedRef.current = saved;
   const lang: Lang = saved?.lang ?? "en";
   const client = saved ? kioskClient(saved) : null;
   const voice = useLocalVoice(lang);
@@ -37,6 +43,7 @@ export default function KioskApp() {
 
   // ---- reset: clear the tablet's copy of the session and go back to the language screen (the record stays for staff)
   const reset = useCallback(() => {
+    if (savedRef.current) kioskClient(savedRef.current).end().catch(() => undefined);     // drops the identity session and unconfirmed scans
     clearSaved();
     stopSpeaking();
     setSaved(null);
@@ -46,6 +53,7 @@ export default function KioskApp() {
     setContrast(false);
     setHelp(null);
     setIdle(null);
+    setPrompt("");
     setLangOpen(false);
     window.scrollTo(0, 0);
   }, []);
@@ -62,7 +70,7 @@ export default function KioskApp() {
   // ---- resume after a reload
   useEffect(() => {
     if (!saved || stage.kind !== "language") return;
-    kioskClient(saved).screen().then((s) => show(s), () => reset());
+    kioskClient(saved).screen().then((s) => (s.stage === "consent" && !saved.identity ? setStage({ kind: "identify" }) : show(s)), () => reset());
   }, []); // once, on load
 
   // ---- idle: 90 s without a touch shows "Are you still there?" with a 30 s countdown, then resets
@@ -114,7 +122,7 @@ export default function KioskApp() {
       save(s);
       setSaved(s);
       lastTouch.current = Date.now();
-      setStage({ kind: "screen", screen: c.screen, dir: "fwd" });
+      setStage({ kind: "identify" });
     });
 
   const changeLanguage = (l: Lang) => {
@@ -130,6 +138,20 @@ export default function KioskApp() {
     });
   };
 
+  const identityDone = (r: IdentifyResult) => {
+    if (r.identity && !r.identity.walkIn) return setStage({ kind: "scan" });          // step 2
+    if (r.screen) return show(r.screen);                                               // walk-in: straight to the quiz consent
+    run(() => kioskClient(saved!).screen(), (sc) => show(sc));                         // "No thanks": anonymous walk-in, nothing saved
+  };
+  const setIdentity = (identity: string, masked: string) =>
+    setSaved((prev) => {
+      if (!prev) return prev;
+      const n = { ...prev, identity, masked };
+      save(n);
+      return n;
+    });
+  const toQuiz = () => run(() => kioskClient(saved!).screen(), (sc) => show(sc));
+
   const callHelp = () => {
     if (!client) return;
     client.help().then(() => setHelp("sent"), () => setHelp("failed"));
@@ -144,6 +166,11 @@ export default function KioskApp() {
     run(() => client.back(current?.node?.id ?? null), (s) => show(s, "back"));
   };
   const questionText = current?.node?.text ?? "";
+  const listenText = stage.kind === "identify" || stage.kind === "scan" ? prompt : [questionText, ...(current?.node?.options ?? []).map((o) => o.label)].join(". ");
+  const step: 1 | 2 | 3 | null = stage.kind === "identify" ? 1 : stage.kind === "scan" ? 2 : stage.kind === "slip" || stage.kind === "language" ? null : 3;
+  useEffect(() => {
+    if (voice && prompt && (stage.kind === "identify" || stage.kind === "scan")) speak(voice, prompt);
+  }, [prompt, voice, stage.kind]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (stage.kind === "language") return <LanguageScreen onPick={start} busy={busy} error={error} />;
 
@@ -158,8 +185,8 @@ export default function KioskApp() {
           <span className="min-w-1" />
         )}
         <div className="flex-1" />
-        {voice && questionText && (
-          <Button size="kiosk" variant="ghost" icon={Volume2} onClick={() => speak(voice, [questionText, ...(current?.node?.options ?? []).map((o) => o.label)].join(". "))} aria-label={t("listen", lang)} className="px-4 sm:px-6">
+        {voice && listenText && (
+          <Button size="kiosk" variant="ghost" icon={Volume2} onClick={() => speak(voice, listenText)} aria-label={t("listen", lang)} className="px-4 sm:px-6">
             <span className="hidden sm:inline">{t("listen", lang)}</span>
           </Button>
         )}
@@ -170,6 +197,7 @@ export default function KioskApp() {
           <span className="hidden sm:inline">{t("help", lang)}</span>
         </Button>
       </header>
+      {step && <StepIndicator step={step} lang={lang} />}
       {current && current.stage === "question" && (
         <div className="h-2 bg-tint no-print" role="progressbar" aria-label={t("progress", lang)} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round((100 * current.progress.done) / Math.max(1, current.progress.total))}>
           <div className="h-full bg-teal transition-[width] duration-(--dur-screen) ease-std" style={{ width: `${(100 * current.progress.done) / Math.max(1, current.progress.total)}%` }} />
@@ -191,6 +219,10 @@ export default function KioskApp() {
             </Button>
           </div>
         )}
+        {stage.kind === "identify" && client && (
+          <IdentifyFlow lang={lang} bind={(tok) => client.bind(tok)} onDone={identityDone} onExit={reset} onHelp={callHelp} onPrompt={setPrompt} onSession={setIdentity} />
+        )}
+        {stage.kind === "scan" && client && <ScanStep client={client} lang={lang} onNext={toQuiz} onSkip={toQuiz} onHelp={callHelp} onPrompt={setPrompt} />}
         {stage.kind === "screen" && (
           <QuestionScreen
             key={`${stage.screen.node?.id ?? stage.screen.stage}-${lang}`}
@@ -223,7 +255,10 @@ export default function KioskApp() {
               run(() => client!.doctor(id), () => {
                 setStage({ kind: "slip", slip: null, error: null });
                 client!.finish().then(
-                  (slip) => setStage({ kind: "slip", slip, error: null }),
+                  (slip) => {
+                    setStage({ kind: "slip", slip, error: null });
+                    client!.end().catch(() => undefined);           // the slip is out: the identity session ends here
+                  },
                   () => setStage({ kind: "slip", slip: null, error: t("error", lang) }),
                 );
               })

@@ -8,7 +8,7 @@ Two things sit OUTSIDE the repo folder, one level up: `../Final_Drugs_data/` (th
 1. What: an offline clinic OPD app. A patient answers an adaptive quiz (en/hi/mr); staff see red flags; a doctor gets a summary and a deterministic dosage-check engine; old paper records can be scanned by a local vision model.
 2. Users: patients (kiosk quiz), staff (red-flag board, vitals), doctors (summary, dosage check, audit log). Patients never see dosing output.
 3. Offline/local-only: only allowed outbound call is `localhost:11434` (Ollama); data are local JSON files; an offline badge and `OFFLINE_STRICT` guard prove it. Dosing code has no network, no LLM, no randomness.
-4. Status: prototype. Every formulary drug is `verified: false`; the UI shows "Prototype data, not clinically verified". Synthetic data only. UI: FastAPI (`api/`) + React (`web/`) since 2026-11-04 (Streamlit retired). Tests: 829 Python, 17 Vitest, 16 Playwright pass.
+4. Status: prototype. Every formulary drug is `verified: false`; the UI shows "Prototype data, not clinically verified". Synthetic data only. UI: FastAPI (`api/`) + React (`web/`) since 2026-11-04 (Streamlit retired). Tests (before the identity work): 829 Python, 17 Vitest, 16 Playwright; see section 11 for the current additions.
 5. Hackathon context: not stated in code. Folder is `Phaltan_hacktahon`; a "Hackathon 2K26 at College of Engineering Phaltan, 3-4 Nov 2026" is NOT in the repo (hackathon name/rules/judging: not found). `docs/DEMO_SCRIPT.md` is a ~4 minute demo script.
 
 ## 2. Tech stack, run, tests, demo
@@ -194,3 +194,13 @@ Where to add things:
 - Add an engine message: `dosing/messages.py` (add hi/mr there when translations are available).
 - Add a kiosk UI string: `web/src/i18n/kiosk.json` (en/hi/mr, hi/mr machine-drafted); staff/doctor screens are English.
 - Before finishing any change: `.venv/bin/python -m pytest -q`; keep the banner; do not mark anything verified.
+
+## 11. Patient identity and kiosk scan (branch `feat/patient-identity-ocr`, 2026-11-04)
+Plan and decisions: `docs/IDENTITY_OCR_PLAN.md`. Storage and what is not claimed: `docs/SECURITY.md`.
+- **Kiosk flow**: language -> Step 1 identify (method tiles, number pad, PIN, consent) -> Step 2 scan papers -> Step 3 the existing quiz, doctor choice, token slip. A step indicator shows 1/2/3. "Ask staff" makes a walk-in; "No thanks" at consent continues anonymously (no identifier, no scans stored). Idle reset is 50 s + a visible 10 s countdown.
+- **Identity**: mobile (`+91`, 10 digits starting 6-9) or ABHA (14 digits, format only) plus a 4-digit PIN. No SMS offline, so no OTP (`api/identity_provider.py`: `PinProvider`; `OtpProvider` is a raising stub). Fernet-encrypted identifier, HMAC lookup hash, argon2id peppered PIN (`records/identity.py`), patient files in `data_local/patients/`, key in `IDENTITY_MASTER_KEY` or `data_local/identity.key`. 5 wrong PINs lock 10 minutes (persisted); per-device and per-number rate limits.
+- **API**: `POST /api/kiosk/identify|register|login|walk-in`, `POST /api/kiosk/sessions/{token}/bind|end`, scans under `/api/kiosk/sessions/{token}/scans` (upload, poll `GET /{id}`, PATCH, `confirm`, DELETE, `image`), staff `/api/staff/patients` (lookup, `reset-pin`, `walk-in-complete`), doctor `/api/doctor/visits/{token}/scans|previous|scans/{id}/use-as-current-medicines`. The identity token travels in `X-Kiosk-Identity` and opens only kiosk routes of its own visit.
+- **Scan**: existing `ocr.service.extract` (now with an optional streaming `progress` callback and role `kiosk`) on one background worker (`api/scan_jobs.py`); blur/dark pictures are refused before OCR; status lives in `PatientRecord.kioskScans` (unverified). Images in `data_local/scans/`. `KIOSK_SCAN_KEEP_IMAGE=0` deletes the picture on confirm.
+- **Audit**: `records/identity_audit.py` appends identity/consent/scan/PIN-reset events to the same hash-chained file (`dosing/` untouched).
+- **Staff/doctor UI**: board shows masked number, new/returning, papers, honest status; `/staff/people` lookup, Reset PIN, Complete walk-in; the doctor Timeline has a "Patient papers" panel (images, unverified label, Use as current medicines, previous visits).
+- **Tests**: `tests/api/test_api_identity.py`, `tests/api/test_api_scans.py` (fake OCR backend); `web/src/kiosk/identity/validation.test.ts`; Playwright `web/e2e/identity.spec.ts`, `identity-desk.spec.ts`. `scripts/e2e_server.py` uses a fake reader for the kiosk scan step unless `--real-ocr`.

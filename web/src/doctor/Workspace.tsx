@@ -13,6 +13,7 @@ import { ageSex, useBodyRegions, useDoctors } from "../lib/hooks";
 import { ScanUpload } from "../shared/ScanUpload";
 import { VitalsForm, VITAL_FIELDS } from "../shared/VitalsForm";
 import { DosageCheck, type DosagePreset } from "./DosageCheck";
+import { PatientPapers } from "./PatientPapers";
 
 const SECTIONS = [
   ["summary", "Summary"],
@@ -291,6 +292,7 @@ function TimelineSection({ token }: { token: string }) {
   return (
     <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_22rem]">
       <div className="flex flex-col gap-4">
+        <PatientPapers token={token} />
         {t.isPending ? (
           <Skeleton className="h-48" />
         ) : t.isError ? (

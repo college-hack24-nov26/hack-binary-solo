@@ -331,6 +331,411 @@
       "en": "Patient's left",
       "hi": "मरीज़ का बायाँ",
       "mr": "रुग्णाचा डावा"
+    },
+    "stepOf": {
+      "en": "Step {n} of 3",
+      "hi": "चरण {n} / 3",
+      "mr": "पायरी {n} / 3"
+    },
+    "step1": {
+      "en": "Who you are",
+      "hi": "आप कौन हैं",
+      "mr": "तुम्ही कोण आहात"
+    },
+    "step2": {
+      "en": "Your papers",
+      "hi": "आपके कागज़",
+      "mr": "तुमचे कागद"
+    },
+    "step3": {
+      "en": "Your problem",
+      "hi": "आपकी समस्या",
+      "mr": "तुमची समस्या"
+    },
+    "idTitleMethod": {
+      "en": "How should we find you?",
+      "hi": "हम आपको कैसे ढूँढें?",
+      "mr": "आम्ही तुम्हाला कसे शोधावे?"
+    },
+    "idMobile": {
+      "en": "Mobile number",
+      "hi": "मोबाइल नंबर",
+      "mr": "मोबाइल नंबर"
+    },
+    "idAbha": {
+      "en": "ABHA number (optional)",
+      "hi": "आभा नंबर (वैकल्पिक)",
+      "mr": "आभा क्रमांक (ऐच्छिक)"
+    },
+    "idStaff": {
+      "en": "I have neither. Ask staff",
+      "hi": "दोनों नहीं हैं। स्टाफ से पूछें",
+      "mr": "दोन्ही नाहीत. कर्मचारी मदत करतील"
+    },
+    "idMobileTitle": {
+      "en": "Type your mobile number",
+      "hi": "अपना मोबाइल नंबर लिखें",
+      "mr": "तुमचा मोबाइल नंबर टाका"
+    },
+    "idAbhaTitle": {
+      "en": "Type your ABHA number",
+      "hi": "अपना आभा नंबर लिखें",
+      "mr": "तुमचा आभा क्रमांक टाका"
+    },
+    "idEntered": {
+      "en": "Number so far",
+      "hi": "अब तक का नंबर",
+      "mr": "आतापर्यंतचा नंबर"
+    },
+    "mobileBad": {
+      "en": "A mobile number has 10 digits and starts with 6, 7, 8 or 9.",
+      "hi": "मोबाइल नंबर 10 अंकों का होता है और 6, 7, 8 या 9 से शुरू होता है।",
+      "mr": "मोबाइल नंबर 10 अंकांचा असतो आणि 6, 7, 8 किंवा 9 ने सुरू होतो."
+    },
+    "abhaBad": {
+      "en": "An ABHA number has 14 digits.",
+      "hi": "आभा नंबर 14 अंकों का होता है।",
+      "mr": "आभा क्रमांक 14 अंकांचा असतो."
+    },
+    "digitsLeft": {
+      "en": "{n} more digits",
+      "hi": "{n} अंक और",
+      "mr": "आणखी {n} अंक"
+    },
+    "digitsOk": {
+      "en": "The number is complete",
+      "hi": "नंबर पूरा है",
+      "mr": "नंबर पूर्ण आहे"
+    },
+    "abhaNote": {
+      "en": "We only save this number. We do not check it anywhere.",
+      "hi": "हम इस नंबर को सिर्फ़ सहेजते हैं। इसे कहीं जाँचा नहीं जाता।",
+      "mr": "आम्ही हा नंबर फक्त साठवतो. तो कुठेही तपासला जात नाही."
+    },
+    "pinNewTitle": {
+      "en": "Choose a 4-digit PIN",
+      "hi": "4 अंकों का पिन चुनें",
+      "mr": "4 अंकी पिन निवडा"
+    },
+    "pinNewHint": {
+      "en": "You will use it next time. Do not tell it to anyone.",
+      "hi": "अगली बार आप इसका उपयोग करेंगे। इसे किसी को न बताएँ।",
+      "mr": "पुढच्या वेळी तुम्ही तो वापराल. तो कोणालाही सांगू नका."
+    },
+    "pinAgainTitle": {
+      "en": "Type the PIN again",
+      "hi": "पिन फिर से लिखें",
+      "mr": "पिन पुन्हा टाका"
+    },
+    "pinMismatch": {
+      "en": "The two PINs are different. Start again.",
+      "hi": "दोनों पिन अलग हैं। फिर से शुरू करें।",
+      "mr": "दोन्ही पिन वेगळे आहेत. पुन्हा सुरू करा."
+    },
+    "pinEnterTitle": {
+      "en": "Type your PIN",
+      "hi": "अपना पिन लिखें",
+      "mr": "तुमचा पिन टाका"
+    },
+    "pinShow": {
+      "en": "Show PIN",
+      "hi": "पिन दिखाएँ",
+      "mr": "पिन दाखवा"
+    },
+    "pinHide": {
+      "en": "Hide PIN",
+      "hi": "पिन छिपाएँ",
+      "mr": "पिन लपवा"
+    },
+    "pinForgot": {
+      "en": "Forgot the PIN? Ask staff",
+      "hi": "पिन भूल गए? स्टाफ से पूछें",
+      "mr": "पिन विसरलात? कर्मचारी मदत करतील"
+    },
+    "pinWrong": {
+      "en": "That PIN is not right. {n} tries left.",
+      "hi": "यह पिन सही नहीं है। {n} कोशिशें बाकी हैं।",
+      "mr": "हा पिन बरोबर नाही. {n} प्रयत्न बाकी."
+    },
+    "pinLocked": {
+      "en": "Too many wrong PINs. Please ask staff.",
+      "hi": "बहुत ज़्यादा गलत पिन। कृपया स्टाफ से पूछें।",
+      "mr": "खूप चुकीचे पिन. कृपया कर्मचारी मदत करतील."
+    },
+    "idNotFound": {
+      "en": "We could not find that number. Check it, or ask staff.",
+      "hi": "यह नंबर नहीं मिला। इसे जाँचें, या स्टाफ से पूछें।",
+      "mr": "हा नंबर सापडला नाही. तपासा किंवा कर्मचारी मदत करतील."
+    },
+    "rateLimited": {
+      "en": "Too many tries. Please wait a minute or ask staff.",
+      "hi": "बहुत कोशिशें हो गईं। एक मिनट रुकें या स्टाफ से पूछें।",
+      "mr": "खूप प्रयत्न झाले. एक मिनिट थांबा किंवा कर्मचारी मदत करतील."
+    },
+    "welcomeBack": {
+      "en": "Welcome back",
+      "hi": "फिर से स्वागत है",
+      "mr": "पुन्हा स्वागत आहे"
+    },
+    "lastVisit": {
+      "en": "Your last visit: {date}",
+      "hi": "आपकी पिछली विज़िट: {date}",
+      "mr": "तुमची मागील भेट: {date}"
+    },
+    "staffWillHelp": {
+      "en": "A staff member will finish your details at the desk. You can answer the questions now.",
+      "hi": "स्टाफ काउंटर पर आपकी जानकारी पूरी करेगा। आप अभी सवालों के जवाब दे सकते हैं।",
+      "mr": "कर्मचारी काउंटरवर तुमची माहिती पूर्ण करतील. तुम्ही आता प्रश्नांची उत्तरे देऊ शकता."
+    },
+    "consentTitle": {
+      "en": "Before we save anything",
+      "hi": "कुछ भी सहेजने से पहले",
+      "mr": "काहीही साठवण्यापूर्वी"
+    },
+    "consentWhat": {
+      "en": "We will keep: your number, your answers and the papers you scan.",
+      "hi": "हम रखेंगे: आपका नंबर, आपके जवाब और आपके स्कैन किए कागज़।",
+      "mr": "आम्ही ठेवू: तुमचा नंबर, तुमची उत्तरे आणि स्कॅन केलेले कागद."
+    },
+    "consentWho": {
+      "en": "Who sees it: your doctor and the hospital staff.",
+      "hi": "कौन देखेगा: आपके डॉक्टर और अस्पताल का स्टाफ।",
+      "mr": "कोण पाहील: तुमचे डॉक्टर आणि रुग्णालयाचे कर्मचारी."
+    },
+    "consentWhy": {
+      "en": "Why: to get your visit ready.",
+      "hi": "क्यों: आपकी विज़िट की तैयारी के लिए।",
+      "mr": "का: तुमची भेट तयार करण्यासाठी."
+    },
+    "consentWithdraw": {
+      "en": "You can ask the desk to remove it at any time.",
+      "hi": "आप कभी भी काउंटर से इसे हटाने को कह सकते हैं।",
+      "mr": "तुम्ही केव्हाही काउंटरवर ते काढायला सांगू शकता."
+    },
+    "consentAgree": {
+      "en": "I agree",
+      "hi": "मैं सहमत हूँ",
+      "mr": "मी सहमत आहे"
+    },
+    "consentNo": {
+      "en": "No thanks, continue without saving",
+      "hi": "नहीं, सहेजे बिना आगे बढ़ें",
+      "mr": "नको, साठवल्याशिवाय पुढे जा"
+    },
+    "scanTitle": {
+      "en": "Scan your old papers",
+      "hi": "अपने पुराने कागज़ स्कैन करें",
+      "mr": "तुमचे जुने कागद स्कॅन करा"
+    },
+    "scanLead": {
+      "en": "Old prescriptions or lab reports. You can skip this.",
+      "hi": "पुरानी पर्ची या जाँच रिपोर्ट। आप इसे छोड़ सकते हैं।",
+      "mr": "जुनी चिठ्ठी किंवा तपासणी अहवाल. तुम्ही हे वगळू शकता."
+    },
+    "scanTake": {
+      "en": "Take a picture",
+      "hi": "फ़ोटो लें",
+      "mr": "फोटो काढा"
+    },
+    "scanUpload": {
+      "en": "Choose a picture instead",
+      "hi": "इसके बजाय फ़ोटो चुनें",
+      "mr": "त्याऐवजी फोटो निवडा"
+    },
+    "scanFrame": {
+      "en": "Put the whole paper inside the frame",
+      "hi": "पूरा कागज़ फ़्रेम के अंदर रखें",
+      "mr": "संपूर्ण कागद चौकटीत ठेवा"
+    },
+    "scanCapture": {
+      "en": "Take picture",
+      "hi": "फ़ोटो खींचें",
+      "mr": "फोटो काढा"
+    },
+    "scanRetake": {
+      "en": "Take again",
+      "hi": "फिर से लें",
+      "mr": "पुन्हा काढा"
+    },
+    "scanUse": {
+      "en": "Use this picture",
+      "hi": "यह फ़ोटो इस्तेमाल करें",
+      "mr": "हा फोटो वापरा"
+    },
+    "cameraBlocked": {
+      "en": "The camera is not allowed here. Choose a picture instead, or ask staff.",
+      "hi": "यहाँ कैमरा चालू नहीं है। फ़ोटो चुनें, या स्टाफ से पूछें।",
+      "mr": "इथे कॅमेरा चालू नाही. फोटो निवडा किंवा कर्मचारी मदत करतील."
+    },
+    "scanReading": {
+      "en": "Reading your paper",
+      "hi": "आपका कागज़ पढ़ा जा रहा है",
+      "mr": "तुमचा कागद वाचला जात आहे"
+    },
+    "stagePreparing": {
+      "en": "Getting the picture ready",
+      "hi": "फ़ोटो तैयार हो रहा है",
+      "mr": "फोटो तयार होत आहे"
+    },
+    "stageReading": {
+      "en": "Reading the writing",
+      "hi": "लिखावट पढ़ी जा रही है",
+      "mr": "अक्षरे वाचली जात आहेत"
+    },
+    "stageStructuring": {
+      "en": "Putting it in order",
+      "hi": "क्रम में रखा जा रहा है",
+      "mr": "क्रमाने लावले जात आहे"
+    },
+    "stageQueued": {
+      "en": "Waiting for its turn",
+      "hi": "अपनी बारी का इंतज़ार",
+      "mr": "आपल्या पाळीची वाट"
+    },
+    "seconds": {
+      "en": "{s} seconds",
+      "hi": "{s} सेकंड",
+      "mr": "{s} सेकंद"
+    },
+    "retakeDark": {
+      "en": "The picture is too dark. Take it again with more light.",
+      "hi": "फ़ोटो बहुत अंधेरा है। ज़्यादा रोशनी में फिर से लें।",
+      "mr": "फोटो खूप अंधारा आहे. जास्त प्रकाशात पुन्हा काढा."
+    },
+    "retakeBlurry": {
+      "en": "The picture is blurry. Hold the tablet still and take it again.",
+      "hi": "फ़ोटो धुंधला है। टैबलेट स्थिर रखकर फिर से लें।",
+      "mr": "फोटो अस्पष्ट आहे. टॅबलेट स्थिर धरून पुन्हा काढा."
+    },
+    "unreadableFile": {
+      "en": "We could not open that picture. Try another one.",
+      "hi": "वह फ़ोटो खुल नहीं सका। दूसरा आज़माएँ।",
+      "mr": "तो फोटो उघडता आला नाही. दुसरा वापरून पहा."
+    },
+    "modelDown": {
+      "en": "The reading helper is not running. We kept the picture for the doctor.",
+      "hi": "पढ़ने वाला सहायक चालू नहीं है। हमने फ़ोटो डॉक्टर के लिए रखा है।",
+      "mr": "वाचणारा सहाय्यक चालू नाही. आम्ही फोटो डॉक्टरांसाठी ठेवला आहे."
+    },
+    "showDoctor": {
+      "en": "Show to the doctor",
+      "hi": "डॉक्टर को दिखाएँ",
+      "mr": "डॉक्टरांना दाखवा"
+    },
+    "readFailed": {
+      "en": "We could not read this paper. You can type it, skip, or ask staff.",
+      "hi": "यह कागज़ पढ़ा नहीं गया। आप लिख सकते हैं, छोड़ सकते हैं, या स्टाफ से पूछ सकते हैं।",
+      "mr": "हा कागद वाचता आला नाही. तुम्ही लिहू शकता, वगळू शकता किंवा कर्मचारी मदत करतील."
+    },
+    "scanCheck": {
+      "en": "Please check",
+      "hi": "कृपया जाँचें",
+      "mr": "कृपया तपासा"
+    },
+    "scanRight": {
+      "en": "This is right",
+      "hi": "यह सही है",
+      "mr": "हे बरोबर आहे"
+    },
+    "scanAnother": {
+      "en": "Scan another",
+      "hi": "एक और स्कैन करें",
+      "mr": "आणखी एक स्कॅन करा"
+    },
+    "scanSkip": {
+      "en": "Skip this step",
+      "hi": "यह चरण छोड़ें",
+      "mr": "ही पायरी वगळा"
+    },
+    "scanNext": {
+      "en": "Go to your problem",
+      "hi": "अपनी समस्या पर जाएँ",
+      "mr": "तुमच्या समस्येकडे जा"
+    },
+    "papersAdded": {
+      "en": "Papers added: {n}",
+      "hi": "जोड़े गए कागज़: {n}",
+      "mr": "जोडलेले कागद: {n}"
+    },
+    "scanRemove": {
+      "en": "Remove this paper",
+      "hi": "यह कागज़ हटाएँ",
+      "mr": "हा कागद काढा"
+    },
+    "scanNote": {
+      "en": "The camera read this. It may have mistakes. The doctor will check it.",
+      "hi": "कैमरे ने यह पढ़ा है। इसमें गलतियाँ हो सकती हैं। डॉक्टर इसे जाँचेंगे।",
+      "mr": "कॅमेऱ्याने हे वाचले आहे. यात चुका असू शकतात. डॉक्टर ते तपासतील."
+    },
+    "typePrescription": {
+      "en": "Prescription",
+      "hi": "पर्ची",
+      "mr": "चिठ्ठी"
+    },
+    "typeLab": {
+      "en": "Lab report",
+      "hi": "जाँच रिपोर्ट",
+      "mr": "तपासणी अहवाल"
+    },
+    "typeOther": {
+      "en": "Other paper",
+      "hi": "अन्य कागज़",
+      "mr": "इतर कागद"
+    },
+    "scanDate": {
+      "en": "Date",
+      "hi": "तारीख",
+      "mr": "तारीख"
+    },
+    "medName": {
+      "en": "Medicine",
+      "hi": "दवा",
+      "mr": "औषध"
+    },
+    "medDose": {
+      "en": "Strength",
+      "hi": "मात्रा",
+      "mr": "प्रमाण"
+    },
+    "medFreq": {
+      "en": "How often",
+      "hi": "कितनी बार",
+      "mr": "किती वेळा"
+    },
+    "notFoundField": {
+      "en": "Not found",
+      "hi": "नहीं मिला",
+      "mr": "सापडले नाही"
+    },
+    "addMedicine": {
+      "en": "Add a medicine",
+      "hi": "दवा जोड़ें",
+      "mr": "औषध जोडा"
+    },
+    "save": {
+      "en": "Save",
+      "hi": "सहेजें",
+      "mr": "जतन करा"
+    },
+    "editRow": {
+      "en": "Change",
+      "hi": "बदलें",
+      "mr": "बदला"
+    },
+    "slipPapers": {
+      "en": "Papers added: {n}",
+      "hi": "जोड़े गए कागज़: {n}",
+      "mr": "जोडलेले कागद: {n}"
+    },
+    "slipId": {
+      "en": "Your number",
+      "hi": "आपका नंबर",
+      "mr": "तुमचा नंबर"
+    },
+    "stillThereCount": {
+      "en": "Still there? Starting over in {s}",
+      "hi": "अभी भी यहाँ हैं? {s} में फिर से शुरू",
+      "mr": "अजून इथे आहात? {s} मध्ये पुन्हा सुरू"
     }
   }
 }

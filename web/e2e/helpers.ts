@@ -1,3 +1,4 @@
+import AxeBuilder from "@axe-core/playwright";
 import { expect, type Page } from "@playwright/test";
 
 export const VIEWPORTS = {
@@ -21,11 +22,32 @@ export async function loginAs(page: Page, role: "staff" | "doctor") {
 
 const LANG_LABEL = { en: "English", hi: "हिन्दी", mr: "मराठी" } as const;
 
-/** From the kiosk language screen to the consent question. */
+/** From the kiosk language screen to the quiz's consent question, as an "ask staff" walk-in (no number, no PIN). */
 export async function startKiosk(page: Page, lang: "en" | "hi" | "mr") {
   await page.goto("/kiosk");
   await page.getByRole("button", { name: new RegExp(LANG_LABEL[lang]) }).click();
+  await page.getByTestId("id-staff").click();
+  await page.getByTestId("continue").click();
   await expect(page.getByTestId("kiosk-question")).toBeVisible();
+}
+
+/** Digits on the on-screen number pad. */
+export async function tapDigits(page: Page, digits: string) {
+  for (const d of digits) await page.getByTestId(`key-${d}`).click();
+}
+
+/** Language screen to the first quiz question for a NEW patient: number, PIN twice, consent. */
+export async function registerKiosk(page: Page, lang: "en" | "hi" | "mr", opts: { kind?: "mobile" | "abha"; digits?: string; pin?: string } = {}) {
+  const { kind = "mobile", digits = "9876543210", pin = "4821" } = opts;
+  await page.goto("/kiosk");
+  await page.getByRole("button", { name: new RegExp(LANG_LABEL[lang]) }).click();
+  await page.getByTestId(kind === "mobile" ? "id-mobile" : "id-abha").click();
+  await tapDigits(page, digits);
+  await page.getByTestId("continue").click();
+  await expect(page.getByTestId("id-pin-new")).toBeVisible();
+  await tapDigits(page, pin);
+  await tapDigits(page, pin);
+  await page.getByTestId("consent-agree").click();
 }
 
 /** Answer through the API-driven kiosk until `nodeId` is on screen, using the first tile or a default for each type. */
@@ -78,4 +100,34 @@ export async function loadDemoAndOpen(page: Page, key: string) {
   await page.goto("/doctor/demo");
   await page.getByTestId(`load-${key}`).click();
   await expect(page.getByRole("heading", { name: "Dosage check" })).toBeVisible();
+}
+
+/** A unique valid mobile number per call so the per-number rate limit and "already registered" never interfere. */
+export function uniqueMobile(): string {
+  return "9" + String(Math.floor(Math.random() * 1e9)).padStart(9, "0");
+}
+
+/** Answer the quiz until the review screen (or `stopAt`), using the first/neutral tile unless `answers` says otherwise. */
+export async function answerAll(page: Page, answers: Record<string, string>, stopAt?: string) {
+  for (let i = 0; i < 90; i++) {
+    if (await page.getByTestId("kiosk-review").isVisible().catch(() => false)) return;
+    const q = page.getByTestId("kiosk-question").or(page.getByTestId("kiosk-review"));
+    await q.first().waitFor();
+    if (await page.getByTestId("kiosk-review").isVisible()) return;
+    const id = (await page.getByTestId("kiosk-question").getAttribute("data-node")) ?? "";
+    if (id === stopAt) return;
+    await answerCurrent(page, id, answers[id]);
+  }
+  throw new Error("quiz did not reach the review screen");
+}
+
+/** 1x1 PNGs: a flat grey page reads as "blurry" and a black one as "dark" to the server's quick quality check. */
+export const PNG_GREY = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGNgYGD4DwABBAEAHz9PZwAAAABJRU5ErkJggg==", "base64");
+
+/** Zero serious or critical axe findings on the settled screen. */
+export async function axeCheck(page: Page, label: string) {
+  await page.evaluate(() => Promise.all(document.getAnimations().filter((a) => a.effect?.getTiming().iterations !== Infinity).map((a) => a.finished.catch(() => undefined))));
+  const r = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
+  const bad = r.violations.filter((v) => v.impact === "serious" || v.impact === "critical");
+  expect(bad.map((v) => `${label}: ${v.id} (${v.impact}) ${v.nodes.slice(0, 3).map((n) => n.target.join(" ")).join(" | ")}`)).toEqual([]);
 }

@@ -34,16 +34,25 @@ export type AuditVerify = Schemas["AuditVerify"];
 export type AuditDetail = Schemas["AuditDetail"];
 export type Fixture = Schemas["Fixture"];
 export type PendingScan = Schemas["PendingScanOut"];
+export type IdentityOut = Schemas["IdentityOut"];
+export type ScanOut = Schemas["ScanOut"];
+export type ScanMedicine = Schemas["ScanMedicine"];
+export type ScanField = Schemas["ScanField"];
 
 export type FieldError = { loc: (string | number)[]; msg: string; type: string };
 
 export class ApiError extends Error {
   status: number;
   fields: FieldError[];
-  constructor(status: number, message: string, fields: FieldError[] = []) {
+  /** Machine code from the X-Error-Code header (e.g. wrong_pin, locked), so the kiosk can answer in the patient's language. */
+  code: string | null;
+  attemptsLeft: number | null;
+  constructor(status: number, message: string, fields: FieldError[] = [], code: string | null = null, attemptsLeft: number | null = null) {
     super(message);
     this.status = status;
     this.fields = fields;
+    this.code = code;
+    this.attemptsLeft = attemptsLeft;
   }
   /** field name -> message, from a FastAPI 422 body */
   fieldMap(): Record<string, string> {
@@ -84,12 +93,14 @@ export async function api<T>(path: string, opts: Opts = {}): Promise<T> {
     data = text;
   }
   if (!res.ok) {
+    const code = res.headers.get("X-Error-Code");
+    const left = res.headers.get("X-Attempts-Left");
     const detail = (data as { detail?: unknown } | undefined)?.detail;
     if (Array.isArray(detail)) {
       const fields = detail as FieldError[];
-      throw new ApiError(res.status, fields.map((f) => f.msg).join(" "), fields);
+      throw new ApiError(res.status, fields.map((f) => f.msg).join(" "), fields, code);
     }
-    throw new ApiError(res.status, typeof detail === "string" ? detail : `Request failed (${res.status}).`);
+    throw new ApiError(res.status, typeof detail === "string" ? detail : `Request failed (${res.status}).`, [], code, left === null ? null : Number(left));
   }
   return data as T;
 }

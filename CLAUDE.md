@@ -13,10 +13,10 @@ Run from `hack-binary-solo/` using the local venv:
 - Data checks: `scripts/validate_graph.py`, `scripts/list_boundary_overlaps.py`
 
 ## Layout
-- `api/` FastAPI: `main.py` (create_app), `deps.py` (WRITE_LOCK, login sessions, roles), `routers/` (system, auth, kiosk, patients, staff, doctor, ocr, dosing, audit, demo), `sessions.py` (kiosk sessions), `events.py` (SSE), `result_card.py` (card wording)
+- `api/` FastAPI: `main.py` (create_app), `deps.py` (WRITE_LOCK, login sessions, roles), `routers/` (system, auth, kiosk, identity, kiosk_scans, patients, staff, staff_patients, doctor, doctor_visits, ocr, dosing, audit, demo), `identity_provider.py` (PinProvider; OtpProvider is a stub), `kiosk_identity.py` (identity sessions, rate limits), `scan_jobs.py` (background OCR for kiosk scans), `sessions.py` (kiosk sessions), `events.py` (SSE), `result_card.py` (card wording)
 - `web/` React 19 + Vite + Tailwind v4: `src/kiosk`, `src/staff`, `src/doctor`, `src/components`, `src/dosing`, `src/gallery`; tokens in `src/styles/app.css` (from `docs/DESIGN.md`); kiosk strings `src/i18n/kiosk.json`
 - `intake/` quiz engine, red flags, summary, offline guard
-- `records/` PatientRecord schema and local JSON store (`data_local/`, gitignored)
+- `records/` PatientRecord schema and local JSON store (`data_local/`, gitignored); `identity.py` (mask, Fernet, HMAC lookup, argon2id PIN), `patients.py` (identity store), `identity_audit.py`, `scanfiles.py`
 - `ocr/` local vision-model transcription and formulary matching
 - `dosing/` the dosage engine: `mapper` (quiz to context), `rules`, `calc`, `products`, `safety`, `interactions`, `history`, `engine`, `service`, `audit`, `demo`; data in `dosing/data/`
 - Formulary: verbatim copy at `data/dosesafe_formulary_v2.json` (original in `../Final_Drugs_data/`); `DOSING_FORMULARY_PATH` overrides. Do not edit it
@@ -33,6 +33,13 @@ Run from `hack-binary-solo/` using the local venv:
 - The server is the single source of truth: the web app never computes quiz flow, red flags, doses, rounding or blanking. No dose number renders unless `status == "ok"`.
 - Every record or audit write holds `api.deps.WRITE_LOCK`; run one worker. Confirm uses the server's cached result, never a client-sent one.
 - Offline: no CDN, remote fonts/icons/analytics; `tests/test_offline.py` scans `api/` and `web/src` for outside URLs. Never use browser speech recognition (it sends audio to a server); read-aloud only with `voice.localService`.
+
+- No OTP, "verified" or similar claim without a real provider. There is no SMS offline: identity is identifier + 4-digit PIN (`PinProvider`). `OtpProvider` stays a stub that raises; never add a fake OTP screen.
+- ABHA is an unverified identifier: format check only, label "ABHA number (optional)". No government logos, card imitations, "NDHM" or "secure" claims.
+- No plaintext identifier or PIN on disk or in logs. Identifiers are Fernet-encrypted with an HMAC lookup hash, PINs are argon2id over a peppered input, UI and audit show masked values only. `tests/api/test_api_identity.py::test_no_plaintext_identifier_or_pin_on_disk_or_in_logs` must keep passing; the key file `data_local/identity.key` is never committed.
+- Scanned text (kiosk or staff) is patient-supplied and unverified until a doctor uses it: only the doctor's "Use as current medicines" writes it to the timeline (with `confirmedBy` and per-item provenance). It never reaches `dosing/` by any other path. The kiosk shows no clinical meaning for scanned medicines.
+- No network calls added by identity or scan code (`OFFLINE_STRICT=1` must pass). No government branding anywhere.
+- Declining consent or the PIN never blocks care: anonymous walk-in and "Ask staff" always work.
 
 ## Conventions
 - Match surrounding code style and comment density; no new frameworks.

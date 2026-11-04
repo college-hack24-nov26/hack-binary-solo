@@ -71,7 +71,7 @@ describe("buttons", () => {
 describe("token slip", () => {
   const slip: Slip = {
     queueNumber: 27, queueDate: "2026-11-04", token: "PT-7KQ2MD", room: "12", floor: { en: "Ground floor", hi: "भूतल", mr: "तळमजला" },
-    guidance: "follow_line", estimatedWaitMinutes: 20, patientsAhead: 2, estimateLabel: "estimate",
+    guidance: "follow_line", estimatedWaitMinutes: 20, patientsAhead: 2, estimateLabel: "estimate", papersAdded: 0, identifierMasked: null,
     doctor: { id: "dr_general", name: "Dr. Asha Kulkarni", specialty: { en: "General Physician", hi: "सामान्य चिकित्सक", mr: "सामान्य वैद्य" }, room: "12",
       floor: { en: "Ground floor", hi: "भूतल", mr: "तळमजला" }, lineColor: "#1E7B45", lineName: { en: "green", hi: "हरी", mr: "हिरव्या" }, lineTextColor: "#FFFFFF" },
   };
