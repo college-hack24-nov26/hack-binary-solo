@@ -346,3 +346,10 @@ Captured 22 screenshots (`docs/screens/gallery/`, 4 viewports, en/hi/mr, light/d
 - Doctor: at 1280 px the drug field collapsed to a sliver (a two-column span inside a one-column grid); fixed.
 - Summary labels sat on the textarea baseline and drifted below their values; they now align to the top.
 - **Removed decoration:** none needed this pass beyond the siren (replaced, not added).
+
+### Review 7: kiosk identity and scan steps (800x1280, 1280x800, 360x740; en, hi, mr; `docs/screens/kiosk-identity/`)
+- The first screenshot run photographed the language screen under the name "method": the capture did not wait for the screen it meant to show. `e2e/screens-identity.spec.ts` now waits for a named screen, then fails if the image is smaller than a floor that a blank page cannot reach.
+- Portrait method and consent screens left the lower half empty: tiles, icons and consent rows are larger in portrait.
+- At 360 px the medicine row broke "Paracetamol" into three lines beside the flag and pencil; the row now wraps so the name has the full width, with the "Please check" flag on its own line.
+- axe: a row's `aria-label` did not contain its visible text; removed (the visible content names the button). "1 seconds" became "1 s".
+- **Removed decoration:** none added; the step indicator is a thin bar with labels, like the quiz progress bar.

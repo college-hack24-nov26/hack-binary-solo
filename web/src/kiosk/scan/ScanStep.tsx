@@ -327,7 +327,7 @@ function MedRow({ m, lang, locked, onClick }: { m: ScanMedicine; lang: Lang; loc
   const check = m.name.check || m.dose.check || m.frequency.check;
   const inner = (
     <>
-      <span className="grid flex-1 gap-2 sm:grid-cols-[2fr_1fr_1fr]">
+      <span className="grid min-w-[14rem] flex-1 gap-2 sm:grid-cols-[2fr_1fr_1fr]">
         <Field f={m.name} label={t("medName", lang)} big lang={lang} />
         <Field f={m.dose} label={t("medDose", lang)} lang={lang} />
         <Field f={m.frequency} label={t("medFreq", lang)} lang={lang} />
@@ -341,13 +341,13 @@ function MedRow({ m, lang, locked, onClick }: { m: ScanMedicine; lang: Lang; loc
       {!locked && <Pencil size={26} aria-hidden className="shrink-0 text-teal" />}
     </>
   );
-  const cls = cn("flex w-full items-center gap-3 rounded-tile border-2 px-4 py-3 text-left", check && !locked ? "border-on-marigold/60 bg-marigold-tint" : "border-line bg-paper");
+  const cls = cn("flex w-full flex-wrap items-center gap-3 rounded-tile border-2 px-4 py-3 text-left", check && !locked ? "border-on-marigold/60 bg-marigold-tint" : "border-line bg-paper");
   return (
     <li>
       {locked ? (
         <div className={cls} data-testid="med-row">{inner}</div>
       ) : (
-        <button type="button" className={cn(cls, "min-h-20 active:translate-y-px")} onClick={onClick} data-testid="med-row" data-check={check || undefined} aria-label={`${t("editRow", lang)}: ${m.name.value ?? ""}`}>
+        <button type="button" className={cn(cls, "min-h-20 active:translate-y-px")} onClick={onClick} data-testid="med-row" data-check={check || undefined}>
           {inner}
         </button>
       )}

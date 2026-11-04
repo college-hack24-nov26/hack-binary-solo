@@ -39,7 +39,7 @@ def ollama_status(url: str, model: str, timeout: float = 2.0) -> tuple[bool, boo
 def check_all() -> list[Check]:
     out: list[Check] = []
     out.append(Check("python", sys.version_info >= (3, 10), f"{sys.version.split()[0]} (3.10 or newer needed)"))
-    for mod in ("fastapi", "uvicorn", "python_multipart", "pydantic", "PIL", "requests"):
+    for mod in ("fastapi", "uvicorn", "python_multipart", "pydantic", "PIL", "requests", "cryptography", "argon2"):
         try:
             importlib.import_module(mod)
             out.append(Check(f"package {mod}", True, "installed"))

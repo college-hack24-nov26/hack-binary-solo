@@ -127,7 +127,7 @@ export function IdentifyFlow({ lang, bind, onDone, onExit, onHelp, onPrompt, onS
   const body = (): ReactNode => {
     if (st.s === "method")
       return (
-        <div className="grid gap-4" data-testid="id-method">
+        <div className="grid gap-5 portrait:gap-6" data-testid="id-method">
           <MethodTile icon={Smartphone} label={t("idMobile", lang)} onClick={() => setSt({ s: "number", kind: "mobile", digits: "" })} testId="id-mobile" />
           <MethodTile icon={IdCard} label={t("idAbha", lang)} onClick={() => setSt({ s: "number", kind: "abha", digits: "" })} testId="id-abha" />
           <MethodTile icon={HandHelping} label={t("idStaff", lang)} onClick={askStaff} testId="id-staff" quiet disabled={busy} />
@@ -193,7 +193,7 @@ export function IdentifyFlow({ lang, bind, onDone, onExit, onHelp, onPrompt, onS
     if (st.s === "consent")
       return (
         <div className="flex flex-col gap-5" data-testid="id-consent">
-          <ul className="flex flex-col gap-4 rounded-tile border-2 border-line bg-surface p-5">
+          <ul className="flex flex-col gap-5 rounded-tile border-2 border-line bg-surface p-5 portrait:gap-7 portrait:p-7">
             <ConsentLine icon={ClipboardList} text={t("consentWhat", lang)} />
             <ConsentLine icon={Users} text={t("consentWho", lang)} />
             <ConsentLine icon={Stethoscope} text={t("consentWhy", lang)} />
@@ -260,12 +260,12 @@ function MethodTile({ icon: Icon, label, onClick, testId, quiet, disabled }: { i
       disabled={disabled}
       onClick={onClick}
       className={cn(
-        "flex min-h-28 items-center gap-5 rounded-tile border-2 border-b-[6px] px-6 text-left transition-transform duration-(--dur-feedback) active:translate-y-[3px] active:border-b-2 disabled:opacity-60",
+        "flex min-h-28 items-center gap-5 rounded-tile border-2 border-b-[6px] px-6 portrait:min-h-44 portrait:gap-6 text-left transition-transform duration-(--dur-feedback) active:translate-y-[3px] active:border-b-2 disabled:opacity-60",
         quiet ? "border-line-strong bg-paper" : "border-line-strong bg-surface hover:border-teal",
       )}
     >
-      <span className={cn("flex size-16 shrink-0 items-center justify-center rounded-tile", quiet ? "bg-tint text-ink" : "bg-teal text-on-teal")} aria-hidden>
-        <Icon size={36} strokeWidth={2} />
+      <span className={cn("flex size-16 shrink-0 items-center justify-center rounded-tile portrait:size-24", quiet ? "bg-tint text-ink" : "bg-teal text-on-teal")} aria-hidden>
+        <Icon size={40} strokeWidth={2} />
       </span>
       <span className="text-k-tile font-bold leading-snug">{label}</span>
     </button>

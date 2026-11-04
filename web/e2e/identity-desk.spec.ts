@@ -65,7 +65,7 @@ test("a patient who chose Ask staff is completed at the desk", async ({ page, re
   const mobile = uniqueMobile();
   await person.getByLabel("Number", { exact: true }).fill(mobile);
   await person.getByTestId("walkin-complete").click();
-  await expect(person.getByTestId("temp-pin")).toHaveText(/^\d{4}$/);
+  await expect(page.getByTestId("temp-pin").first()).toHaveText(/^\d{4}$/);
   await expect(page.getByTestId("person-masked").filter({ hasText: `••${mobile.slice(-3)}` }).first()).toBeVisible();
 });
 

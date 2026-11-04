@@ -9,6 +9,7 @@ import { answerAll, axeCheck, PNG_GREY, registerKiosk, tapDigits, uniqueMobile }
 const FIXTURE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..", "fixtures", "rx_01.png");
 const LANG_LABEL = { en: "English", hi: "हिन्दी", mr: "मराठी" } as const;
 const SIZES = { "800x1280": { width: 800, height: 1280 }, "1280x800": { width: 1280, height: 800 }, "360x740": { width: 360, height: 740 } } as const;
+test.use({ hasTouch: true });
 const CHEST = { sex: "male", chief_complaint: "chest_pain", age_years: "54", weight_kg: "72", cp_site: "chest_center" };
 
 test.beforeAll(() => {
@@ -44,6 +45,7 @@ for (const [vp, size] of Object.entries(SIZES)) {
       await answerAll(page, CHEST, "cp_site");
       await page.getByTestId("region-chest_center").click();
       await page.getByTestId("continue").click();
+      await expect(page.getByTestId("kiosk-question")).not.toHaveAttribute("data-node", "cp_site");
       await answerAll(page, CHEST);
       await page.getByTestId("confirm-all").click();
       await page.getByTestId("doctor-dr_general").click();
