@@ -90,7 +90,8 @@ def test_finish_twice_returns_the_same_slip_and_numbers_go_up(anon):
     assert len({s["queueNumber"] for s in slips}) == 1
     s1 = slips[0]
     assert s1["doctor"]["id"] == "dr_general" and s1["room"] == "12" and s1["guidance"] == "follow_line"
-    assert set(s1) == {"queueNumber", "queueDate", "token", "doctor", "room", "floor", "guidance", "estimatedWaitMinutes", "patientsAhead", "estimateLabel"}
+    assert set(s1) == {"queueNumber", "queueDate", "token", "doctor", "room", "floor", "guidance", "estimatedWaitMinutes", "patientsAhead", "estimateLabel",
+                     "papersAdded", "identifierMasked"}      # the two last keys were added with patient identity; still no answers or flags
     t2, k2 = new_kiosk(anon)
     _drive(anon, t2, k2, {})
     anon.post(f"/api/kiosk/sessions/{t2}/doctor", json={"doctorId": "dr_general"}, headers=k2)

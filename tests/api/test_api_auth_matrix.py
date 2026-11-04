@@ -19,6 +19,10 @@ EXPECT = {
     ("POST", "/api/kiosk/identify"): PUBLIC, ("POST", "/api/kiosk/register"): PUBLIC, ("POST", "/api/kiosk/login"): PUBLIC,
     ("POST", "/api/kiosk/walk-in"): PUBLIC, ("POST", KS + "/end"): K,
     ("POST", KS + "/bind"): K,
+    ("POST", KS + "/scans"): K, ("GET", KS + "/scans"): K, ("GET", KS + "/scans/{sid}"): K, ("PATCH", KS + "/scans/{sid}"): K,
+    ("GET", KS + "/scans/{sid}/image"): K, ("POST", KS + "/scans/{sid}/confirm"): K, ("DELETE", KS + "/scans/{sid}"): K,
+    ("GET", "/api/doctor/visits/{token}/scans"): D, ("GET", "/api/doctor/visits/{token}/scans/{sid}/image"): D,
+    ("POST", "/api/doctor/visits/{token}/scans/{sid}/use-as-current-medicines"): D, ("GET", "/api/doctor/visits/{token}/previous"): D,
     ("GET", "/api/staff/patients"): SD, ("GET", "/api/staff/patients/{pid}"): SD,
     ("POST", "/api/staff/patients/{pid}/reset-pin"): SD, ("POST", "/api/staff/patients/{pid}/walk-in-complete"): SD,
     ("GET", KS): K, ("POST", KS + "/consent"): K, ("POST", KS + "/answers"): K, ("POST", KS + "/bodymap"): K,
@@ -36,7 +40,8 @@ EXPECT = {
     ("GET", "/api/audit"): D, ("GET", "/api/audit/verify"): D, ("GET", "/api/audit/entries/{index}"): D, ("GET", "/api/audit/export"): D,
     ("GET", "/api/demo/fixtures"): D, ("POST", "/api/demo/load/{key}"): D, ("POST", "/api/demo/kiosk-patient"): SD,
 }
-IDENTITY_GATED = {("POST", KS + "/bind")}      # also need an X-Kiosk-Identity token; the allowed side is covered in test_api_identity.py
+IDENTITY_GATED = {("POST", KS + "/bind"), ("POST", KS + "/scans"), ("GET", KS + "/scans"), ("GET", KS + "/scans/{sid}"),
+                  ("PATCH", KS + "/scans/{sid}"), ("GET", KS + "/scans/{sid}/image"), ("POST", KS + "/scans/{sid}/confirm"), ("DELETE", KS + "/scans/{sid}")}      # also need an X-Kiosk-Identity token; the allowed side is covered in test_api_identity.py
 STREAMING = {("GET", "/api/events")}      # infinite stream: allowed roles are checked against a live server in test_api_live.py
 
 
@@ -71,6 +76,8 @@ def _url(path: str, role: str, c: dict) -> str:
 def _call(client: TestClient, method: str, url: str):
     if method == "GET":
         return client.get(url)
+    if method == "DELETE":
+        return client.delete(url, headers=H)
     return client.request(method, url, json={}, headers=H)
 
 

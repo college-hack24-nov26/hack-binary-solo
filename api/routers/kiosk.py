@@ -194,7 +194,8 @@ def slip(rec) -> dict:
     return {"queueNumber": rec.queueNumber, "queueDate": rec.queueDate, "token": rec.token, "doctor": dout,
             "room": d.room if has_room else None, "floor": dout["floor"] if has_room else None,
             "guidance": "follow_line" if has_room and d.lineColor else ("room" if has_room else "reception"),
-            "estimatedWaitMinutes": ahead * minutes_per_patient(), "patientsAhead": ahead, "estimateLabel": "estimate"}
+            "estimatedWaitMinutes": ahead * minutes_per_patient(), "patientsAhead": ahead, "estimateLabel": "estimate",
+            "papersAdded": sum(1 for x in rec.kioskScans if x.get("confirmed")), "identifierMasked": rec.identifierMasked}
 
 
 @router.post("/sessions/{token}/finish", response_model=TokenSlip)

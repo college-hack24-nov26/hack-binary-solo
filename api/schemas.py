@@ -198,6 +198,8 @@ class TokenSlip(Out):
     estimatedWaitMinutes: int
     patientsAhead: int
     estimateLabel: str = "estimate"
+    papersAdded: int = 0
+    identifierMasked: Optional[str] = None
 
 
 # ---------------------------------------------------------------- patients
@@ -230,6 +232,10 @@ class BoardRow(Out):
     assignedDoctor: Optional[str] = None
     vitalsPresent: bool
     pendingScans: int
+    identifierMasked: Optional[str] = None
+    identityState: Literal["new", "returning", "walk_in", "anonymous"] = "anonymous"
+    papersCount: int = 0
+    statusText: str = ""
     minutesWaiting: int
     createdAt: str
     updatedAt: str
@@ -287,6 +293,10 @@ class PatientView(Out):
     weightMismatch: Optional[str] = None
     pendingScans: list[PendingScanMeta] = []
     timelineCount: int = 0
+    patientId: Optional[str] = None
+    identifierMasked: Optional[str] = None
+    identityState: Literal["new", "returning", "walk_in", "anonymous"] = "anonymous"
+    papersCount: int = 0
     role: Literal["staff", "doctor"]
     # doctor-only below (None for staff)
     socrates: Optional[dict] = None

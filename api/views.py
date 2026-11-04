@@ -52,6 +52,23 @@ def minutes_since(iso: str, now: Optional[datetime] = None) -> int:
         return 0
 
 
+def identity_state(rec: PatientRecord) -> str:
+    if not rec.patientId:
+        return "anonymous"
+    if rec.identifierType == "walk_in":
+        return "walk_in"
+    return "returning" if rec.returning else "new"
+
+
+def status_text(rec: PatientRecord) -> str:
+    """Honest status for the staff board: what has really happened to this visit."""
+    if rec.queueNumber:
+        return f"Token {rec.queueNumber}"
+    if rec.patientId:
+        return "Identified, no token yet" if rec.identifierType != "walk_in" else "Walk-in, needs staff, no token yet"
+    return "Answering questions, no token yet"
+
+
 def board_row(rec: PatientRecord, me: Optional[Doctor] = None) -> dict:
     flags = red_flags(rec)
     d = rec.dosingInputs
@@ -59,6 +76,8 @@ def board_row(rec: PatientRecord, me: Optional[Doctor] = None) -> dict:
             "complaint": rec.complaint.label, "complaintText": rec.complaint.text, "redFlags": flags,
             "urgent": any(f["severity"] == "urgent" for f in flags), "assignedDoctor": rec.assignedDoctor,
             "vitalsPresent": bool(rec.vitals and rec.vitals.any_measured()), "pendingScans": len(rec.pendingScans),
+            "identifierMasked": rec.identifierMasked, "identityState": identity_state(rec),
+            "papersCount": sum(1 for x in rec.kioskScans if x.get("confirmed")), "statusText": status_text(rec),
             "minutesWaiting": minutes_since(rec.createdAt), "createdAt": rec.createdAt, "updatedAt": rec.updatedAt,
             "mine": bool(me) and rec.assignedDoctor == me.id}
 
@@ -97,7 +116,9 @@ def patient_view(rec: PatientRecord, role: str, lang: str = "en") -> dict:
            "complaint": rec.complaint.model_dump(), "dosingInputs": d.model_dump(), "redFlags": red_flags(rec, lang),
            "answers": answer_lines(rec, lang), "assignedDoctor": rec.assignedDoctor,
            "vitals": v.model_dump() if v else None, "abnormal": abnormal(v, d.ageYears) if v else {}, "bmi": bmi(v) if v else None,
-           "weightMismatch": mismatch, "pendingScans": _pending_meta(rec), "timelineCount": len(rec.timeline), "role": role}
+           "weightMismatch": mismatch, "pendingScans": _pending_meta(rec), "timelineCount": len(rec.timeline), "role": role,
+           "patientId": rec.patientId, "identifierMasked": rec.identifierMasked, "identityState": identity_state(rec),
+           "papersCount": sum(1 for x in rec.kioskScans if x.get("confirmed"))}
     if role == "doctor":
         out.update({"socrates": {k: (x.model_dump() if hasattr(x, "model_dump") else [l.model_dump() for l in x])
                                  for k, x in rec.socrates.items()},
