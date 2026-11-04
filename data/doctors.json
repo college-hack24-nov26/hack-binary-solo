@@ -1,14 +1,22 @@
 {
- "_note": "SYNTHETIC doctors for the demo. Hindi/Marathi specialty names are machine-drafted, needs native review. `username` links a doctor to a login (optional); leave null if unlinked.",
+ "_note": "SYNTHETIC doctors for the demo. Hindi/Marathi specialty, floor and line names are machine-drafted, needs native review. `username` links a doctor to a login (optional); leave null if unlinked. room/floor/lineColor are synthetic: lineColor is the painted floor line that leads to the room (contrast checked in docs/DESIGN.md 3.4); lineName.mr is in the oblique case used by 'X रेषेने ... जा'.",
  "translationStatus": "machine-drafted, needs native review",
  "doctors": [
   {"id": "dr_general", "name": "Dr. Asha Kulkarni", "username": "doctor1",
-   "specialty": {"en": "General Physician", "hi": "सामान्य चिकित्सक", "mr": "सामान्य वैद्य"}},
+   "specialty": {"en": "General Physician", "hi": "सामान्य चिकित्सक", "mr": "सामान्य वैद्य"},
+   "room": "12", "floor": {"en": "Ground floor", "hi": "भूतल", "mr": "तळमजला"},
+   "lineColor": "#1E7B45", "lineName": {"en": "green", "hi": "हरी", "mr": "हिरव्या"}},
   {"id": "dr_heart", "name": "Dr. Rohan Deshmukh", "username": null,
-   "specialty": {"en": "Cardiologist (heart)", "hi": "हृदय रोग विशेषज्ञ", "mr": "हृदयरोगतज्ज्ञ"}},
+   "specialty": {"en": "Cardiologist (heart)", "hi": "हृदय रोग विशेषज्ञ", "mr": "हृदयरोगतज्ज्ञ"},
+   "room": "14", "floor": {"en": "First floor", "hi": "पहली मंज़िल", "mr": "पहिला मजला"},
+   "lineColor": "#1F5FAD", "lineName": {"en": "blue", "hi": "नीली", "mr": "निळ्या"}},
   {"id": "dr_child", "name": "Dr. Meera Joshi", "username": null,
-   "specialty": {"en": "Paediatrician (children)", "hi": "बाल रोग विशेषज्ञ", "mr": "बालरोगतज्ज्ञ"}},
+   "specialty": {"en": "Paediatrician (children)", "hi": "बाल रोग विशेषज्ञ", "mr": "बालरोगतज्ज्ञ"},
+   "room": "7", "floor": {"en": "Ground floor", "hi": "भूतल", "mr": "तळमजला"},
+   "lineColor": "#F2B33D", "lineName": {"en": "yellow", "hi": "पीली", "mr": "पिवळ्या"}},
   {"id": "dr_women", "name": "Dr. Sunita Pawar", "username": null,
-   "specialty": {"en": "Gynaecologist (women's health)", "hi": "स्त्री रोग विशेषज्ञ", "mr": "स्त्रीरोगतज्ज्ञ"}}
+   "specialty": {"en": "Gynaecologist (women's health)", "hi": "स्त्री रोग विशेषज्ञ", "mr": "स्त्रीरोगतज्ज्ञ"},
+   "room": "9", "floor": {"en": "Ground floor", "hi": "भूतल", "mr": "तळमजला"},
+   "lineColor": "#6A3FA6", "lineName": {"en": "purple", "hi": "बैंगनी", "mr": "जांभळ्या"}}
  ]
 }

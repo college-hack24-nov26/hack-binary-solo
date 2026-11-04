@@ -1,0 +1,263 @@
+/* Design tokens from docs/DESIGN.md section 3. Change them there first, with a reason. */
+@import "tailwindcss";
+
+/* Self-hosted fonts (no Google Fonts, no CDN): Latin from Noto Sans, Devanagari from Noto Sans Devanagari. */
+@import "@fontsource/noto-sans/latin-400.css";
+@import "@fontsource/noto-sans/latin-600.css";
+@import "@fontsource/noto-sans/latin-700.css";
+@import "@fontsource/noto-sans-devanagari/devanagari-400.css";
+@import "@fontsource/noto-sans-devanagari/devanagari-600.css";
+@import "@fontsource/noto-sans-devanagari/devanagari-700.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root,
+.force-light {
+  --paper: #fafbf8;
+  --surface: #ffffff;
+  --tint: #e3f0ee;
+  --line: #c9d6d3;
+  --line-strong: #8fa6a2;
+  --ink: #14302d;
+  --muted: #4f6461;
+  --teal: #0b5a55;
+  --teal-press: #08453f;
+  --on-teal: #ffffff;
+  --marigold: #f2b33d;
+  --marigold-tint: #fdf3dc;
+  --on-marigold: #14302d;
+  --red: #b42318;
+  --red-tint: #fdecea;
+  --red-fill: #b42318;
+  --on-red: #ffffff;
+  --green: #1c7a4c;
+  --green-tint: #e6f4ec;
+  --on-green: #ffffff;
+  --focus: #0b5a55;
+  --shadow-overlay: 0 12px 32px rgb(20 48 45 / 0.18);
+  color-scheme: light;
+}
+
+.dark {
+  --paper: #0f1e1c;
+  --surface: #16302c;
+  --tint: #1d3b36;
+  --line: #2c4a45;
+  --line-strong: #4a6a64;
+  --ink: #e6efed;
+  --muted: #9db5b0;
+  --teal: #5cc4b8;
+  --teal-press: #7ad3c8;
+  --on-teal: #0f1e1c;
+  --marigold: #f2b33d;
+  --marigold-tint: #3a3220;
+  --on-marigold: #0f1e1c;
+  --red: #ff8f85;
+  --red-tint: #3a1d1a;
+  --red-fill: #7a1a12;
+  --on-red: #e6efed;
+  --green: #4ade9b;
+  --green-tint: #173a2a;
+  --on-green: #0f1e1c;
+  --focus: #5cc4b8;
+  --shadow-overlay: 0 12px 32px rgb(0 0 0 / 0.5);
+  color-scheme: dark;
+}
+
+/* Kiosk high-contrast mode (patient toggle, this session only) */
+.kiosk-contrast {
+  --paper: #ffffff;
+  --surface: #ffffff;
+  --tint: #d5ebe7;
+  --line: #14302d;
+  --line-strong: #14302d;
+  --muted: #14302d;
+  --teal: #063f3b;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-tint: var(--tint);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-teal: var(--teal);
+  --color-teal-press: var(--teal-press);
+  --color-on-teal: var(--on-teal);
+  --color-marigold: var(--marigold);
+  --color-marigold-tint: var(--marigold-tint);
+  --color-on-marigold: var(--on-marigold);
+  --color-red: var(--red);
+  --color-red-tint: var(--red-tint);
+  --color-red-fill: var(--red-fill);
+  --color-on-red: var(--on-red);
+  --color-green: var(--green);
+  --color-green-tint: var(--green-tint);
+  --color-on-green: var(--on-green);
+  --color-focus: var(--focus);
+}
+
+@theme {
+  --font-sans: "Noto Sans", "Noto Sans Devanagari", system-ui, sans-serif;
+
+  /* workstation scale (base 15) */
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.5;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.5;
+  --text-base: 0.9375rem;
+  --text-base--line-height: 1.5;
+  --text-md: 1.0625rem;
+  --text-md--line-height: 1.4;
+  --text-lg: 1.25rem;
+  --text-lg--line-height: 1.35;
+  --text-xl: 1.5rem;
+  --text-xl--line-height: 1.3;
+  --text-2xl: 1.875rem;
+  --text-2xl--line-height: 1.3;
+  --text-dose: 2.75rem;
+  --text-dose--line-height: 1.15;
+
+  /* kiosk scale (base 20); rem-based so "A+ larger text" scales everything together */
+  --text-k-body: 1.25rem;
+  --text-k-body--line-height: 1.5;
+  --text-k-tile: 1.75rem;
+  --text-k-tile--line-height: 1.4;
+  --text-k-lead: 1.875rem;
+  --text-k-lead--line-height: 1.35;
+  --text-k-question: clamp(2.25rem, 1.4rem + 2.6vw, 3.25rem);
+  --text-k-question--line-height: 1.3;
+  --text-k-hero: clamp(2.5rem, 1.6rem + 3vw, 3.75rem);
+  --text-k-hero--line-height: 1.25;
+  --text-k-queue: 7.5rem;
+  --text-k-queue--line-height: 1;
+
+  --radius-field: 6px;
+  --radius-panel: 8px;
+  --radius-tile: 16px;
+  --radius-slip: 2px;
+
+  --ease-std: cubic-bezier(0.2, 0, 0, 1);
+  --animate-attention: attention 600ms var(--ease-std) 1;
+  --animate-stamp: stamp 280ms var(--ease-std) 1 both;
+  --animate-slide-fwd: slide-fwd 240ms var(--ease-std) both;
+  --animate-slide-back: slide-back 240ms var(--ease-std) both;
+  --animate-fade: fade 200ms var(--ease-std) both;
+
+  @keyframes attention {
+    0% { background-color: var(--marigold); }
+    100% { background-color: var(--red-tint); }
+  }
+  @keyframes stamp {
+    0% { transform: scale(1.6) rotate(-12deg); opacity: 0; }
+    100% { transform: scale(1) rotate(-6deg); opacity: 1; }
+  }
+  @keyframes slide-fwd {
+    from { transform: translateX(48px); opacity: 0; }
+    to { transform: none; opacity: 1; }
+  }
+  @keyframes slide-back {
+    from { transform: translateX(-48px); opacity: 0; }
+    to { transform: none; opacity: 1; }
+  }
+  @keyframes fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+}
+
+:root {
+  --dur-feedback: 120ms;
+  --dur-screen: 240ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-feedback: 0ms;
+    --dur-screen: 0ms;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    font-synthesis: none; /* no fake bold/italic on Devanagari */
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-size: var(--text-base);
+    line-height: 1.5;
+    letter-spacing: 0;
+  }
+  h1, h2, h3, h4 {
+    line-height: 1.3;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+  :focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+  }
+  button, [role="button"] {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Kiosk root: larger base, light only. "A+ larger text" scales the root size. */
+.kiosk-root {
+  font-size: 1.25rem;
+}
+html.kiosk-large {
+  font-size: 120%;
+}
+
+/* Parchi: perforated top edge drawn with a radial-gradient mask (no image) */
+.parchi {
+  --perf: 16px;
+  -webkit-mask: radial-gradient(circle at 50% 0, transparent 6px, #000 6.5px) top / var(--perf) 100% repeat-x;
+  mask: radial-gradient(circle at 50% 0, transparent 6px, #000 6.5px) top / var(--perf) 100% repeat-x;
+}
+/* the counter the slip lies on: a quiet tint so the white paper and its perforated edge read */
+.slip-counter {
+  background: var(--tint);
+}
+
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+  .print-area,
+  .print-area * {
+    visibility: visible !important;
+  }
+  .print-area {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 80mm;
+    box-shadow: none !important;
+    -webkit-mask: none !important;
+    mask: none !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  .no-print {
+    display: none !important;
+  }
+}

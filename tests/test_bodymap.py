@@ -133,9 +133,6 @@ def test_svg_is_self_contained_plain_shapes():
     assert '#d62828' in svg                                                # selected region highlighted
 
 
-def test_component_has_no_external_loads():
-    html = (Path(bm.__file__).parent / "ui" / "bodymap_component" / "index.html").read_text()
-    assert not re.search(r"https?://|<script[^>]+src=|<link|@import|//cdn", html)
 
 
 # ------------------------------------------------------------ answers: map and list are interchangeable

@@ -1,0 +1,2205 @@
+{
+ "ok": {
+  "result": {
+   "status": "ok",
+   "drug": "paracetamol",
+   "indication": "pain/fever",
+   "selected_rule_id": "paracetamol#2",
+   "suggested_rule_id": "paracetamol#2",
+   "alternatives": [
+    {
+     "rule_id": "paracetamol#2",
+     "indication": "pain/fever",
+     "population": {
+      "min_age_months": 2
+     },
+     "dose_type": "mg_per_kg_per_dose",
+     "data_status": "VERIFIED",
+     "suggested": true,
+     "selected": true,
+     "computed": true,
+     "kind": "numeric",
+     "sources": [
+      {
+       "id": "S6",
+       "name": "WHO AWaRe Antibiotic Book 2022",
+       "url": "iris.who.int/handle/10665/365237",
+       "section": "S6; S8 6693/4590 sec 4.2",
+       "status": "VERIFIED"
+      },
+      {
+       "id": "S8",
+       "name": "UK eMC Summaries of Product Characteristics",
+       "url": "www.medicines.org.uk/emc",
+       "section": "S6; S8 6693/4590 sec 4.2",
+       "status": "VERIFIED"
+      }
+     ],
+     "rule_hash": "792b343f45",
+     "conflict": "Daily cap 60 mg/kg (WHO) vs 75 mg/kg (US); default 60",
+     "dose_range_mg": [
+      160.0,
+      240.0
+     ],
+     "interval_h": 6,
+     "doses_per_day": null,
+     "binding_cap": null,
+     "needs_input": []
+    }
+   ],
+   "dose_mg": 200.0,
+   "dose_range_mg": [
+    160.0,
+    240.0
+   ],
+   "product": "oral liquid 250 mg/5 mL",
+   "product_options": [
+    {
+     "product": "tablet 500 mg",
+     "form": "tablet",
+     "units": 1,
+     "volume_ml": null,
+     "delivered_mg": 500.0,
+     "in_range": false,
+     "note": "",
+     "ratio_mismatch": false
+    },
+    {
+     "product": "tablet 650 mg",
+     "form": "tablet",
+     "units": 1,
+     "volume_ml": null,
+     "delivered_mg": 650.0,
+     "in_range": false,
+     "note": "",
+     "ratio_mismatch": false
+    },
+    {
+     "product": "oral liquid 250 mg/5 mL",
+     "form": "oral liquid",
+     "units": null,
+     "volume_ml": 4.0,
+     "delivered_mg": 200.0,
+     "in_range": true,
+     "note": "",
+     "ratio_mismatch": false
+    },
+    {
+     "product": "oral liquid 125 mg/5 mL",
+     "form": "oral liquid",
+     "units": null,
+     "volume_ml": 8.0,
+     "delivered_mg": 200.0,
+     "in_range": true,
+     "note": "",
+     "ratio_mismatch": false
+    },
+    {
+     "product": "oral liquid 120 mg/5 mL",
+     "form": "oral liquid",
+     "units": null,
+     "volume_ml": 8.5,
+     "delivered_mg": 204.0,
+     "in_range": true,
+     "note": "",
+     "ratio_mismatch": false
+    },
+    {
+     "product": "oral liquid 120 mg/5 mL",
+     "form": "oral liquid",
+     "units": null,
+     "volume_ml": 8.0,
+     "delivered_mg": 192.0,
+     "in_range": true,
+     "note": "",
+     "ratio_mismatch": false
+    }
+   ],
+   "volume_ml": 4.0,
+   "units": null,
+   "interval_h": 6,
+   "doses_per_day": 4,
+   "daily_total_mg": 800.0,
+   "daily_max_mg": 960.0,
+   "binding_cap": null,
+   "duration": null,
+   "plan": null,
+   "text_regimen": null,
+   "computed": true,
+   "calculation_steps": [
+    "Age: 48 months (window 48.0 to 60.0 months, patient_reported).",
+    "Weight: 16 kg (doctor_confirmed).",
+    "Rule paracetamol#2: 'pain/fever', S6; S8 6693/4590 sec 4.2 [VERIFIED].",
+    "Rule age window: min_age_months 2.",
+    "10 to 15 mg/kg x 16 kg = 160.0 to 240.0 mg per dose.",
+    "Weight band 15 to 20 kg: 200 mg per dose.",
+    "No cap bound.",
+    "Daily total 640.0 to 960.0 mg/day.",
+    "Product oral liquid 250 mg/5 mL: 4 mL -> 200.0 mg delivered.",
+    "50 mg/mL: 200.0 mg = 4.0 mL, rounded to step 0.5 mL -> 4.0 mL = 200.0 mg."
+   ],
+   "warnings": [
+    {
+     "code": "calc",
+     "text": "Pharmacy form not chosen: the suggested product is the closest listed one."
+    },
+    {
+     "code": "warn_alt_conflict",
+     "text": "The formulary notes a conflict: Daily cap 60 mg/kg (WHO) vs 75 mg/kg (US); default 60"
+    }
+   ],
+   "label_warnings": [
+    {
+     "code": "warn_label",
+     "text": "Label warning: Too much paracetamol can cause delayed, serious liver damage; talk to a doctor at once if too much is taken, even if you feel well",
+     "data_status": "VERIFIED",
+     "sources": [
+      {
+       "id": "S19",
+       "name": "UK eMC paracetamol SmPC (product 100828)",
+       "url": "www.medicines.org.uk/emc/product/100828/smpc",
+       "section": "UK eMC paracetamol SmPC 100828 sec 4.4 www.medicines.org.uk/emc/product/100828/smpc [S19]",
+       "status": "VERIFIED"
+      }
+     ]
+    },
+    {
+     "code": "warn_label",
+     "text": "Label warning: US OTC: severe liver damage may occur if more than 4,000 mg in 24 hours or with 3 or more alcoholic drinks every day",
+     "data_status": "SECONDARY",
+     "sources": [
+      {
+       "id": "S21",
+       "name": "ndclist.com mirror of Tylenol Extra Strength 500 mg label (NDC 50580-490)",
+       "url": "ndclist.com/ndc/50580-490/label",
+       "section": "US OTC Tylenol Extra Strength Drug Facts (ndclist mirror of FDA label) Drug Facts Warnings ndclist.com/ndc/50580-490/label [S21]",
+       "status": "SECONDARY"
+      }
+     ],
+     "conflict": "4,000 mg is the liver-damage threshold, not the labelled maximum dose (labelled max for the 500 mg Extra Strength product is 3,000 mg/day)."
+    },
+    {
+     "code": "warn_label",
+     "text": "Label warning: Adult OTC: do not take for more than 3 days without consulting a doctor",
+     "data_status": "VERIFIED",
+     "sources": [
+      {
+       "id": "S18",
+       "name": "UK eMC paracetamol 500 mg tablet SmPC (product 9128)",
+       "url": "www.medicines.org.uk/emc/product/9128/smpc/print",
+       "section": "UK eMC paracetamol SmPC 9128 sec 4.2 www.medicines.org.uk/emc/product/9128/smpc/print [S18]",
+       "status": "VERIFIED"
+      }
+     ]
+    },
+    {
+     "code": "warn_label",
+     "text": "Label warning: Tablet formulation: not recommended for children under 10 years of age",
+     "data_status": "VERIFIED",
+     "sources": [
+      {
+       "id": "S18",
+       "name": "UK eMC paracetamol 500 mg tablet SmPC (product 9128)",
+       "url": "www.medicines.org.uk/emc/product/9128/smpc/print",
+       "section": "UK eMC paracetamol SmPC 9128 sec 4.2 www.medicines.org.uk/emc/product/9128/smpc/print [S18]",
+       "status": "VERIFIED"
+      }
+     ]
+    },
+    {
+     "code": "warn_label",
+     "text": "Label warning: US OTC: children under 12, ask a doctor",
+     "data_status": "SECONDARY",
+     "sources": [
+      {
+       "id": "S21",
+       "name": "ndclist.com mirror of Tylenol Extra Strength 500 mg label (NDC 50580-490)",
+       "url": "ndclist.com/ndc/50580-490/label",
+       "section": "US OTC Tylenol Extra Strength Drug Facts (ndclist mirror of FDA label) Directions ndclist.com/ndc/50580-490/label [S21]",
+       "status": "SECONDARY"
+      }
+     ]
+    }
+   ],
+   "blocks": [],
+   "needs_input": [],
+   "refused_reasons": [],
+   "interactions": [],
+   "overrides": [],
+   "provenance": {
+    "abdominal_surgery": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "age_days_hi": {
+     "value": 1826.25,
+     "provenance": "patient_reported"
+    },
+    "age_days_lo": {
+     "value": 1461.0,
+     "provenance": "patient_reported"
+    },
+    "age_months": {
+     "value": 48,
+     "provenance": "patient_reported"
+    },
+    "age_window_months": {
+     "value": 11,
+     "provenance": "patient_reported"
+    },
+    "age_years_reported": {
+     "value": 4,
+     "provenance": "patient_reported"
+    },
+    "alcohol": {
+     "value": "no",
+     "provenance": "doctor_confirmed",
+     "note": "History check"
+    },
+    "allergy_nsaids": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "allergy_penicillins": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "allergy_sulfa": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "asthma": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "cholesterol": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "complaint": {
+     "value": "fever",
+     "provenance": "patient_reported"
+    },
+    "diabetes": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "family_heart": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "gi_bleed": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "heart_disease": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "hypertension": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "kidney_disease": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "liver_disease": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "meds_known": {
+     "value": "yes",
+     "provenance": "patient_reported",
+     "note": "none"
+    },
+    "pregnancy_bleeding": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "pregnant": {
+     "value": "no",
+     "provenance": "derived",
+     "note": "not asked: male, or outside the age band the quiz asks pregnancy for"
+    },
+    "sex": {
+     "value": "male",
+     "provenance": "patient_reported"
+    },
+    "sex_for_formula": {
+     "value": "male",
+     "provenance": "derived"
+    },
+    "smoking": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked on this path"
+    },
+    "stones": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "ulcer": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "weight_kg": {
+     "value": 16.0,
+     "provenance": "doctor_confirmed",
+     "note": "quiz value 16.0 confirmed"
+    }
+   },
+   "sources": [
+    {
+     "id": "S6",
+     "name": "WHO AWaRe Antibiotic Book 2022",
+     "url": "iris.who.int/handle/10665/365237",
+     "section": "S6; S8 6693/4590 sec 4.2",
+     "status": "VERIFIED"
+    },
+    {
+     "id": "S8",
+     "name": "UK eMC Summaries of Product Characteristics",
+     "url": "www.medicines.org.uk/emc",
+     "section": "S6; S8 6693/4590 sec 4.2",
+     "status": "VERIFIED"
+    }
+   ],
+   "data_status": "VERIFIED",
+   "final": true,
+   "pending_confirmations": [],
+   "indications": [
+    {
+     "key": "pain/fever",
+     "labels": [
+      "pain/fever",
+      "pain/fever",
+      "pain/fever (UK SmPC 100828)",
+      "pain/fever (UK SmPC 9128, 500 mg tablets)",
+      "pain/fever, child 10-15 y (UK SmPC, 500 mg tablet)",
+      "pain/fever, US OTC extra strength 500 mg"
+     ],
+     "rules": 6
+    },
+    {
+     "key": "fever",
+     "labels": [
+      "fever (India)"
+     ],
+     "rules": 1
+    },
+    {
+     "key": "neonate",
+     "labels": [
+      "neonate"
+     ],
+     "rules": 1
+    }
+   ],
+   "engine_version": "0.1.0",
+   "formulary_version": "0.2.0",
+   "banner": "Prototype data, not clinically verified",
+   "disclaimer": "Decision support only. The doctor makes the final decision.",
+   "allow_unverified": true,
+   "demo": true,
+   "acknowledge_items": [],
+   "demo_banner": "DEMO - UNVERIFIED DATA",
+   "boundary_overlap": []
+  },
+  "card": {
+   "status": "ok",
+   "header": "Dose ready for doctor review",
+   "reason": "Every required input is present and no safety rule stopped this dose.",
+   "responsible": "Rule paracetamol#2",
+   "sources": [],
+   "missing": [],
+   "show_numbers": true,
+   "overrides": []
+  }
+ },
+ "needs_input": {
+  "result": {
+   "status": "needs_input",
+   "drug": "metformin",
+   "indication": "type 2 diabetes",
+   "selected_rule_id": "metformin#0",
+   "suggested_rule_id": "metformin#2",
+   "alternatives": [
+    {
+     "rule_id": "metformin#0",
+     "indication": "type 2 diabetes",
+     "population": {
+      "min_age_years": 18
+     },
+     "dose_type": "titration",
+     "data_status": "SECONDARY",
+     "suggested": false,
+     "selected": true,
+     "computed": false,
+     "kind": "plan",
+     "sources": [
+      {
+       "id": "S4",
+       "name": "FDA drug labels via openFDA / DailyMed",
+       "url": "open.fda.gov/apis/drug/label/how-to-use-the-endpoint/",
+       "section": "S4 sec 2.2",
+       "status": "SECONDARY"
+      }
+     ],
+     "rule_hash": "379fef9b35",
+     "note": "Immediate release",
+     "needs_input": []
+    },
+    {
+     "rule_id": "metformin#2",
+     "indication": "type 2 diabetes, IR adult (US label)",
+     "population": {
+      "min_age_years": 18
+     },
+     "dose_type": "titration",
+     "data_status": "VERIFIED",
+     "suggested": true,
+     "selected": false,
+     "computed": false,
+     "kind": "plan",
+     "sources": [
+      {
+       "id": "S46",
+       "name": "DailyMed metformin HCl tablets (IR), Marksans Pharma (setid b8004451-7b26-425b-b5ea-cbb1b08e30e3), Revised 6/2026",
+       "url": "dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b8004451-7b26-425b-b5ea-cbb1b08e30e3",
+       "section": "DailyMed metformin HCl tablets IR, Marksans (Revised 6/2026) sec 2.1 dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b8004451-7b26-425b-b5ea-cbb1b08e30e3 [S46]; Drugs.com metformin professional information sec 2.1 www.drugs.com/pro/metformin.html [S48]",
+       "status": "VERIFIED"
+      },
+      {
+       "id": "S48",
+       "name": "Drugs.com metformin professional information",
+       "url": "www.drugs.com/pro/metformin.html",
+       "section": "DailyMed metformin HCl tablets IR, Marksans (Revised 6/2026) sec 2.1 dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b8004451-7b26-425b-b5ea-cbb1b08e30e3 [S46]; Drugs.com metformin professional information sec 2.1 www.drugs.com/pro/metformin.html [S48]",
+       "status": "VERIFIED"
+      }
+     ],
+     "rule_hash": "82eb2db3b5",
+     "note": "'up to a maximum dose of 2550 mg per day, given in divided doses'; doses above 2000 mg may be better tolerated three times daily with meals. Corroborates existing SECONDARY rule (kept).",
+     "needs_input": []
+    },
+    {
+     "rule_id": "metformin#3",
+     "indication": "type 2 diabetes, IR age 10+ (US label)",
+     "population": {
+      "min_age_years": 10
+     },
+     "dose_type": "titration",
+     "data_status": "VERIFIED",
+     "suggested": false,
+     "selected": false,
+     "computed": false,
+     "kind": "plan",
+     "sources": [
+      {
+       "id": "S46",
+       "name": "DailyMed metformin HCl tablets (IR), Marksans Pharma (setid b8004451-7b26-425b-b5ea-cbb1b08e30e3), Revised 6/2026",
+       "url": "dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b8004451-7b26-425b-b5ea-cbb1b08e30e3",
+       "section": "DailyMed metformin HCl tablets IR, Marksans (Revised 6/2026) sec 2.2 dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b8004451-7b26-425b-b5ea-cbb1b08e30e3 [S46]; Drugs.com metformin professional information sec 2.2 www.drugs.com/pro/metformin.html [S48]",
+       "status": "VERIFIED"
+      },
+      {
+       "id": "S48",
+       "name": "Drugs.com metformin professional information",
+       "url": "www.drugs.com/pro/metformin.html",
+       "section": "DailyMed metformin HCl tablets IR, Marksans (Revised 6/2026) sec 2.2 dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b8004451-7b26-425b-b5ea-cbb1b08e30e3 [S46]; Drugs.com metformin professional information sec 2.2 www.drugs.com/pro/metformin.html [S48]",
+       "status": "VERIFIED"
+      }
+     ],
+     "rule_hash": "08a8861fd2",
+     "note": "'up to a maximum of 2000 mg per day, given in divided doses twice daily'.",
+     "needs_input": []
+    },
+    {
+     "rule_id": "metformin#4",
+     "indication": "type 2 diabetes, ER adult (US label, AvKARE rev 6/2024)",
+     "population": {
+      "min_age_years": 18
+     },
+     "dose_type": "titration",
+     "data_status": "VERIFIED",
+     "suggested": false,
+     "selected": false,
+     "computed": false,
+     "kind": "plan",
+     "sources": [
+      {
+       "id": "S47",
+       "name": "DailyMed metformin ER tablets, AvKARE repackager (setid 1aa40000-877f-8ea4-e063-6394a90a0e31), Revised 6/2024",
+       "url": "dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=1aa40000-877f-8ea4-e063-6394a90a0e31",
+       "section": "DailyMed metformin ER tablets, AvKARE (Revised 6/2024) sec 2 dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=1aa40000-877f-8ea4-e063-6394a90a0e31 [S47]",
+       "status": "VERIFIED"
+      }
+     ],
+     "rule_hash": "a5b3df59ea",
+     "note": "Max 2000 mg once daily with the evening meal; swallow whole, never crush/cut/chew. Paraphrase of extract (exact quote not obtainable).",
+     "needs_input": []
+    }
+   ],
+   "dose_mg": null,
+   "dose_range_mg": null,
+   "product": null,
+   "product_options": [],
+   "volume_ml": null,
+   "units": null,
+   "interval_h": null,
+   "doses_per_day": null,
+   "daily_total_mg": null,
+   "daily_max_mg": 2550,
+   "binding_cap": null,
+   "duration": null,
+   "plan": {
+    "start": "500 mg twice daily or 850 mg once daily",
+    "step": "+500 mg weekly",
+    "max_per_day_mg": 2550,
+    "note": "Immediate release"
+   },
+   "text_regimen": null,
+   "computed": false,
+   "calculation_steps": [
+    "[UNVERIFIED] Age: 696 months (window 696.0 to 708.0 months, patient_reported).",
+    "[UNVERIFIED] Weight: 78 kg (doctor_confirmed).",
+    "[UNVERIFIED] 4 rule(s) apply; suggested: metformin#2 (VERIFIED).",
+    "[UNVERIFIED] Rule metformin#0: 'type 2 diabetes', S4 sec 2.2 [SECONDARY].",
+    "[UNVERIFIED] Rule age window: min_age_years 18.",
+    "[UNVERIFIED] Titration plan from the rule (no single dose): start 500 mg twice daily or 850 mg once daily; step +500 mg weekly; max 2550 mg/day."
+   ],
+   "warnings": [
+    {
+     "code": "warn_relevant",
+     "text": "Relevant to this patient (diabetes reported): Insulin/secretagogues: hypoglycaemia risk; thiazides, corticosteroids, oestrogens, phenytoin: monitor glucose",
+     "data_status": "VERIFIED",
+     "sources": [
+      {
+       "id": "S47",
+       "name": "DailyMed metformin ER tablets, AvKARE repackager (setid 1aa40000-877f-8ea4-e063-6394a90a0e31), Revised 6/2024",
+       "url": "dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=1aa40000-877f-8ea4-e063-6394a90a0e31",
+       "section": "DailyMed metformin ER tablets, AvKARE (Revised 6/2024) sec 7 dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=1aa40000-877f-8ea4-e063-6394a90a0e31 [S47]",
+       "status": "VERIFIED"
+      }
+     ]
+    },
+    {
+     "code": "warn_interaction",
+     "text": "Interaction (unspecified) with Glycomet (current medicine): Alcohol is known to potentiate the effect of metformin on lactate metabolism; warn against excessive intake",
+     "data_status": "VERIFIED",
+     "sources": [
+      {
+       "id": "S46",
+       "name": "DailyMed metformin HCl tablets (IR), Marksans Pharma (setid b8004451-7b26-425b-b5ea-cbb1b08e30e3), Revised 6/2026",
+       "url": "dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b8004451-7b26-425b-b5ea-cbb1b08e30e3",
+       "section": "DailyMed metformin HCl tablets IR, Marksans (Revised 6/2026) sec 7 dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b8004451-7b26-425b-b5ea-cbb1b08e30e3 [S46]",
+       "status": "VERIFIED"
+      }
+     ]
+    },
+    {
+     "code": "warn_interaction",
+     "text": "Interaction (unspecified) with Glycomet (current medicine): Ranolazine, vandetanib, dolutegravir, cimetidine may raise metformin exposure; cationic drugs eliminated by renal tubular secretion may reduce metformin elimination (sec 12.3)",
+     "data_status": "VERIFIED",
+     "sources": [
+      {
+       "id": "S46",
+       "name": "DailyMed metformin HCl tablets (IR), Marksans Pharma (setid b8004451-7b26-425b-b5ea-cbb1b08e30e3), Revised 6/2026",
+       "url": "dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b8004451-7b26-425b-b5ea-cbb1b08e30e3",
+       "section": "DailyMed metformin HCl tablets IR, Marksans (Revised 6/2026) sec 7, 12.3 dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b8004451-7b26-425b-b5ea-cbb1b08e30e3 [S46]",
+       "status": "VERIFIED"
+      }
+     ]
+    },
+    {
+     "code": "warn_interaction",
+     "text": "Duplicate therapy (biguanide) with Glycomet (current medicine): Duplicate therapy (no severity in the formulary)",
+     "data_status": "UNVERIFIED",
+     "sources": [
+      {
+       "id": null,
+       "name": "no source text",
+       "url": null,
+       "section": "",
+       "status": "UNVERIFIED"
+      }
+     ]
+    }
+   ],
+   "label_warnings": [
+    {
+     "code": "warn_label",
+     "text": "Label warning: Stop at or before iodinated contrast if eGFR 30-60, liver disease, alcoholism or heart failure; recheck eGFR 48 h after",
+     "data_status": "VERIFIED",
+     "sources": [
+      {
+       "id": "S4",
+       "name": "FDA drug labels via openFDA / DailyMed",
+       "url": "open.fda.gov/apis/drug/label/how-to-use-the-endpoint/",
+       "section": "S4 sec 2.4",
+       "status": "VERIFIED"
+      }
+     ]
+    },
+    {
+     "code": "warn_label",
+     "text": "Label warning: Lactic acidosis (boxed); B12 deficiency",
+     "data_status": "UNVERIFIED",
+     "sources": [
+      {
+       "id": "S4",
+       "name": "FDA drug labels via openFDA / DailyMed",
+       "url": "open.fda.gov/apis/drug/label/how-to-use-the-endpoint/",
+       "section": "S4 sec 5",
+       "status": "UNVERIFIED"
+      }
+     ]
+    },
+    {
+     "code": "warn_label",
+     "text": "Label warning: Boxed warning: postmarketing metformin-associated lactic acidosis has resulted in death, hypothermia, hypotension and resistant bradyarrhythmias; onset often subtle with nonspecific symptoms (malaise, myalgias, respiratory distress, somnolence, abdominal pain)",
+     "data_status": "SECONDARY",
+     "sources": [
+      {
+       "id": "S48",
+       "name": "Drugs.com metformin professional information",
+       "url": "www.drugs.com/pro/metformin.html",
+       "section": "Drugs.com metformin professional information Boxed Warning www.drugs.com/pro/metformin.html [S48]",
+       "status": "SECONDARY"
+      }
+     ]
+    },
+    {
+     "code": "warn_label",
+     "text": "Label warning: Boxed warning: lactic acidosis characterised by blood lactate >5 mmol/L, anion gap acidosis (no ketonuria/ketonaemia), increased lactate/pyruvate ratio, metformin plasma levels generally >5 mcg/mL",
+     "data_status": "SECONDARY",
+     "sources": [
+      {
+       "id": "S48",
+       "name": "Drugs.com metformin professional information",
+       "url": "www.drugs.com/pro/metformin.html",
+       "section": "Drugs.com metformin professional information Boxed Warning www.drugs.com/pro/metformin.html [S48]",
+       "status": "SECONDARY"
+      }
+     ]
+    },
+    {
+     "code": "warn_label",
+     "text": "Label warning: Boxed warning risk factors: renal impairment, certain drugs (e.g. carbonic anhydrase inhibitors such as topiramate), age 65 or greater, radiological study with contrast, surgery and other procedures, hypoxic states (e.g. acute congestive heart failure), excessive alcohol intake, hepatic impairment (drugs.com copy also lists mitochondrial diseases)",
+     "data_status": "SECONDARY",
+     "sources": [
+      {
+       "id": "S48",
+       "name": "Drugs.com metformin professional information",
+       "url": "www.drugs.com/pro/metformin.html",
+       "section": "Drugs.com metformin professional information Boxed Warning www.drugs.com/pro/metformin.html [S48]",
+       "status": "SECONDARY"
+      }
+     ]
+    },
+    {
+     "code": "warn_label",
+     "text": "Label warning: Boxed warning action: if lactic acidosis is suspected, immediately discontinue and institute general supportive measures in a hospital setting; prompt haemodialysis is recommended",
+     "data_status": "SECONDARY",
+     "sources": [
+      {
+       "id": "S48",
+       "name": "Drugs.com metformin professional information",
+       "url": "www.drugs.com/pro/metformin.html",
+       "section": "Drugs.com metformin professional information Boxed Warning www.drugs.com/pro/metformin.html [S48]",
+       "status": "SECONDARY"
+      }
+     ]
+    },
+    {
+     "code": "warn_label",
+     "text": "Label warning: Vitamin B12: subnormal levels in about 7% of patients in 29-week IR trials; measure haematologic parameters annually; B12 every 2-3 years and manage abnormalities",
+     "data_status": "VERIFIED",
+     "sources": [
+      {
+       "id": "S46",
+       "name": "DailyMed metformin HCl tablets (IR), Marksans Pharma (setid b8004451-7b26-425b-b5ea-cbb1b08e30e3), Revised 6/2026",
+       "url": "dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b8004451-7b26-425b-b5ea-cbb1b08e30e3",
+       "section": "DailyMed metformin HCl tablets IR, Marksans (Revised 6/2026) sec 5.2 dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b8004451-7b26-425b-b5ea-cbb1b08e30e3 [S46]; DailyMed metformin ER tablets, AvKARE (Revised 6/2024) sec 5.2 dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=1aa40000-877f-8ea4-e063-6394a90a0e31 [S47]",
+       "status": "VERIFIED"
+      },
+      {
+       "id": "S47",
+       "name": "DailyMed metformin ER tablets, AvKARE repackager (setid 1aa40000-877f-8ea4-e063-6394a90a0e31), Revised 6/2024",
+       "url": "dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=1aa40000-877f-8ea4-e063-6394a90a0e31",
+       "section": "DailyMed metformin HCl tablets IR, Marksans (Revised 6/2026) sec 5.2 dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b8004451-7b26-425b-b5ea-cbb1b08e30e3 [S46]; DailyMed metformin ER tablets, AvKARE (Revised 6/2024) sec 5.2 dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=1aa40000-877f-8ea4-e063-6394a90a0e31 [S47]",
+       "status": "VERIFIED"
+      }
+     ]
+    },
+    {
+     "code": "warn_label",
+     "text": "Label warning: Iodinated contrast: discontinue at the time of, or prior to, an iodinated contrast imaging procedure; re-evaluate eGFR 48 hours after; restart if renal function is stable",
+     "data_status": "VERIFIED",
+     "sources": [
+      {
+       "id": "S46",
+       "name": "DailyMed metformin HCl tablets (IR), Marksans Pharma (setid b8004451-7b26-425b-b5ea-cbb1b08e30e3), Revised 6/2026",
+       "url": "dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b8004451-7b26-425b-b5ea-cbb1b08e30e3",
+       "section": "DailyMed metformin HCl tablets IR, Marksans (Revised 6/2026) sec 2.4 dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b8004451-7b26-425b-b5ea-cbb1b08e30e3 [S46]",
+       "status": "VERIFIED"
+      }
+     ],
+     "conflict": "Existing rule gives qualifiers (eGFR 30-60, liver disease, alcoholism, heart failure). The qualifying eGFR/risk wording was not captured in this read; existing entry kept."
+    },
+    {
+     "code": "warn_label",
+     "text": "Label warning: Geriatric: trials lacked enough elderly patients; assess renal function more frequently in elderly patients; start at the low end of the dose range",
+     "data_status": "VERIFIED",
+     "sources": [
+      {
+       "id": "S46",
+       "name": "DailyMed metformin HCl tablets (IR), Marksans Pharma (setid b8004451-7b26-425b-b5ea-cbb1b08e30e3), Revised 6/2026",
+       "url": "dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b8004451-7b26-425b-b5ea-cbb1b08e30e3",
+       "section": "DailyMed metformin HCl tablets IR, Marksans (Revised 6/2026) sec 8.5 dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b8004451-7b26-425b-b5ea-cbb1b08e30e3 [S46]; DailyMed metformin ER tablets, AvKARE (Revised 6/2024) sec 8.5 dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=1aa40000-877f-8ea4-e063-6394a90a0e31 [S47]",
+       "status": "VERIFIED"
+      },
+      {
+       "id": "S47",
+       "name": "DailyMed metformin ER tablets, AvKARE repackager (setid 1aa40000-877f-8ea4-e063-6394a90a0e31), Revised 6/2024",
+       "url": "dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=1aa40000-877f-8ea4-e063-6394a90a0e31",
+       "section": "DailyMed metformin HCl tablets IR, Marksans (Revised 6/2026) sec 8.5 dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b8004451-7b26-425b-b5ea-cbb1b08e30e3 [S46]; DailyMed metformin ER tablets, AvKARE (Revised 6/2024) sec 8.5 dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=1aa40000-877f-8ea4-e063-6394a90a0e31 [S47]",
+       "status": "VERIFIED"
+      }
+     ]
+    },
+    {
+     "code": "warn_label",
+     "text": "Label warning: Indian guideline (RSSDI): monitor vitamin B12 periodically, especially where anaemia or peripheral neuropathy is present",
+     "data_status": "VERIFIED",
+     "sources": [
+      {
+       "id": "S49",
+       "name": "RSSDI 2022 recommendations, Int J Diabetes Dev Ctries 42 (Suppl 1)",
+       "url": "link.springer.com/content/pdf/10.1007/s13410-022-01129-5.pdf",
+       "section": "RSSDI Clinical Practice Recommendations 2022 Treatment 1 link.springer.com/content/pdf/10.1007/s13410-022-01129-5.pdf [S49]",
+       "status": "VERIFIED"
+      }
+     ]
+    }
+   ],
+   "blocks": [],
+   "needs_input": [
+    {
+     "field": "scr_mg_dl",
+     "why": "Serum creatinine (mg/dL) is needed (EGFR via ckd_epi_2021)."
+    },
+    {
+     "field": "scr_mg_dl",
+     "why": "Kidney disease is reported, unsure or unknown and this drug has numeric renal rules. Enter serum creatinine."
+    }
+   ],
+   "refused_reasons": [],
+   "interactions": [
+    {
+     "kind": "drug_drug",
+     "severity": "unspecified",
+     "with": "Glycomet (current medicine)",
+     "action": "Alcohol is known to potentiate the effect of metformin on lactate metabolism; warn against excessive intake",
+     "data_status": "VERIFIED",
+     "sources": [
+      {
+       "id": "S46",
+       "name": "DailyMed metformin HCl tablets (IR), Marksans Pharma (setid b8004451-7b26-425b-b5ea-cbb1b08e30e3), Revised 6/2026",
+       "url": "dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b8004451-7b26-425b-b5ea-cbb1b08e30e3",
+       "section": "DailyMed metformin HCl tablets IR, Marksans (Revised 6/2026) sec 7 dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b8004451-7b26-425b-b5ea-cbb1b08e30e3 [S46]",
+       "status": "VERIFIED"
+      }
+     ],
+     "details": [
+      "Alcohol is known to potentiate the effect of metformin on lactate metabolism; warn against excessive intake"
+     ],
+     "blocking": false,
+     "origins": [
+      {
+       "source": "patient_reported",
+       "scan_ref": null,
+       "scan_date": null
+      }
+     ],
+     "text": "Interaction (unspecified) with Glycomet (current medicine): Alcohol is known to potentiate the effect of metformin on lactate metabolism; warn against excessive intake"
+    },
+    {
+     "kind": "drug_drug",
+     "severity": "unspecified",
+     "with": "Glycomet (current medicine)",
+     "action": "Ranolazine, vandetanib, dolutegravir, cimetidine may raise metformin exposure; cationic drugs eliminated by renal tubular secretion may reduce metformin elimination (sec 12.3)",
+     "data_status": "VERIFIED",
+     "sources": [
+      {
+       "id": "S46",
+       "name": "DailyMed metformin HCl tablets (IR), Marksans Pharma (setid b8004451-7b26-425b-b5ea-cbb1b08e30e3), Revised 6/2026",
+       "url": "dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b8004451-7b26-425b-b5ea-cbb1b08e30e3",
+       "section": "DailyMed metformin HCl tablets IR, Marksans (Revised 6/2026) sec 7, 12.3 dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b8004451-7b26-425b-b5ea-cbb1b08e30e3 [S46]",
+       "status": "VERIFIED"
+      }
+     ],
+     "details": [
+      "Ranolazine, vandetanib, dolutegravir, cimetidine may raise metformin exposure; cationic drugs eliminated by renal tubular secretion may reduce metformin elimination (sec 12.3)"
+     ],
+     "blocking": false,
+     "origins": [
+      {
+       "source": "patient_reported",
+       "scan_ref": null,
+       "scan_date": null
+      }
+     ],
+     "text": "Interaction (unspecified) with Glycomet (current medicine): Ranolazine, vandetanib, dolutegravir, cimetidine may raise metformin exposure; cationic drugs eliminated by renal tubular secretion may reduce metformin elimination (sec 12.3)"
+    },
+    {
+     "kind": "duplicate",
+     "severity": "unspecified",
+     "with": "Glycomet (current medicine)",
+     "action": "Duplicate therapy (no severity in the formulary)",
+     "data_status": "UNVERIFIED",
+     "sources": [
+      {
+       "id": null,
+       "name": "no source text",
+       "url": null,
+       "section": "",
+       "status": "UNVERIFIED"
+      }
+     ],
+     "details": [],
+     "blocking": false,
+     "origins": [
+      {
+       "source": "patient_reported",
+       "scan_ref": null,
+       "scan_date": null
+      }
+     ],
+     "text": "Duplicate therapy (biguanide) with Glycomet (current medicine): Duplicate therapy (no severity in the formulary)"
+    }
+   ],
+   "overrides": [],
+   "provenance": {
+    "abdominal_surgery": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "age_days_hi": {
+     "value": 21549.75,
+     "provenance": "patient_reported"
+    },
+    "age_days_lo": {
+     "value": 21184.5,
+     "provenance": "patient_reported"
+    },
+    "age_months": {
+     "value": 696,
+     "provenance": "patient_reported"
+    },
+    "age_window_months": {
+     "value": 11,
+     "provenance": "patient_reported"
+    },
+    "age_years_reported": {
+     "value": 58,
+     "provenance": "patient_reported"
+    },
+    "alcohol": {
+     "value": "no",
+     "provenance": "doctor_confirmed",
+     "note": "History check"
+    },
+    "allergy_nsaids": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "allergy_penicillins": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "allergy_sulfa": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "asthma": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "cholesterol": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "complaint": {
+     "value": "other",
+     "provenance": "patient_reported"
+    },
+    "diabetes": {
+     "value": "yes",
+     "provenance": "patient_reported"
+    },
+    "family_heart": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "gi_bleed": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "heart_disease": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "hypertension": {
+     "value": "yes",
+     "provenance": "patient_reported"
+    },
+    "kidney_disease": {
+     "value": "yes",
+     "provenance": "patient_reported"
+    },
+    "liver_disease": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "meds_known": {
+     "value": "yes",
+     "provenance": "patient_reported"
+    },
+    "meds_text": {
+     "value": "Glycomet",
+     "provenance": "patient_reported"
+    },
+    "pregnancy_bleeding": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "pregnant": {
+     "value": "no",
+     "provenance": "derived",
+     "note": "not asked: male, or outside the age band the quiz asks pregnancy for"
+    },
+    "sex": {
+     "value": "male",
+     "provenance": "patient_reported"
+    },
+    "sex_for_formula": {
+     "value": "male",
+     "provenance": "derived"
+    },
+    "smoking": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked on this path"
+    },
+    "stones": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "ulcer": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "weight_kg": {
+     "value": 78.0,
+     "provenance": "doctor_confirmed",
+     "note": "quiz value 78.0 confirmed"
+    }
+   },
+   "sources": [
+    {
+     "id": "S4",
+     "name": "FDA drug labels via openFDA / DailyMed",
+     "url": "open.fda.gov/apis/drug/label/how-to-use-the-endpoint/",
+     "section": "S4 sec 2.2",
+     "status": "SECONDARY"
+    },
+    {
+     "id": "S47",
+     "name": "DailyMed metformin ER tablets, AvKARE repackager (setid 1aa40000-877f-8ea4-e063-6394a90a0e31), Revised 6/2024",
+     "url": "dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=1aa40000-877f-8ea4-e063-6394a90a0e31",
+     "section": "DailyMed metformin ER tablets, AvKARE (Revised 6/2024) sec 7 dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=1aa40000-877f-8ea4-e063-6394a90a0e31 [S47]",
+     "status": "VERIFIED"
+    },
+    {
+     "id": "S46",
+     "name": "DailyMed metformin HCl tablets (IR), Marksans Pharma (setid b8004451-7b26-425b-b5ea-cbb1b08e30e3), Revised 6/2026",
+     "url": "dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b8004451-7b26-425b-b5ea-cbb1b08e30e3",
+     "section": "DailyMed metformin HCl tablets IR, Marksans (Revised 6/2026) sec 7 dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b8004451-7b26-425b-b5ea-cbb1b08e30e3 [S46]",
+     "status": "VERIFIED"
+    },
+    {
+     "id": "S46",
+     "name": "DailyMed metformin HCl tablets (IR), Marksans Pharma (setid b8004451-7b26-425b-b5ea-cbb1b08e30e3), Revised 6/2026",
+     "url": "dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b8004451-7b26-425b-b5ea-cbb1b08e30e3",
+     "section": "DailyMed metformin HCl tablets IR, Marksans (Revised 6/2026) sec 7, 12.3 dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b8004451-7b26-425b-b5ea-cbb1b08e30e3 [S46]",
+     "status": "VERIFIED"
+    },
+    {
+     "id": null,
+     "name": "no source text",
+     "url": null,
+     "section": "",
+     "status": "UNVERIFIED"
+    }
+   ],
+   "data_status": "UNVERIFIED",
+   "final": false,
+   "pending_confirmations": [],
+   "indications": [
+    {
+     "key": "type 2 diabetes",
+     "labels": [
+      "type 2 diabetes",
+      "type 2 diabetes",
+      "type 2 diabetes, IR adult (US label)",
+      "type 2 diabetes, IR age 10+ (US label)",
+      "type 2 diabetes, ER adult (US label, AvKARE rev 6/2024)"
+     ],
+     "rules": 5
+    },
+    {
+     "key": "prediabetes",
+     "labels": [
+      "prediabetes (RSSDI 2022, India)"
+     ],
+     "rules": 1
+    }
+   ],
+   "engine_version": "0.1.0",
+   "formulary_version": "0.2.0",
+   "banner": "Prototype data, not clinically verified",
+   "disclaimer": "Decision support only. The doctor makes the final decision.",
+   "allow_unverified": true,
+   "demo": true,
+   "acknowledge_items": [],
+   "demo_banner": "DEMO - UNVERIFIED DATA",
+   "boundary_overlap": []
+  },
+  "card": {
+   "status": "needs_input",
+   "header": "More information needed",
+   "reason": "1 item must be filled in before a dose can be shown.",
+   "responsible": "Missing: scr_mg_dl",
+   "sources": [],
+   "missing": [
+    {
+     "field": "scr_mg_dl",
+     "why": "Serum creatinine (mg/dL) is needed (EGFR via ckd_epi_2021). Kidney disease is reported, unsure or unknown and this drug has numeric renal rules. Enter serum creatinine.",
+     "kind": "num",
+     "key": "scr_mg_dl",
+     "options": [],
+     "hint": null
+    }
+   ],
+   "show_numbers": true,
+   "overrides": []
+  }
+ },
+ "blocked": {
+  "result": {
+   "status": "blocked",
+   "drug": "amoxicillin",
+   "indication": "community-acquired pneumonia (India)",
+   "selected_rule_id": "amoxicillin#0",
+   "suggested_rule_id": "amoxicillin#0",
+   "alternatives": [
+    {
+     "rule_id": "amoxicillin#0",
+     "indication": "community-acquired pneumonia (India)",
+     "population": {
+      "min_age_years": 18
+     },
+     "dose_type": "fixed",
+     "data_status": "VERIFIED",
+     "suggested": true,
+     "selected": true,
+     "computed": true,
+     "kind": "numeric",
+     "sources": [
+      {
+       "id": "S2",
+       "name": "ICMR Treatment Guidelines for Antimicrobial Use in Common Syndromes, 2nd ed. 2019",
+       "url": "www.icmr.gov.in/icmrobject/custom_data/pdf/resource-guidelines/Treatment_Guidelines_2019_Final.pdf",
+       "section": "S2 Table 4.4",
+       "status": "VERIFIED"
+      }
+     ],
+     "rule_hash": "caf2c499d9",
+     "dose_range_mg": [
+      500.0,
+      1000.0
+     ],
+     "interval_h": null,
+     "doses_per_day": 3,
+     "binding_cap": null,
+     "needs_input": []
+    }
+   ],
+   "dose_mg": null,
+   "dose_range_mg": null,
+   "product": null,
+   "product_options": [],
+   "volume_ml": null,
+   "units": null,
+   "interval_h": null,
+   "doses_per_day": 3,
+   "daily_total_mg": null,
+   "daily_max_mg": null,
+   "binding_cap": null,
+   "duration": null,
+   "plan": null,
+   "text_regimen": null,
+   "computed": false,
+   "calculation_steps": [
+    "[UNVERIFIED] Age: 408 months (window 408.0 to 420.0 months, patient_reported).",
+    "[UNVERIFIED] Weight: 60 kg (patient_reported).",
+    "[UNVERIFIED] Rule amoxicillin#0: 'community-acquired pneumonia (India)', S2 Table 4.4 [VERIFIED].",
+    "[UNVERIFIED] Rule age window: min_age_years 18.",
+    "[UNVERIFIED] Fixed dose 500 to 1000 mg.",
+    "[UNVERIFIED] No cap bound.",
+    "[UNVERIFIED] Daily total 1500.0 to 3000.0 mg/day.",
+    "[UNVERIFIED] Product capsule 250 mg: 3 unit(s) -> 750.0 mg delivered.",
+    "[UNVERIFIED] capsule 250 mg per unit: 3 unit(s) = 750.0 mg."
+   ],
+   "warnings": [
+    {
+     "code": "calc",
+     "text": "Pharmacy form not chosen: the suggested product is the closest listed one."
+    },
+    {
+     "code": "warn_other_allergy_unmatched",
+     "text": "Free-text allergy not recognised: 'dust'. Doctor to review."
+    }
+   ],
+   "label_warnings": [
+    {
+     "code": "warn_label",
+     "text": "Label warning: Duration: continue at least 48-72 h after the patient is asymptomatic or eradication is documented; S. pyogenes at least 10 days; some infections need several weeks",
+     "data_status": "SECONDARY",
+     "sources": [
+      {
+       "id": "S29",
+       "name": "DrugCentral copy of Amoxicillin for Oral Suspension USP label, Hikma, rev Feb 2024",
+       "url": "drugcentral.org/label/d46f1091-33dc-4f8f-9c34-75dcfedb4b4c/view",
+       "section": "DrugCentral copy of Hikma amoxicillin for oral suspension label (rev Feb 2024) sec 2.2 drugcentral.org/label/d46f1091-33dc-4f8f-9c34-75dcfedb4b4c/view [S29]",
+       "status": "SECONDARY"
+      }
+     ]
+    }
+   ],
+   "blocks": [
+    {
+     "code": "block_ci",
+     "text": "Contraindication: Serious penicillin/beta-lactam allergy",
+     "data_status": "UNVERIFIED",
+     "sources": [
+      {
+       "id": "S4",
+       "name": "FDA drug labels via openFDA / DailyMed",
+       "url": "open.fda.gov/apis/drug/label/how-to-use-the-endpoint/",
+       "section": "S4 (amoxicillin label)",
+       "status": "UNVERIFIED"
+      }
+     ],
+     "overridable": true
+    },
+    {
+     "code": "block_ci",
+     "text": "Contraindication: Serious hypersensitivity reaction (e.g. anaphylaxis, Stevens-Johnson syndrome) to amoxicillin or other beta-lactams, including penicillins and cephalosporins",
+     "data_status": "VERIFIED",
+     "sources": [
+      {
+       "id": "S29",
+       "name": "DrugCentral copy of Amoxicillin for Oral Suspension USP label, Hikma, rev Feb 2024",
+       "url": "drugcentral.org/label/d46f1091-33dc-4f8f-9c34-75dcfedb4b4c/view",
+       "section": "DrugCentral copy of Hikma amoxicillin for oral suspension label (rev Feb 2024) sec 4 drugcentral.org/label/d46f1091-33dc-4f8f-9c34-75dcfedb4b4c/view [S29]; medlibrary amoxicillin label (page 2) medlibrary.org/lib/rx/meds/amoxicillin-31/page/2/ [S30]",
+       "status": "VERIFIED"
+      },
+      {
+       "id": "S30",
+       "name": "medlibrary.org amoxicillin-31 page 2 (mirror of US amoxicillin label)",
+       "url": "medlibrary.org/lib/rx/meds/amoxicillin-31/page/2/",
+       "section": "DrugCentral copy of Hikma amoxicillin for oral suspension label (rev Feb 2024) sec 4 drugcentral.org/label/d46f1091-33dc-4f8f-9c34-75dcfedb4b4c/view [S29]; medlibrary amoxicillin label (page 2) medlibrary.org/lib/rx/meds/amoxicillin-31/page/2/ [S30]",
+       "status": "VERIFIED"
+      }
+     ],
+     "overridable": true
+    },
+    {
+     "code": "block_interaction",
+     "overridable": true,
+     "data_status": "VERIFIED",
+     "sources": [
+      {
+       "id": "S3",
+       "name": "AUGMENTIN US prescribing information, revised 07/2026",
+       "url": "www.accessdata.fda.gov/drugsatfda_docs/label/2026/050564s061lbl.pdf",
+       "section": "S3 sec 4",
+       "status": "VERIFIED"
+      }
+     ],
+     "text": "Interaction (contraindicated) with allergy to penicillins (quiz): Block (serious allergy)"
+    }
+   ],
+   "needs_input": [],
+   "refused_reasons": [],
+   "interactions": [
+    {
+     "kind": "allergy",
+     "severity": "contraindicated",
+     "with": "allergy to penicillins (quiz)",
+     "action": "Block (serious allergy)",
+     "data_status": "VERIFIED",
+     "sources": [
+      {
+       "id": "S3",
+       "name": "AUGMENTIN US prescribing information, revised 07/2026",
+       "url": "www.accessdata.fda.gov/drugsatfda_docs/label/2026/050564s061lbl.pdf",
+       "section": "S3 sec 4",
+       "status": "VERIFIED"
+      }
+     ],
+     "details": [],
+     "blocking": true,
+     "text": "Interaction (contraindicated) with allergy to penicillins (quiz): Block (serious allergy)"
+    }
+   ],
+   "overrides": [],
+   "provenance": {
+    "abdominal_surgery": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "age_days_hi": {
+     "value": 12783.75,
+     "provenance": "patient_reported"
+    },
+    "age_days_lo": {
+     "value": 12418.5,
+     "provenance": "patient_reported"
+    },
+    "age_months": {
+     "value": 408,
+     "provenance": "patient_reported"
+    },
+    "age_window_months": {
+     "value": 11,
+     "provenance": "patient_reported"
+    },
+    "age_years_reported": {
+     "value": 34,
+     "provenance": "patient_reported"
+    },
+    "alcohol": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "allergy_nsaids": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "allergy_penicillins": {
+     "value": "yes",
+     "provenance": "patient_reported"
+    },
+    "allergy_sulfa": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "asthma": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "cholesterol": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "complaint": {
+     "value": "cough_breath",
+     "provenance": "patient_reported"
+    },
+    "diabetes": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "family_heart": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "gi_bleed": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "heart_disease": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "hypertension": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "kidney_disease": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "liver_disease": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "meds_known": {
+     "value": "yes",
+     "provenance": "patient_reported",
+     "note": "none"
+    },
+    "pregnancy_bleeding": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "pregnant": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "sex": {
+     "value": "female",
+     "provenance": "patient_reported"
+    },
+    "sex_for_formula": {
+     "value": "female",
+     "provenance": "derived"
+    },
+    "smoking": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "stones": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "ulcer": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "weight_kg": {
+     "value": 60.0,
+     "provenance": "patient_reported"
+    }
+   },
+   "sources": [
+    {
+     "id": "S2",
+     "name": "ICMR Treatment Guidelines for Antimicrobial Use in Common Syndromes, 2nd ed. 2019",
+     "url": "www.icmr.gov.in/icmrobject/custom_data/pdf/resource-guidelines/Treatment_Guidelines_2019_Final.pdf",
+     "section": "S2 Table 4.4",
+     "status": "VERIFIED"
+    },
+    {
+     "id": "S4",
+     "name": "FDA drug labels via openFDA / DailyMed",
+     "url": "open.fda.gov/apis/drug/label/how-to-use-the-endpoint/",
+     "section": "S4 (amoxicillin label)",
+     "status": "UNVERIFIED"
+    },
+    {
+     "id": "S29",
+     "name": "DrugCentral copy of Amoxicillin for Oral Suspension USP label, Hikma, rev Feb 2024",
+     "url": "drugcentral.org/label/d46f1091-33dc-4f8f-9c34-75dcfedb4b4c/view",
+     "section": "DrugCentral copy of Hikma amoxicillin for oral suspension label (rev Feb 2024) sec 4 drugcentral.org/label/d46f1091-33dc-4f8f-9c34-75dcfedb4b4c/view [S29]; medlibrary amoxicillin label (page 2) medlibrary.org/lib/rx/meds/amoxicillin-31/page/2/ [S30]",
+     "status": "VERIFIED"
+    },
+    {
+     "id": "S30",
+     "name": "medlibrary.org amoxicillin-31 page 2 (mirror of US amoxicillin label)",
+     "url": "medlibrary.org/lib/rx/meds/amoxicillin-31/page/2/",
+     "section": "DrugCentral copy of Hikma amoxicillin for oral suspension label (rev Feb 2024) sec 4 drugcentral.org/label/d46f1091-33dc-4f8f-9c34-75dcfedb4b4c/view [S29]; medlibrary amoxicillin label (page 2) medlibrary.org/lib/rx/meds/amoxicillin-31/page/2/ [S30]",
+     "status": "VERIFIED"
+    },
+    {
+     "id": "S3",
+     "name": "AUGMENTIN US prescribing information, revised 07/2026",
+     "url": "www.accessdata.fda.gov/drugsatfda_docs/label/2026/050564s061lbl.pdf",
+     "section": "S3 sec 4",
+     "status": "VERIFIED"
+    }
+   ],
+   "data_status": "UNVERIFIED",
+   "final": false,
+   "pending_confirmations": [],
+   "indications": [
+    {
+     "key": "community-acquired pneumonia",
+     "labels": [
+      "community-acquired pneumonia (India)",
+      "community-acquired pneumonia (India)"
+     ],
+     "rules": 2
+    },
+    {
+     "key": "respiratory infection",
+     "labels": [
+      "respiratory infection (WHO)"
+     ],
+     "rules": 1
+    },
+    {
+     "key": "pneumococcal non-meningeal",
+     "labels": [
+      "pneumococcal non-meningeal (India)"
+     ],
+     "rules": 1
+    },
+    {
+     "key": "all indications",
+     "labels": [
+      "all indications (WHO high dose)"
+     ],
+     "rules": 1
+    },
+    {
+     "key": "streptococcal pharyngitis",
+     "labels": [
+      "streptococcal pharyngitis (India)"
+     ],
+     "rules": 1
+    },
+    {
+     "key": "adult",
+     "labels": [
+      "adult, US label overall range"
+     ],
+     "rules": 1
+    },
+    {
+     "key": "mild/moderate ent",
+     "labels": [
+      "mild/moderate ENT, skin, GU (US label)"
+     ],
+     "rules": 1
+    },
+    {
+     "key": "severe or lower respiratory tract infection",
+     "labels": [
+      "severe or lower respiratory tract infection (US label)"
+     ],
+     "rules": 1
+    },
+    {
+     "key": "paediatric >= 12 weeks",
+     "labels": [
+      "paediatric >= 12 weeks, overall range (US label)"
+     ],
+     "rules": 1
+    },
+    {
+     "key": "paediatric <40 kg mild/moderate",
+     "labels": [
+      "paediatric <40 kg mild/moderate (US label)"
+     ],
+     "rules": 1
+    },
+    {
+     "key": "paediatric <40 kg severe/lrti",
+     "labels": [
+      "paediatric <40 kg severe/LRTI (US label)"
+     ],
+     "rules": 1
+    },
+    {
+     "key": "infants < 12 weeks",
+     "labels": [
+      "infants < 12 weeks (US label)"
+     ],
+     "rules": 1
+    }
+   ],
+   "engine_version": "0.1.0",
+   "formulary_version": "0.2.0",
+   "banner": "Prototype data, not clinically verified",
+   "disclaimer": "Decision support only. The doctor makes the final decision.",
+   "allow_unverified": true,
+   "demo": true,
+   "acknowledge_items": [],
+   "demo_banner": "DEMO - UNVERIFIED DATA",
+   "boundary_overlap": []
+  },
+  "card": {
+   "status": "blocked",
+   "header": "Blocked: safety rule",
+   "reason": "Contraindication: Serious penicillin/beta-lactam allergy",
+   "responsible": "Rule type: contraindication · 3 safety rules fired, all listed below",
+   "sources": [
+    {
+     "id": "S4",
+     "name": "FDA drug labels via openFDA / DailyMed",
+     "url": "open.fda.gov/apis/drug/label/how-to-use-the-endpoint/"
+    },
+    {
+     "id": "S29",
+     "name": "DrugCentral copy of Amoxicillin for Oral Suspension USP label, Hikma, rev Feb 2024",
+     "url": "drugcentral.org/label/d46f1091-33dc-4f8f-9c34-75dcfedb4b4c/view"
+    },
+    {
+     "id": "S30",
+     "name": "medlibrary.org amoxicillin-31 page 2 (mirror of US amoxicillin label)",
+     "url": "medlibrary.org/lib/rx/meds/amoxicillin-31/page/2/"
+    },
+    {
+     "id": "S3",
+     "name": "AUGMENTIN US prescribing information, revised 07/2026",
+     "url": "www.accessdata.fda.gov/drugsatfda_docs/label/2026/050564s061lbl.pdf"
+    }
+   ],
+   "missing": [],
+   "show_numbers": false,
+   "overrides": []
+  }
+ },
+ "override": {
+  "result": {
+   "status": "ok",
+   "drug": "amoxicillin",
+   "indication": "community-acquired pneumonia (India)",
+   "selected_rule_id": "amoxicillin#0",
+   "suggested_rule_id": "amoxicillin#0",
+   "alternatives": [
+    {
+     "rule_id": "amoxicillin#0",
+     "indication": "community-acquired pneumonia (India)",
+     "population": {
+      "min_age_years": 18
+     },
+     "dose_type": "fixed",
+     "data_status": "VERIFIED",
+     "suggested": true,
+     "selected": true,
+     "computed": true,
+     "kind": "numeric",
+     "sources": [
+      {
+       "id": "S2",
+       "name": "ICMR Treatment Guidelines for Antimicrobial Use in Common Syndromes, 2nd ed. 2019",
+       "url": "www.icmr.gov.in/icmrobject/custom_data/pdf/resource-guidelines/Treatment_Guidelines_2019_Final.pdf",
+       "section": "S2 Table 4.4",
+       "status": "VERIFIED"
+      }
+     ],
+     "rule_hash": "caf2c499d9",
+     "dose_range_mg": [
+      500.0,
+      1000.0
+     ],
+     "interval_h": null,
+     "doses_per_day": 3,
+     "binding_cap": null,
+     "needs_input": []
+    }
+   ],
+   "dose_mg": 750.0,
+   "dose_range_mg": [
+    500.0,
+    1000.0
+   ],
+   "product": "capsule 250 mg",
+   "product_options": [
+    {
+     "product": "capsule 250 mg",
+     "form": "capsule",
+     "units": 3,
+     "volume_ml": null,
+     "delivered_mg": 750.0,
+     "in_range": true,
+     "note": "",
+     "ratio_mismatch": false
+    },
+    {
+     "product": "capsule 500 mg",
+     "form": "capsule",
+     "units": 1,
+     "volume_ml": null,
+     "delivered_mg": 500.0,
+     "in_range": true,
+     "note": "",
+     "ratio_mismatch": false
+    },
+    {
+     "product": "capsule 500 mg",
+     "form": "capsule",
+     "units": 2,
+     "volume_ml": null,
+     "delivered_mg": 1000.0,
+     "in_range": true,
+     "note": "",
+     "ratio_mismatch": false
+    },
+    {
+     "product": "oral liquid 250 mg/5 mL",
+     "form": "oral liquid",
+     "units": null,
+     "volume_ml": 15.0,
+     "delivered_mg": 750.0,
+     "in_range": true,
+     "note": "",
+     "ratio_mismatch": false
+    },
+    {
+     "product": "oral liquid 125 mg/5 mL",
+     "form": "oral liquid",
+     "units": null,
+     "volume_ml": 30.0,
+     "delivered_mg": 750.0,
+     "in_range": true,
+     "note": "",
+     "ratio_mismatch": false
+    }
+   ],
+   "volume_ml": null,
+   "units": 3,
+   "interval_h": null,
+   "doses_per_day": 3,
+   "daily_total_mg": 2250.0,
+   "daily_max_mg": null,
+   "binding_cap": null,
+   "duration": null,
+   "plan": null,
+   "text_regimen": null,
+   "computed": true,
+   "calculation_steps": [
+    "[UNVERIFIED] Age: 408 months (window 408.0 to 420.0 months, patient_reported).",
+    "[UNVERIFIED] Weight: 60 kg (patient_reported).",
+    "[UNVERIFIED] Rule amoxicillin#0: 'community-acquired pneumonia (India)', S2 Table 4.4 [VERIFIED].",
+    "[UNVERIFIED] Rule age window: min_age_years 18.",
+    "[UNVERIFIED] Fixed dose 500 to 1000 mg.",
+    "[UNVERIFIED] No cap bound.",
+    "[UNVERIFIED] Daily total 1500.0 to 3000.0 mg/day.",
+    "[UNVERIFIED] Product capsule 250 mg: 3 unit(s) -> 750.0 mg delivered.",
+    "[UNVERIFIED] capsule 250 mg per unit: 3 unit(s) = 750.0 mg."
+   ],
+   "warnings": [
+    {
+     "code": "calc",
+     "text": "Pharmacy form not chosen: the suggested product is the closest listed one."
+    },
+    {
+     "code": "warn_other_allergy_unmatched",
+     "text": "Free-text allergy not recognised: 'dust'. Doctor to review."
+    },
+    {
+     "code": "overridden",
+     "text": "OVERRIDDEN by doctor (demo_doctor): Benefit outweighs risk: Mild reaction only; ID consult done, monitored dose | original block: Contraindication: Serious penicillin/beta-lactam allergy",
+     "data_status": "UNVERIFIED",
+     "sources": [
+      {
+       "id": "S4",
+       "name": "FDA drug labels via openFDA / DailyMed",
+       "url": "open.fda.gov/apis/drug/label/how-to-use-the-endpoint/",
+       "section": "S4 (amoxicillin label)",
+       "status": "UNVERIFIED"
+      }
+     ]
+    },
+    {
+     "code": "overridden",
+     "text": "OVERRIDDEN by doctor (demo_doctor): Benefit outweighs risk: Mild reaction only; ID consult done, monitored dose | original block: Contraindication: Serious hypersensitivity reaction (e.g. anaphylaxis, Stevens-Johnson syndrome) to amoxicillin or other beta-lactams, including penicillins and cephalosporins",
+     "data_status": "VERIFIED",
+     "sources": [
+      {
+       "id": "S29",
+       "name": "DrugCentral copy of Amoxicillin for Oral Suspension USP label, Hikma, rev Feb 2024",
+       "url": "drugcentral.org/label/d46f1091-33dc-4f8f-9c34-75dcfedb4b4c/view",
+       "section": "DrugCentral copy of Hikma amoxicillin for oral suspension label (rev Feb 2024) sec 4 drugcentral.org/label/d46f1091-33dc-4f8f-9c34-75dcfedb4b4c/view [S29]; medlibrary amoxicillin label (page 2) medlibrary.org/lib/rx/meds/amoxicillin-31/page/2/ [S30]",
+       "status": "VERIFIED"
+      },
+      {
+       "id": "S30",
+       "name": "medlibrary.org amoxicillin-31 page 2 (mirror of US amoxicillin label)",
+       "url": "medlibrary.org/lib/rx/meds/amoxicillin-31/page/2/",
+       "section": "DrugCentral copy of Hikma amoxicillin for oral suspension label (rev Feb 2024) sec 4 drugcentral.org/label/d46f1091-33dc-4f8f-9c34-75dcfedb4b4c/view [S29]; medlibrary amoxicillin label (page 2) medlibrary.org/lib/rx/meds/amoxicillin-31/page/2/ [S30]",
+       "status": "VERIFIED"
+      }
+     ]
+    },
+    {
+     "code": "overridden",
+     "text": "OVERRIDDEN by doctor (demo_doctor): Benefit outweighs risk: Mild reaction only; ID consult done, monitored dose | original block: Interaction (contraindicated) with allergy to penicillins (quiz): Block (serious allergy)",
+     "data_status": "VERIFIED",
+     "sources": [
+      {
+       "id": "S3",
+       "name": "AUGMENTIN US prescribing information, revised 07/2026",
+       "url": "www.accessdata.fda.gov/drugsatfda_docs/label/2026/050564s061lbl.pdf",
+       "section": "S3 sec 4",
+       "status": "VERIFIED"
+      }
+     ]
+    }
+   ],
+   "label_warnings": [
+    {
+     "code": "warn_label",
+     "text": "Label warning: Duration: continue at least 48-72 h after the patient is asymptomatic or eradication is documented; S. pyogenes at least 10 days; some infections need several weeks",
+     "data_status": "SECONDARY",
+     "sources": [
+      {
+       "id": "S29",
+       "name": "DrugCentral copy of Amoxicillin for Oral Suspension USP label, Hikma, rev Feb 2024",
+       "url": "drugcentral.org/label/d46f1091-33dc-4f8f-9c34-75dcfedb4b4c/view",
+       "section": "DrugCentral copy of Hikma amoxicillin for oral suspension label (rev Feb 2024) sec 2.2 drugcentral.org/label/d46f1091-33dc-4f8f-9c34-75dcfedb4b4c/view [S29]",
+       "status": "SECONDARY"
+      }
+     ]
+    }
+   ],
+   "blocks": [],
+   "needs_input": [],
+   "refused_reasons": [],
+   "interactions": [
+    {
+     "kind": "allergy",
+     "severity": "contraindicated",
+     "with": "allergy to penicillins (quiz)",
+     "action": "Block (serious allergy)",
+     "data_status": "VERIFIED",
+     "sources": [
+      {
+       "id": "S3",
+       "name": "AUGMENTIN US prescribing information, revised 07/2026",
+       "url": "www.accessdata.fda.gov/drugsatfda_docs/label/2026/050564s061lbl.pdf",
+       "section": "S3 sec 4",
+       "status": "VERIFIED"
+      }
+     ],
+     "details": [],
+     "blocking": true,
+     "text": "Interaction (contraindicated) with allergy to penicillins (quiz): Block (serious allergy)"
+    }
+   ],
+   "overrides": [
+    {
+     "block": "Contraindication: Serious penicillin/beta-lactam allergy",
+     "code": "block_ci",
+     "reason": "Mild reaction only; ID consult done, monitored dose",
+     "doctor_id": "demo_doctor",
+     "category": "benefit_outweighs_risk",
+     "category_label": "Benefit outweighs risk"
+    },
+    {
+     "block": "Contraindication: Serious hypersensitivity reaction (e.g. anaphylaxis, Stevens-Johnson syndrome) to amoxicillin or other beta-lactams, including penicillins and cephalosporins",
+     "code": "block_ci",
+     "reason": "Mild reaction only; ID consult done, monitored dose",
+     "doctor_id": "demo_doctor",
+     "category": "benefit_outweighs_risk",
+     "category_label": "Benefit outweighs risk"
+    },
+    {
+     "block": "Interaction (contraindicated) with allergy to penicillins (quiz): Block (serious allergy)",
+     "code": "block_interaction",
+     "reason": "Mild reaction only; ID consult done, monitored dose",
+     "doctor_id": "demo_doctor",
+     "category": "benefit_outweighs_risk",
+     "category_label": "Benefit outweighs risk"
+    }
+   ],
+   "provenance": {
+    "abdominal_surgery": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "age_days_hi": {
+     "value": 12783.75,
+     "provenance": "patient_reported"
+    },
+    "age_days_lo": {
+     "value": 12418.5,
+     "provenance": "patient_reported"
+    },
+    "age_months": {
+     "value": 408,
+     "provenance": "patient_reported"
+    },
+    "age_window_months": {
+     "value": 11,
+     "provenance": "patient_reported"
+    },
+    "age_years_reported": {
+     "value": 34,
+     "provenance": "patient_reported"
+    },
+    "alcohol": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "allergy_nsaids": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "allergy_penicillins": {
+     "value": "yes",
+     "provenance": "patient_reported"
+    },
+    "allergy_sulfa": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "asthma": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "cholesterol": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "complaint": {
+     "value": "cough_breath",
+     "provenance": "patient_reported"
+    },
+    "diabetes": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "family_heart": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "gi_bleed": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "heart_disease": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "hypertension": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "kidney_disease": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "liver_disease": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "meds_known": {
+     "value": "yes",
+     "provenance": "patient_reported",
+     "note": "none"
+    },
+    "pregnancy_bleeding": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "pregnant": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "sex": {
+     "value": "female",
+     "provenance": "patient_reported"
+    },
+    "sex_for_formula": {
+     "value": "female",
+     "provenance": "derived"
+    },
+    "smoking": {
+     "value": "no",
+     "provenance": "patient_reported"
+    },
+    "stones": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "ulcer": {
+     "value": "unknown",
+     "provenance": "unknown",
+     "note": "not asked"
+    },
+    "weight_kg": {
+     "value": 60.0,
+     "provenance": "patient_reported"
+    }
+   },
+   "sources": [
+    {
+     "id": "S2",
+     "name": "ICMR Treatment Guidelines for Antimicrobial Use in Common Syndromes, 2nd ed. 2019",
+     "url": "www.icmr.gov.in/icmrobject/custom_data/pdf/resource-guidelines/Treatment_Guidelines_2019_Final.pdf",
+     "section": "S2 Table 4.4",
+     "status": "VERIFIED"
+    },
+    {
+     "id": "S4",
+     "name": "FDA drug labels via openFDA / DailyMed",
+     "url": "open.fda.gov/apis/drug/label/how-to-use-the-endpoint/",
+     "section": "S4 (amoxicillin label)",
+     "status": "UNVERIFIED"
+    },
+    {
+     "id": "S29",
+     "name": "DrugCentral copy of Amoxicillin for Oral Suspension USP label, Hikma, rev Feb 2024",
+     "url": "drugcentral.org/label/d46f1091-33dc-4f8f-9c34-75dcfedb4b4c/view",
+     "section": "DrugCentral copy of Hikma amoxicillin for oral suspension label (rev Feb 2024) sec 4 drugcentral.org/label/d46f1091-33dc-4f8f-9c34-75dcfedb4b4c/view [S29]; medlibrary amoxicillin label (page 2) medlibrary.org/lib/rx/meds/amoxicillin-31/page/2/ [S30]",
+     "status": "VERIFIED"
+    },
+    {
+     "id": "S30",
+     "name": "medlibrary.org amoxicillin-31 page 2 (mirror of US amoxicillin label)",
+     "url": "medlibrary.org/lib/rx/meds/amoxicillin-31/page/2/",
+     "section": "DrugCentral copy of Hikma amoxicillin for oral suspension label (rev Feb 2024) sec 4 drugcentral.org/label/d46f1091-33dc-4f8f-9c34-75dcfedb4b4c/view [S29]; medlibrary amoxicillin label (page 2) medlibrary.org/lib/rx/meds/amoxicillin-31/page/2/ [S30]",
+     "status": "VERIFIED"
+    },
+    {
+     "id": "S3",
+     "name": "AUGMENTIN US prescribing information, revised 07/2026",
+     "url": "www.accessdata.fda.gov/drugsatfda_docs/label/2026/050564s061lbl.pdf",
+     "section": "S3 sec 4",
+     "status": "VERIFIED"
+    }
+   ],
+   "data_status": "UNVERIFIED",
+   "final": true,
+   "pending_confirmations": [],
+   "indications": [
+    {
+     "key": "community-acquired pneumonia",
+     "labels": [
+      "community-acquired pneumonia (India)",
+      "community-acquired pneumonia (India)"
+     ],
+     "rules": 2
+    },
+    {
+     "key": "respiratory infection",
+     "labels": [
+      "respiratory infection (WHO)"
+     ],
+     "rules": 1
+    },
+    {
+     "key": "pneumococcal non-meningeal",
+     "labels": [
+      "pneumococcal non-meningeal (India)"
+     ],
+     "rules": 1
+    },
+    {
+     "key": "all indications",
+     "labels": [
+      "all indications (WHO high dose)"
+     ],
+     "rules": 1
+    },
+    {
+     "key": "streptococcal pharyngitis",
+     "labels": [
+      "streptococcal pharyngitis (India)"
+     ],
+     "rules": 1
+    },
+    {
+     "key": "adult",
+     "labels": [
+      "adult, US label overall range"
+     ],
+     "rules": 1
+    },
+    {
+     "key": "mild/moderate ent",
+     "labels": [
+      "mild/moderate ENT, skin, GU (US label)"
+     ],
+     "rules": 1
+    },
+    {
+     "key": "severe or lower respiratory tract infection",
+     "labels": [
+      "severe or lower respiratory tract infection (US label)"
+     ],
+     "rules": 1
+    },
+    {
+     "key": "paediatric >= 12 weeks",
+     "labels": [
+      "paediatric >= 12 weeks, overall range (US label)"
+     ],
+     "rules": 1
+    },
+    {
+     "key": "paediatric <40 kg mild/moderate",
+     "labels": [
+      "paediatric <40 kg mild/moderate (US label)"
+     ],
+     "rules": 1
+    },
+    {
+     "key": "paediatric <40 kg severe/lrti",
+     "labels": [
+      "paediatric <40 kg severe/LRTI (US label)"
+     ],
+     "rules": 1
+    },
+    {
+     "key": "infants < 12 weeks",
+     "labels": [
+      "infants < 12 weeks (US label)"
+     ],
+     "rules": 1
+    }
+   ],
+   "engine_version": "0.1.0",
+   "formulary_version": "0.2.0",
+   "banner": "Prototype data, not clinically verified",
+   "disclaimer": "Decision support only. The doctor makes the final decision.",
+   "allow_unverified": true,
+   "demo": true,
+   "acknowledge_items": [],
+   "demo_banner": "DEMO - UNVERIFIED DATA",
+   "boundary_overlap": []
+  },
+  "card": {
+   "status": "ok",
+   "header": "Dose ready for doctor review",
+   "reason": "Every required input is present and no safety rule stopped this dose.",
+   "responsible": "Rule amoxicillin#0",
+   "sources": [],
+   "missing": [],
+   "show_numbers": true,
+   "overrides": [
+    {
+     "block": "Contraindication: Serious penicillin/beta-lactam allergy",
+     "code": "block_ci",
+     "reason": "Mild reaction only; ID consult done, monitored dose",
+     "doctor_id": "demo_doctor",
+     "category": "benefit_outweighs_risk",
+     "category_label": "Benefit outweighs risk"
+    }
+   ]
+  }
+ },
+ "refused": {
+  "result": {
+   "status": "refused",
+   "drug": null,
+   "indication": null,
+   "selected_rule_id": null,
+   "suggested_rule_id": null,
+   "alternatives": [],
+   "dose_mg": null,
+   "dose_range_mg": null,
+   "product": null,
+   "product_options": [],
+   "volume_ml": null,
+   "units": null,
+   "interval_h": null,
+   "doses_per_day": null,
+   "daily_total_mg": null,
+   "daily_max_mg": null,
+   "binding_cap": null,
+   "duration": null,
+   "plan": null,
+   "text_regimen": null,
+   "computed": false,
+   "calculation_steps": [],
+   "warnings": [],
+   "label_warnings": [],
+   "blocks": [],
+   "needs_input": [],
+   "refused_reasons": [
+    "'warfarin' is not in the formulary."
+   ],
+   "interactions": [],
+   "overrides": [],
+   "provenance": {},
+   "sources": [],
+   "data_status": "VERIFIED",
+   "final": false,
+   "pending_confirmations": [],
+   "indications": [],
+   "engine_version": "0.1.0",
+   "formulary_version": "0.2.0",
+   "banner": "Prototype data, not clinically verified",
+   "disclaimer": "Decision support only. The doctor makes the final decision.",
+   "allow_unverified": true,
+   "demo": true,
+   "acknowledge_items": [],
+   "demo_banner": "DEMO - UNVERIFIED DATA",
+   "boundary_overlap": []
+  },
+  "card": {
+   "status": "refused",
+   "header": "Refused: no data for this case",
+   "reason": "'warfarin' is not in the formulary.",
+   "responsible": "No usable formulary rule for: None / -",
+   "sources": [],
+   "missing": [],
+   "show_numbers": false,
+   "overrides": []
+  }
+ },
+ "redFlags": [
+  {
+   "ruleId": "RF_CHEST_PAIN_RADIATION_SWEATING",
+   "severity": "urgent",
+   "staffMessage": "Chest pain reported with sweating, or centre/left chest pain spreading to an arm, shoulder, jaw or neck.",
+   "patientMessage": {
+    "en": "Please tell the staff now.",
+    "hi": "कृपया अभी स्टाफ को बताएँ।",
+    "mr": "कृपया आत्ता कर्मचाऱ्यांना सांगा.",
+    "translationStatus": "machine-drafted, needs native review"
+   },
+   "draft": true,
+   "label": "Draft rule, source check pending",
+   "triggeredBy": [
+    {
+     "nodeId": "chief_complaint",
+     "label": "What is the main problem today?",
+     "answer": "Chest pain"
+    },
+    {
+     "nodeId": "cp_assoc",
+     "label": "Also has",
+     "answer": "Sweating, Nausea or vomiting"
+    },
+    {
+     "nodeId": "cp_site",
+     "label": "Site",
+     "answer": "Chest, centre"
+    },
+    {
+     "nodeId": "body_map_radiation",
+     "label": "Spreads to",
+     "answer": "Jaw; Upper arm, patient's left"
+    }
+   ]
+  }
+ ]
+}
