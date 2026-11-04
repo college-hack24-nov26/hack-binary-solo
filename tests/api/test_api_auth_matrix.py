@@ -16,6 +16,11 @@ EXPECT = {
     ("GET", "/api/system/health"): PUBLIC, ("GET", "/api/system/config"): PUBLIC, ("GET", "/api/system/offline-status"): SD,
     ("POST", "/api/auth/login"): PUBLIC, ("POST", "/api/auth/logout"): SD, ("GET", "/api/auth/me"): SD,
     ("POST", "/api/kiosk/sessions"): PUBLIC,
+    ("POST", "/api/kiosk/identify"): PUBLIC, ("POST", "/api/kiosk/register"): PUBLIC, ("POST", "/api/kiosk/login"): PUBLIC,
+    ("POST", "/api/kiosk/walk-in"): PUBLIC, ("POST", KS + "/end"): K,
+    ("POST", KS + "/bind"): K,
+    ("GET", "/api/staff/patients"): SD, ("GET", "/api/staff/patients/{pid}"): SD,
+    ("POST", "/api/staff/patients/{pid}/reset-pin"): SD, ("POST", "/api/staff/patients/{pid}/walk-in-complete"): SD,
     ("GET", KS): K, ("POST", KS + "/consent"): K, ("POST", KS + "/answers"): K, ("POST", KS + "/bodymap"): K,
     ("POST", KS + "/skip"): K, ("POST", KS + "/back"): K, ("PUT", KS + "/language"): K, ("GET", KS + "/review"): K,
     ("POST", KS + "/doctor"): K, ("POST", KS + "/finish"): K, ("POST", KS + "/help"): K,
@@ -31,6 +36,7 @@ EXPECT = {
     ("GET", "/api/audit"): D, ("GET", "/api/audit/verify"): D, ("GET", "/api/audit/entries/{index}"): D, ("GET", "/api/audit/export"): D,
     ("GET", "/api/demo/fixtures"): D, ("POST", "/api/demo/load/{key}"): D, ("POST", "/api/demo/kiosk-patient"): SD,
 }
+IDENTITY_GATED = {("POST", KS + "/bind")}      # also need an X-Kiosk-Identity token; the allowed side is covered in test_api_identity.py
 STREAMING = {("GET", "/api/events")}      # infinite stream: allowed roles are checked against a live server in test_api_live.py
 
 
@@ -59,7 +65,7 @@ def clients(app, monkeypatch):
 def _url(path: str, role: str, c: dict) -> str:
     token = c["_kiosk_token"] if path.startswith("/api/kiosk/") else c["_patient"]
     return (path.replace("{token}", token).replace("{i}", "0").replace("{sid}", "abc").replace("{rid}", "1")
-            .replace("{index}", "0").replace("{key}", "child_fever"))
+            .replace("{index}", "0").replace("{pid}", "PID-AAAAAAAA").replace("{key}", "child_fever"))
 
 
 def _call(client: TestClient, method: str, url: str):
@@ -75,7 +81,7 @@ def test_role_matrix(clients, role):
     routes = sorted(EXPECT, key=lambda mp: mp[1] == "/api/auth/logout")       # sign out last
     for method, path in routes:
         allowed = role in EXPECT[(method, path)]
-        if allowed and (method, path) in STREAMING:
+        if allowed and ((method, path) in STREAMING or (method, path) in IDENTITY_GATED):
             continue
         r = _call(c, method, _url(path, role, clients))
         refused = r.status_code in (401, 403)

@@ -6,3 +6,5 @@ fastapi
 uvicorn
 python-multipart
 httpx
+cryptography
+argon2-cffi

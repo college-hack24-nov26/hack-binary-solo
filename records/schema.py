@@ -145,3 +145,8 @@ class PatientRecord(BaseModel):
     queueDate: Optional[str] = None        # YYYY-MM-DD the queue number belongs to
     finishedAt: Optional[str] = None       # ISO-8601, when the token slip was issued
     pendingScans: list[dict] = []          # OCR drafts uploaded by staff/doctor, waiting for a doctor to confirm (then moved to timeline)
+    patientId: Optional[str] = None        # PID-XXXXXXXX of the identity record (records/patients.py); None = anonymous walk-in
+    identifierType: Optional[str] = None   # mobile | abha | walk_in
+    identifierMasked: Optional[str] = None # display only, e.g. "+91 ••••• ••321"; the number itself is never in this file
+    returning: bool = False                # the patient was recognised from an earlier visit
+    kioskScans: list[dict] = []            # papers the patient scanned at the kiosk: UNVERIFIED patient-supplied text (api/kiosk_scans.py)

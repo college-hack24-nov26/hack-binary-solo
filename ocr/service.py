@@ -15,7 +15,7 @@ from .prompt import RETRY_SUFFIX, SYSTEM_PROMPT, USER_PROMPT
 from .schema import RawExtraction, vlm_json_schema
 
 log = logging.getLogger("ocr")  # log ids, sizes, latency only, never content
-ALLOWED_ROLES = {"doctor", "staff"}
+ALLOWED_ROLES = {"doctor", "staff", "kiosk"}   # "kiosk": the patient scanning their own papers (api/scan_jobs.py)
 
 
 class OcrRefused(Exception):

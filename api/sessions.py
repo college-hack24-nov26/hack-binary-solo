@@ -116,5 +116,10 @@ def build_for_save(s: IntakeSession, complete: bool = False) -> PatientRecord:
         rec = s.to_record(complete=False, prior=prior)
     if prior is not None:
         rec = rec.model_copy(update={"timeline": prior.timeline or rec.timeline, "pendingScans": prior.pendingScans,
-                                     "queueNumber": prior.queueNumber, "queueDate": prior.queueDate, "finishedAt": prior.finishedAt})
+                                     "queueNumber": prior.queueNumber, "queueDate": prior.queueDate, "finishedAt": prior.finishedAt,
+                                     "patientId": prior.patientId, "identifierType": prior.identifierType,
+                                     "identifierMasked": prior.identifierMasked, "returning": prior.returning, "kioskScans": prior.kioskScans})
+    ident = getattr(s, "identity", None)          # set by POST .../bind; covers the first save, before a prior record exists
+    if ident:
+        rec = rec.model_copy(update=ident)
     return rec

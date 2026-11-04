@@ -12,7 +12,9 @@ from intake.redflags import load_rules
 
 from .deps import CSRF_HEADER, CSRF_VALUE, SessionStore, make_authenticator
 from .events import Broker, HelpRequests
-from .routers import audit, auth, demo, doctor, dosing, kiosk, ocr, patients, staff, system
+from .identity_provider import default_provider
+from .kiosk_identity import IdentitySessions, RateLimiter
+from .routers import audit, auth, demo, doctor, dosing, identity, kiosk, ocr, patients, staff, staff_patients, system
 from .sessions import Registry
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -33,6 +35,9 @@ def create_app(dist: Path | None = None) -> FastAPI:
     app.state.events = Broker()
     app.state.help = HelpRequests()
     app.state.results = dosing.ResultCache()
+    app.state.identity_sessions = IdentitySessions()
+    app.state.rate = RateLimiter()
+    app.state.provider = default_provider()
 
     @app.middleware("http")
     async def csrf_guard(request: Request, call_next):
@@ -49,7 +54,7 @@ def create_app(dist: Path | None = None) -> FastAPI:
 
     app.add_middleware(GZipMiddleware, minimum_size=1000)   # LAN tablets: smaller JS and fonts. SSE (text/event-stream) is never compressed.
 
-    for r in (system, auth, kiosk, patients, staff, doctor, ocr, dosing, audit, demo):
+    for r in (system, auth, kiosk, identity, patients, staff, staff_patients, doctor, ocr, dosing, audit, demo):
         app.include_router(r.router)
 
     web = dist or DIST
