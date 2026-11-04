@@ -14,6 +14,7 @@ import { ScanUpload } from "../shared/ScanUpload";
 import { VitalsForm, VITAL_FIELDS } from "../shared/VitalsForm";
 import { DosageCheck, type DosagePreset } from "./DosageCheck";
 import { PatientPapers } from "./PatientPapers";
+import { Prescription } from "./Prescription";
 
 const SECTIONS = [
   ["summary", "Summary"],
@@ -22,6 +23,7 @@ const SECTIONS = [
   ["notes", "Notes"],
   ["dosage", "Dosage check"],
   ["record", "Dosing record"],
+  ["prescription", "Prescription"],
 ] as const;
 
 export function usePatient(token: string, lang: Lang = "en") {
@@ -94,9 +96,16 @@ export function Workspace() {
             Dosage check
           </h2>
           <DosageCheck key={token} token={token} preset={preset} />
+          {((pv.dosingChecks ?? []) as { status?: unknown }[]).some((c) => c.status === "ok") && (
+            <div className="mt-2 flex flex-col gap-2">
+              <h3 className="text-md font-semibold">Prescription (from confirmed checks)</h3>
+              <Prescription pv={pv} />
+            </div>
+          )}
         </section>
       )}
       {section === "record" && <RecordSection pv={pv} />}
+      {section === "prescription" && <Prescription pv={pv} />}
     </div>
   );
 }

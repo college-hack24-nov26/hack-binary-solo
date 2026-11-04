@@ -406,6 +406,7 @@ class Drug(Out):
     generic: str
     indications: list[DrugIndication]
     forms: list[str]
+    brands: list[str] = []
 
 
 class Drugs(Out):

@@ -1466,6 +1466,11 @@ export type components = {
             indications: components["schemas"]["DrugIndication"][];
             /** Forms */
             forms: string[];
+            /**
+             * Brands
+             * @default []
+             */
+            brands: string[];
         };
         /** DrugIndication */
         DrugIndication: {

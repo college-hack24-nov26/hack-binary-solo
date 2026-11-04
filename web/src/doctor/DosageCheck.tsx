@@ -66,6 +66,7 @@ export function DosageCheck({ token, preset, onConfirmed }: { token: string; pre
   const [drug, setDrug] = useState<string | null>(preset?.drug ?? null);
   const [indication, setIndication] = useState<string | null>(preset?.indication ?? null);
   const [form, setForm] = useState("");
+  const [brand, setBrand] = useState("");
   const [route, setRoute] = useState("");
   const [visit, setVisit] = useState<string[]>([]);
   const [showAll, setShowAll] = useState(false);
@@ -179,9 +180,16 @@ export function DosageCheck({ token, preset, onConfirmed }: { token: string; pre
                   setSelectedRule(null);
                   setExtras({});
                   setForm("");
+                  setBrand("");
                   resetResult();
                 }}
               />
+              <SelectField label="Brand (optional)" value={brand} disabled={!current?.brands?.length} onChange={(e) => setBrand(e.target.value)} help={brand ? `Dose is computed for the generic, ${current?.generic}. The brand is for reference only.` : "Brand names are from the synonym table (pharmacist review pending)."}>
+                <option value="">{current?.brands?.length ? "Generic (no brand)" : "Choose a drug first"}</option>
+                {current?.brands?.map((b) => (
+                  <option key={b} value={b}>{b}</option>
+                ))}
+              </SelectField>
               <SelectField label="Indication" value={indication ?? ""} disabled={!current} onChange={(e) => (setIndication(e.target.value), setSelectedRule(null), resetResult())}>
                 {!current && <option value="">Choose a drug first</option>}
                 {current?.indications.map((i) => (

@@ -244,7 +244,9 @@ html.kiosk-large {
     visibility: hidden !important;
   }
   .print-area,
-  .print-area * {
+  .print-area *,
+  .rx-area,
+  .rx-area * {
     visibility: visible !important;
   }
   .print-area {
@@ -256,6 +258,12 @@ html.kiosk-large {
     mask: none !important;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
+  }
+  .rx-area {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+    border: 0 !important;
   }
   .no-print {
     display: none !important;

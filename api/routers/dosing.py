@@ -1,13 +1,15 @@
 """Doctor-only Dosage check. Thin wrapper over dosing.service: results go out exactly as the engine made them, wrapped as
 {result, card}. Confirm never trusts a client-sent result: it uses the server's cached evaluation (or re-evaluates)."""
+import json
 import secrets
 import threading
 import time
 from collections import OrderedDict
+from functools import lru_cache
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 
-from dosing import history as hist, service
+from dosing import history as hist, meds, service
 from dosing.config import BANNER, DEMO_BANNER, OVERRIDE_CATEGORIES
 from dosing.engine import apply_inputs
 from dosing.mapper import map_record
@@ -68,14 +70,26 @@ def card(res: dict) -> dict:
     return {**m, "missing": missing}
 
 
+@lru_cache(maxsize=1)
+def _brands() -> dict[str, list[str]]:
+    """Brand names per drug id, from the synonym table (engine-side mapping, not formulary content; pharmacist review pending)."""
+    out: dict[str, list[str]] = {}
+    for e in json.loads(meds.DATA.read_text(encoding="utf-8"))["entries"]:
+        if e.get("drug_id") and e.get("kind") == "generic":
+            generic = {meds.canon(n) for n in (e["generic"], e["drug_id"].replace("_", " "))}
+            out[e["drug_id"]] = [n for n in e["names"] if meds.canon(n) not in generic]
+    return out
+
+
 @router.get("/api/dosing/drugs", response_model=Drugs, dependencies=[Depends(doctor_only)])
 def drugs(fc=Depends(dosing_formulary)):
     f, cfg = fc
     out = []
+    brands = _brands()
     for did, d in f.drugs.items():
         forms = [f"{x.get('form')} {x.get('strength')}".strip() for x in d.get("forms_india") or [] if x.get("form")]
         out.append({"id": did, "generic": d["generic"], "indications": [{"key": i["key"], "labels": i["labels"]} for i in indications(d)],
-                    "forms": list(dict.fromkeys(forms))})
+                    "forms": list(dict.fromkeys(forms)), "brands": brands.get(did, [])})
     return {"drugs": out, "overrideCategories": OVERRIDE_CATEGORIES, "banner": BANNER, "demoBanner": DEMO_BANNER,
             "allowUnverified": cfg.allow_unverified, "demoMode": cfg.demo_mode}
 
